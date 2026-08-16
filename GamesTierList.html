@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIEST1X Played Games — a personal tierlist</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#0f0e17;
+  --surface:#17151f;
+  --surface-hover:#1e1b29;
+  --text:#ece9f5;
+  --text-dim:#8b87a3;
+  --text-faint:#5c5870;
+  --line:rgba(236,233,245,0.09);
+  --line-strong:rgba(236,233,245,0.16);
+
+  --gold:#e8b563;
+  --gold-dim:rgba(232,181,99,0.18);
+  --teal:#6fc7c0;
+  --teal-dim:rgba(111,199,192,0.18);
+  --sage:#a3b56b;
+  --sage-dim:rgba(163,181,107,0.18);
+  --rust:#d1673f;
+  --rust-dim:rgba(209,103,63,0.18);
+  --slate:#736e8f;
+  --slate-dim:rgba(115,110,143,0.18);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text);}
+body{
+  font-family:'Inter', sans-serif;
+  min-height:100vh;
+  padding-bottom:80px;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold-dim); color:var(--gold);}
+::-webkit-scrollbar{width:10px; height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:6px;}
+:focus-visible{outline:2px solid var(--gold); outline-offset:2px; border-radius:3px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+
+/* ---------- Header ---------- */
+header.top{
+  max-width:1400px;
+  margin:0 auto;
+  padding:56px 24px 32px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:1px solid var(--line);
+}
+.brand h1{
+  font-family:'Inter', serif;
+  font-weight:600;
+  font-size:42px;
+  letter-spacing:-0.01em;
+  color:var(--text);
+}
+.brand p{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  color:var(--text-faint);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  margin-top:6px;
+}
+.btn-add{
+  font-family:'Inter', sans-serif;
+  font-weight:600;
+  font-size:14px;
+  color:#0f0e17;
+  background:var(--gold);
+  border:none;
+  padding:12px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:transform .12s ease, filter .12s ease;
+}
+.btn-add:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+.btn-add:active{ transform:translateY(0px); }
+
+/* ---------- Tier sections ---------- */
+main{
+  max-width:1400px;
+  margin:0 auto;
+  padding:32px 24px 40px;
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+  overflow-x:auto;
+}
+.tier{
+  flex:0 0 auto;
+  min-width:200px;
+}
+.tier-head{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:2px;
+  padding-bottom:10px;
+  border-bottom:2px solid var(--tier-color, var(--line-strong));
+  margin-bottom:4px;
+}
+.tier-letter{
+  font-family:'Fraunces', serif;
+  font-style:italic;
+  font-weight:600;
+  font-size:50px;
+  color:var(--tier-color);
+  line-height:1;
+}
+.tier-label{
+  font-size:13.5px;
+  font-weight:600;
+  color:var(--text);
+}
+.tier-sub{
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  color:var(--text-faint);
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.tier-meta{
+  width:100%;
+  margin-top:4px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.tier-count{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  color:var(--text-dim);
+}
+.resort-btn{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--tier-color);
+  background:transparent;
+  border:1px solid var(--tier-color);
+  opacity:.75;
+  padding:4px 9px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:opacity .12s ease, background .12s ease;
+}
+.resort-btn:hover{ opacity:1; background:var(--tier-dim); }
+
+.rows{ padding:6px 0 4px; min-height:14px; }
+.empty-row{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  color:var(--text-faint);
+  padding:18px 4px;
+  border:1px dashed var(--line-strong);
+  border-radius:8px;
+  text-align:center;
+  margin:8px 0;
+}
+
+.row{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:9px 10px;
+  margin:6px 0;
+  background:var(--surface);
+  border-left:3px solid var(--tier-color);
+  border-radius:6px;
+  cursor:grab;
+  transition:background .12s ease, transform .1s ease;
+}
+.row:hover{ background:var(--surface-hover); }
+.row:active{ cursor:grabbing; }
+.row.dragging{ opacity:.35; }
+.row.drag-over-top{ box-shadow: inset 0 2px 0 var(--tier-color); }
+.row.drag-over-bottom{ box-shadow: inset 0 -2px 0 var(--tier-color); }
+
+.row-top{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px;
+}
+.row-name{
+  font-size:13px;
+  font-weight:500;
+  color:var(--text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex:1;
+}
+.row-eq{
+  display:flex;
+  align-items:flex-end;
+  gap:2.5px;
+  height:16px;
+}
+.row-eq i{
+  display:block;
+  width:4px;
+  background:var(--tier-color);
+  opacity:.55;
+  border-radius:1px;
+  min-height:2px;
+}
+.row-score{
+  font-family:'JetBrains Mono', monospace;
+  font-weight:700;
+  font-size:14px;
+  color:var(--tier-color);
+  flex-shrink:0;
+}
+.row-score sub{ font-size:10px; color:var(--text-faint); font-weight:400; }
+
+/* ---------- Modal ---------- */
+.overlay{
+  position:fixed; inset:0;
+  background:rgba(5,4,9,0.7);
+  backdrop-filter: blur(3px);
+  display:flex; align-items:flex-start; justify-content:center;
+  padding:40px 16px;
+  overflow-y:auto;
+  z-index:100;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .15s ease;
+}
+.overlay.open{ opacity:1; pointer-events:auto; }
+.modal{
+  background:var(--surface);
+  border:1px solid var(--line-strong);
+  border-radius:14px;
+  width:100%;
+  max-width:560px;
+  padding:28px 28px 32px;
+  transform:translateY(8px);
+  transition:transform .15s ease;
+}
+.overlay.open .modal{ transform:translateY(0); }
+
+.modal-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:18px; }
+.modal-name{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:26px;
+  color:var(--text);
+  background:transparent;
+  border:none;
+  border-bottom:1px solid transparent;
+  width:100%;
+  padding:2px 0;
+}
+.modal-name:focus{ border-bottom:1px solid var(--line-strong); }
+.modal-close{
+  background:transparent; border:none; color:var(--text-faint);
+  font-size:20px; cursor:pointer; line-height:1; padding:4px;
+}
+.modal-close:hover{ color:var(--text); }
+
+.tier-picker{ display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap; }
+.tier-chip{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11.5px;
+  font-weight:700;
+  padding:6px 12px;
+  border-radius:20px;
+  border:1px solid var(--line-strong);
+  background:transparent;
+  color:var(--text-dim);
+  cursor:pointer;
+  transition:all .12s ease;
+}
+.tier-chip.active{ color:#0f0e17; }
+
+.overall-line{
+  display:flex; align-items:baseline; gap:10px;
+  margin-bottom:20px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+.overall-num{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:34px; color:var(--gold); }
+.overall-label{ font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em; }
+
+.cat-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0; }
+.cat-label{ font-size:13px; color:var(--text-dim); width:130px; flex-shrink:0; }
+.stars{ display:flex; gap:2px; }
+.star{
+  width:15px; height:15px; cursor:pointer; flex-shrink:0;
+  color:var(--line-strong);
+  transition:color .08s ease, transform .08s ease;
+}
+.star.filled{ color:var(--gold); }
+.star:hover{ transform:scale(1.15); }
+.cat-num{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-faint); width:34px; text-align:right; flex-shrink:0; }
+
+.commentary-label{
+  font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em;
+  margin:22px 0 8px;
+}
+.commentary{
+  width:100%; min-height:120px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--line-strong);
+  border-radius:8px;
+  color:var(--text);
+  font-family:'Inter', sans-serif;
+  font-size:14px;
+  line-height:1.55;
+  padding:12px 14px;
+  resize:vertical;
+}
+.commentary:focus{ border-color:var(--gold); }
+.commentary::placeholder{ color:var(--text-faint); }
+
+.modal-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:24px; }
+.delete-btn{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11.5px;
+  color:var(--rust);
+  background:transparent;
+  border:1px solid transparent;
+  cursor:pointer;
+  padding:6px 10px;
+  border-radius:6px;
+}
+.delete-btn:hover{ background:var(--rust-dim); }
+.done-btn{
+  font-family:'Inter', sans-serif;
+  font-weight:600; font-size:13.5px;
+  background:var(--gold); color:#0f0e17;
+  border:none; padding:9px 20px; border-radius:8px; cursor:pointer;
+}
+
+/* ---------- Add-game modal ---------- */
+.add-modal{ max-width:400px; }
+.field-label{ font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; display:block; }
+.name-input{
+  width:100%;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--line-strong);
+  border-radius:8px;
+  color:var(--text);
+  font-family:'Inter', sans-serif;
+  font-size:15px;
+  padding:11px 12px;
+  margin-bottom:18px;
+}
+.name-input:focus{ border-color:var(--gold); }
+
+.loading-msg{
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px; color:var(--text-faint);
+  text-align:center; padding:60px 20px;
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <h1>Played Games by BIEST1X</h1>
+    <p>a personal tierlist</p>
+  </div>
+  <button class="btn-add" id="openAdd">+ Add game</button>
+</header>
+
+<main id="main">
+  <div class="loading-msg">loading your list…</div>
+</main>
+
+<!-- Add game overlay -->
+<div class="overlay" id="addOverlay">
+  <div class="modal add-modal">
+    <div class="modal-top">
+      <div class="modal-name" style="font-size:20px;">Add a game</div>
+      <button class="modal-close" id="closeAdd">✕</button>
+    </div>
+    <label class="field-label">Name</label>
+    <input class="name-input" id="addName" placeholder="e.g. Disco Elysium" maxlength="80">
+    <label class="field-label">Tier</label>
+    <div class="tier-picker" id="addTierPicker"></div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <button class="done-btn" id="confirmAdd">Add game</button>
+    </div>
+  </div>
+</div>
+
+<!-- Game detail overlay -->
+<div class="overlay" id="gameOverlay">
+  <div class="modal" id="gameModal"></div>
+</div>
+
+<script>
+(function(){
+
+const CATEGORIES = [
+  {key:'gameplay', label:'Gameplay'},
+  {key:'visuals',  label:'Visuals & Graphics'},
+  {key:'story',    label:'Story'},
+  {key:'music',    label:'Music'},
+  {key:'voice',    label:'Voice Acting'},
+  {key:'sound',    label:'Sound Design'},
+  {key:'writing',  label:'Writing'},
+];
+
+const TIERS = [
+  {key:'S', letter:'SS', label:'Masterpiece',           sub:'Best games',            color:'var(--gold)',  varname:'--gold',  dim:'var(--gold-dim)'},
+  {key:'A', letter:'S',  label:'Amazing game',           sub:'Great games',           color:'var(--teal)',  varname:'--teal',  dim:'var(--teal-dim)'},
+  {key:'B', letter:'A',  label:'Good / Okay',            sub:'Solid games',           color:'var(--sage)',  varname:'--sage',  dim:'var(--sage-dim)'},
+  {key:'F', letter:'B',  label:'Nothing special / meh',  sub:'Forgettable',           color:'var(--rust)',  varname:'--rust',  dim:'var(--rust-dim)'},
+  {key:'X', letter:'\u2014', label:'Dislike / dropped',  sub:'Not for me',            color:'var(--slate)', varname:'--slate', dim:'var(--slate-dim)'},
+];
+
+let state = { games:{}, tiers:{} };
+let saveTimer = null;
+let currentGameId = null;
+let dragId = null;
+
+// Seeded from the user's existing tier list — only used the first time
+// the board is opened (i.e. no saved data yet). Order is preserved
+// exactly as given; ratings start at 0 and are auto-sort-off so the
+// curated order sticks until ratings are added.
+const SEED_LISTS = {
+  S: [ // Masterpiece
+    'The Last of Us Part 1 & Part 2','Cyberpunk 2077 & DLC','Clair Obscur: Expedition 33',
+    'Red Dead Redemption 2','God of War 2018 & Ragnarok','Alan Wake 2','Uncharted 4',
+    'Detroit: Become Human','The Witcher 3: Wild Hunt','Resident Evil 4 Remake','Dispatch',
+    'Max Payne 3','Metal Gear Solid','Grand Theft Auto: San Andreas','Resident Evil Requiem',
+    'SOMA','Quantum Break','007 First Light'
+  ],
+  A: [ // Amazing game
+    'Alan Wake','Red Dead Redemption + DLC','Grand Theft Auto V','Call of Duty: Modern Warfare 2019',
+    'Call of Duty: Black Ops','Control','Grand Theft Auto IV','Far Cry 3','Fallout 4','Portal 1 & 2',
+    'Little Nightmares 1 & 2','Wolfenstein II','Wolfenstein: New Order','Metro 2033 / Last Light / Exodus',
+    'Grand Theft Auto IV','It Takes Two','God of War 3','Mafia: Definitive Edition','Mafia II',
+    'Sleeping Dogs','South Park 1 / 2','Ratchet & Clank: Rift Apart','Horizon: Zero Dawn',
+    "Marvel's Spider-Man 1 / 2",'Devil May Cry 1-5','Mafia: The Old Country','Silent Hill f',
+    'Silent Hill 2 Remake','Grand Theft Auto IV: TBOGT DLC','Hades 2','RE2 & RE3 Remakes','PRAGMATA',
+    'Hollow Knight','Hollow Knight: Silksong','FINAL FANTASY 7 Remake & Rebirth','Astro Bot',
+    'FINAL FANTASY XVI','Horizon: Forbidden West'
+  ],
+  B: [ // Good / Okay
+    'Resident Evil 7','Resident Evil Village','Dying Light 1 & 2',"Mirror's Edge",'Outlast',
+    'Dead Island 1 & 2','Deathloop','Outlast 2','Dishonored 1 & 2','Until Dawn',
+    "Marvel's Guardians of the Galaxy",'Darksiders 3','Far Cry 4','Far Cry 5','Far Cry 6',
+    'Call of Duty: Black Ops Cold War','RAGE 2','Doom 2016','Prototype 1 / 2','Mad Max','Trepang2',
+    'Dead Space Remake','Superliminal','Tomb Raider Trilogy','Resident Evil 5','Stanley Parable',
+    'REANIMAL','Batman Arkham Games','Cronos: The New Dawn','Prince of Persia: The Lost Crown',
+    'Mouse: P.I. for Hire'
+  ],
+  F: [ // Nothing special / meh
+    'Still Wakes The Deep','Scorn'
+  ],
+  X: [ // Dislike / dropped
+    'Elden Ring','Lies of P'
+  ]
+};
+
+function seedFromList(){
+  Object.keys(SEED_LISTS).forEach(tierKey => {
+    const ids = [];
+    SEED_LISTS[tierKey].forEach(name => {
+      const id = newId();
+      state.games[id] = { id, name, tier: tierKey, ratings: emptyRatings(), commentary:'' };
+      ids.push(id);
+    });
+    state.tiers[tierKey] = { order: ids, auto: false };
+  });
+}
+
+function emptyRatings(){
+  const r = {};
+  CATEGORIES.forEach(c => r[c.key] = 0);
+  return r;
+}
+
+function newId(){
+  return 'g_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
+
+function score(game){
+  const vals = CATEGORIES.map(c => game.ratings[c.key] || 0);
+  const avg = vals.reduce((a,b)=>a+b,0) / vals.length;
+  return Math.round(avg * 10) / 10;
+}
+
+function ensureTiers(){
+  TIERS.forEach(t => {
+    if(!state.tiers[t.key]) state.tiers[t.key] = { order:[], auto:true };
+  });
+}
+
+async function load(){
+  let hasSavedData = false;
+  try{
+    const raw = localStorage.getItem('played-games-data');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state.games = parsed.games || {};
+      state.tiers = parsed.tiers || {};
+      hasSavedData = Object.keys(state.games).length > 0;
+    }
+  }catch(e){
+    console.error('load failed', e);
+  }
+  if(!hasSavedData){
+    seedFromList();
+    save();
+  }
+  ensureTiers();
+  render();
+}
+
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try{
+      localStorage.setItem('played-games-data', JSON.stringify(state));
+    }catch(e){
+      console.error('save failed', e);
+    }
+  }, 200);
+}
+
+function sortTier(tierKey){
+  const t = state.tiers[tierKey];
+  t.order.sort((a,b) => {
+    const sb = score(state.games[b]) - score(state.games[a]);
+    if(sb !== 0) return sb;
+    return state.games[a].name.localeCompare(state.games[b].name);
+  });
+}
+
+function autoSortIfNeeded(tierKey){
+  const t = state.tiers[tierKey];
+  if(t.auto) sortTier(tierKey);
+}
+
+/* ---------- Rendering ---------- */
+
+function render(){
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  TIERS.forEach(tier => {
+    autoSortIfNeeded(tier.key);
+    main.appendChild(renderTier(tier));
+  });
+  renderTierPicker();
+}
+
+function renderTier(tier){
+  const t = state.tiers[tier.key];
+  const section = document.createElement('section');
+  section.className = 'tier';
+  section.style.setProperty('--tier-color', tier.color);
+  section.style.setProperty('--tier-dim', tier.dim);
+
+  const head = document.createElement('div');
+  head.className = 'tier-head';
+  head.innerHTML = `
+    <span class="tier-letter">${tier.letter}</span>
+    <div>
+      <div class="tier-label">${tier.label}</div>
+      <div class="tier-sub">${tier.sub}</div>
+    </div>
+    <div class="tier-meta">
+      ${!t.auto ? '<button class="resort-btn" data-resort="'+tier.key+'">sort by rating</button>' : ''}
+      <span class="tier-count">${t.order.length}</span>
+    </div>
+  `;
+  section.appendChild(head);
+
+  const rows = document.createElement('div');
+  rows.className = 'rows';
+  rows.dataset.tier = tier.key;
+
+  if(t.order.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'empty-row';
+    empty.textContent = 'No games here yet.';
+    rows.appendChild(empty);
+  } else {
+    t.order.forEach((id, idx) => {
+      const g = state.games[id];
+      if(!g) return;
+      rows.appendChild(renderRow(g, idx, tier));
+    });
+  }
+
+  section.appendChild(rows);
+
+  const resortBtn = head.querySelector('[data-resort]');
+  if(resortBtn){
+    resortBtn.addEventListener('click', () => {
+      t.auto = true;
+      sortTier(tier.key);
+      save();
+      render();
+    });
+  }
+
+  setupDnD(rows, tier.key);
+
+  return section;
+}
+
+function renderRow(game, idx, tier){
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.draggable = true;
+  row.dataset.id = game.id;
+
+  const eq = CATEGORIES.map(c => {
+    const v = game.ratings[c.key] || 0;
+    const h = Math.max(2, (v/10) * 16);
+    return `<i style="height:${h}px"></i>`;
+  }).join('');
+
+  const s = score(game);
+
+  row.innerHTML = `
+    <div class="row-top">
+      <div class="row-name" title="${escapeHtml(game.name)}">${escapeHtml(game.name)}</div>
+      <div class="row-score">${s.toFixed(1)}<sub>/10</sub></div>
+    </div>
+    <div class="row-eq">${eq}</div>
+  `;
+
+  row.addEventListener('click', (e) => {
+    if(row.classList.contains('dragging')) return;
+    openGame(game.id);
+  });
+
+  return row;
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+/* ---------- Drag & drop reorder ---------- */
+
+function setupDnD(container, tierKey){
+  container.addEventListener('dragstart', (e) => {
+    const row = e.target.closest('.row');
+    if(!row) return;
+    dragId = row.dataset.id;
+    row.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  container.addEventListener('dragend', (e) => {
+    const row = e.target.closest('.row');
+    if(row) row.classList.remove('dragging');
+    container.querySelectorAll('.row').forEach(r => {
+      r.classList.remove('drag-over-top','drag-over-bottom');
+    });
+  });
+
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const afterEl = getDragAfterElement(container, e.clientY);
+    container.querySelectorAll('.row').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
+    if(afterEl){
+      afterEl.classList.add('drag-over-top');
+    } else {
+      const rows = [...container.querySelectorAll('.row:not(.dragging)')];
+      if(rows.length) rows[rows.length-1].classList.add('drag-over-bottom');
+    }
+  });
+
+  container.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if(!dragId) return;
+    const t = state.tiers[tierKey];
+
+    // remove dragId from whichever tier currently has it
+    let fromTierKey = null;
+    TIERS.forEach(tt => {
+      const arr = state.tiers[tt.key].order;
+      const i = arr.indexOf(dragId);
+      if(i !== -1){ fromTierKey = tt.key; arr.splice(i,1); }
+    });
+
+    const afterEl = getDragAfterElement(container, e.clientY);
+    if(afterEl){
+      const idx = t.order.indexOf(afterEl.dataset.id);
+      t.order.splice(idx, 0, dragId);
+    } else {
+      t.order.push(dragId);
+    }
+
+    // moving/reordering breaks auto-sort for the destination tier
+    t.auto = false;
+    if(fromTierKey && fromTierKey !== tierKey){
+      state.games[dragId].tier = tierKey;
+    }
+
+    dragId = null;
+    save();
+    render();
+  });
+}
+
+function getDragAfterElement(container, y){
+  const rows = [...container.querySelectorAll('.row:not(.dragging)')];
+  return rows.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height/2;
+    if(offset < 0 && offset > closest.offset){
+      return {offset, element: child};
+    } else {
+      return closest;
+    }
+  }, {offset:-Infinity, element:null}).element;
+}
+
+/* ---------- Add game modal ---------- */
+
+let addTier = 'B';
+
+function renderTierPicker(){
+  const wrap = document.getElementById('addTierPicker');
+  wrap.innerHTML = '';
+  TIERS.forEach(t => {
+    const chip = document.createElement('button');
+    chip.className = 'tier-chip' + (addTier === t.key ? ' active' : '');
+    chip.textContent = t.letter;
+    chip.style.borderColor = t.color;
+    chip.style.color = addTier === t.key ? '#0f0e17' : t.color;
+    chip.style.background = addTier === t.key ? t.color : 'transparent';
+    chip.addEventListener('click', () => { addTier = t.key; renderTierPicker(); });
+    wrap.appendChild(chip);
+  });
+}
+
+document.getElementById('openAdd').addEventListener('click', () => {
+  document.getElementById('addName').value = '';
+  addTier = 'B';
+  renderTierPicker();
+  document.getElementById('addOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('addName').focus(), 50);
+});
+
+document.getElementById('closeAdd').addEventListener('click', () => {
+  document.getElementById('addOverlay').classList.remove('open');
+});
+document.getElementById('addOverlay').addEventListener('click', (e) => {
+  if(e.target.id === 'addOverlay') document.getElementById('addOverlay').classList.remove('open');
+});
+
+function confirmAdd(){
+  const nameInput = document.getElementById('addName');
+  const name = nameInput.value.trim();
+  if(!name) { nameInput.focus(); return; }
+
+  const id = newId();
+  state.games[id] = { id, name, tier: addTier, ratings: emptyRatings(), commentary:'' };
+  state.tiers[addTier].order.unshift(id);
+  state.tiers[addTier].auto = true;
+  sortTier(addTier);
+
+  save();
+  render();
+  document.getElementById('addOverlay').classList.remove('open');
+}
+
+document.getElementById('confirmAdd').addEventListener('click', confirmAdd);
+document.getElementById('addName').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') confirmAdd();
+});
+
+/* ---------- Game detail modal ---------- */
+
+function openGame(id){
+  currentGameId = id;
+  renderGameModal();
+  document.getElementById('gameOverlay').classList.add('open');
+}
+
+function closeGame(){
+  document.getElementById('gameOverlay').classList.remove('open');
+  currentGameId = null;
+  render();
+}
+
+document.getElementById('gameOverlay').addEventListener('click', (e) => {
+  if(e.target.id === 'gameOverlay') closeGame();
+});
+
+function renderGameModal(){
+  const game = state.games[currentGameId];
+  if(!game) return;
+  const modal = document.getElementById('gameModal');
+
+  const catRows = CATEGORIES.map(c => {
+    const val = game.ratings[c.key] || 0;
+    const stars = Array.from({length:10}).map((_, i) => {
+      const filled = i < val;
+      return `<span class="star ${filled ? 'filled':''}" data-cat="${c.key}" data-val="${i+1}">${starSvg()}</span>`;
+    }).join('');
+    return `
+      <div class="cat-row">
+        <div class="cat-label">${c.label}</div>
+        <div class="stars">${stars}</div>
+        <div class="cat-num">${val}/10</div>
+      </div>
+    `;
+  }).join('');
+
+  modal.innerHTML = `
+    <div class="modal-top">
+      <input class="modal-name" id="editName" value="${escapeHtml(game.name)}" maxlength="80">
+      <button class="modal-close" id="closeGame">✕</button>
+    </div>
+    <div class="tier-picker" id="editTierPicker"></div>
+    <div class="overall-line">
+      <span class="overall-num">${score(game).toFixed(1)}</span>
+      <span class="overall-label">/ 10 overall</span>
+    </div>
+    <div id="catRows">${catRows}</div>
+    <div class="commentary-label">Your commentary</div>
+    <textarea class="commentary" id="commentary" placeholder="What did you think of it?">${escapeHtml(game.commentary || '')}</textarea>
+    <div class="modal-footer">
+      <button class="delete-btn" id="deleteGame">Delete game</button>
+      <button class="done-btn" id="doneGame">Done</button>
+    </div>
+  `;
+
+  // tier picker
+  const tierWrap = document.getElementById('editTierPicker');
+  TIERS.forEach(t => {
+    const chip = document.createElement('button');
+    chip.className = 'tier-chip' + (game.tier === t.key ? ' active' : '');
+    chip.textContent = t.letter + ' \u2014 ' + t.label;
+    chip.style.borderColor = t.color;
+    chip.style.color = game.tier === t.key ? '#0f0e17' : t.color;
+    chip.style.background = game.tier === t.key ? t.color : 'transparent';
+    chip.addEventListener('click', () => {
+      if(game.tier === t.key) return;
+      const oldTier = game.tier;
+      const oldArr = state.tiers[oldTier].order;
+      const i = oldArr.indexOf(game.id);
+      if(i !== -1) oldArr.splice(i,1);
+      game.tier = t.key;
+      state.tiers[t.key].order.push(game.id);
+      if(state.tiers[t.key].auto) sortTier(t.key);
+      save();
+      renderGameModal();
+    });
+    tierWrap.appendChild(chip);
+  });
+
+  document.getElementById('closeGame').addEventListener('click', closeGame);
+  document.getElementById('doneGame').addEventListener('click', closeGame);
+
+  document.getElementById('editName').addEventListener('input', (e) => {
+    game.name = e.target.value;
+    save();
+  });
+
+  document.getElementById('commentary').addEventListener('input', (e) => {
+    game.commentary = e.target.value;
+    save();
+  });
+
+  modal.querySelectorAll('.star').forEach(starEl => {
+    starEl.addEventListener('click', () => {
+      const cat = starEl.dataset.cat;
+      const val = parseInt(starEl.dataset.val, 10);
+      game.ratings[cat] = (game.ratings[cat] === val) ? val - 1 : val;
+      if(state.tiers[game.tier].auto) sortTier(game.tier);
+      save();
+      renderGameModal();
+    });
+  });
+
+  document.getElementById('deleteGame').addEventListener('click', () => {
+    if(!confirm(`Delete "${game.name}"? This can't be undone.`)) return;
+    const arr = state.tiers[game.tier].order;
+    const i = arr.indexOf(game.id);
+    if(i !== -1) arr.splice(i,1);
+    delete state.games[game.id];
+    save();
+    closeGame();
+  });
+}
+
+function starSvg(){
+  return `<svg viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%"><path d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"/></svg>`;
+}
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    if(document.getElementById('gameOverlay').classList.contains('open')) closeGame();
+    if(document.getElementById('addOverlay').classList.contains('open')) document.getElementById('addOverlay').classList.remove('open');
+  }
+});
+
+load();
+
+})();
+</script>
+</body>
+</html>
