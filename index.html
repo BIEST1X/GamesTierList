@@ -1559,9 +1559,15 @@ function renderRow(game,tier){
         ${escapeHtml(game.name)}
       </div>
 
-      <div class="row-score">
-        ${formatNumber(score(game))}
-      </div>
+      ${
+        tier.tier_key === "G"
+          ? ""
+          : `
+            <div class="row-score">
+              ${formatNumber(score(game))}
+            </div>
+          `
+      }
 
     </div>
   `;
