@@ -1,35 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GAMES PLAYED BY BIEST1X</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>PLAYED. — a personal tier list</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root{
   --bg:#0f0e17;
   --surface:#17151f;
   --surface-hover:#1e1b29;
+
   --text:#ece9f5;
   --text-dim:#8b87a3;
   --text-faint:#5c5870;
+
   --line:rgba(236,233,245,0.09);
   --line-strong:rgba(236,233,245,0.16);
 
   --gold:#e8b563;
   --gold-dim:rgba(232,181,99,0.18);
+
   --teal:#6fc7c0;
   --teal-dim:rgba(111,199,192,0.18);
+
   --sage:#a3b56b;
   --sage-dim:rgba(163,181,107,0.18);
+
   --rust:#d1673f;
   --rust-dim:rgba(209,103,63,0.18);
+
   --slate:#736e8f;
   --slate-dim:rgba(115,110,143,0.18);
 
   --highlight:#f55951;
+  --highlight-orange:#f59e51;
 }
 
 *{
@@ -38,7 +51,8 @@
   padding:0;
 }
 
-html,body{
+html,
+body{
   background:var(--bg);
   color:var(--text);
 }
@@ -83,18 +97,26 @@ header.top{
   max-width:1400px;
   margin:0 auto;
   padding:56px 24px 32px;
+
   display:flex;
   align-items:flex-end;
-  justify-content:space-between;
-  gap:20px;
+  justify-content:center;
+
+  position:relative;
+
   border-bottom:1px solid var(--line);
+}
+
+.brand{
+  text-align:center;
 }
 
 .brand h1{
   font-family:'Inter',sans-serif;
-  font-weight:700;
+  font-weight:600;
+  font-style:normal;
   font-size:42px;
-  letter-spacing:-.035em;
+  letter-spacing:-.025em;
   color:var(--text);
 }
 
@@ -104,11 +126,15 @@ header.top{
   color:var(--text-faint);
   letter-spacing:.06em;
   text-transform:uppercase;
-  margin-top:6px;
-  padding-left:1px;
+  margin-top:8px;
+  text-align:center;
 }
 
-.header-buttons{
+.header-actions{
+  position:absolute;
+  right:24px;
+  bottom:32px;
+
   display:flex;
   align-items:center;
   gap:8px;
@@ -134,31 +160,36 @@ header.top{
 }
 
 .btn-edit{
-  color:var(--text);
-  background:var(--surface);
+  color:var(--text-dim);
+  background:transparent;
   border:1px solid var(--line-strong);
 }
 
 .btn-edit:hover{
+  color:var(--text);
   background:var(--surface-hover);
 }
 
 /* =========================================================
-   MAIN / TIERS
+   MAIN
 ========================================================= */
 
 main{
   max-width:1400px;
   margin:0 auto;
+
   padding:32px 24px 40px;
+
   display:flex;
   gap:18px;
+
   align-items:flex-start;
+
   overflow-x:auto;
 }
 
 .tier{
-  flex:0 0 auto;
+  flex:1 1 0;
   min-width:200px;
 }
 
@@ -166,10 +197,15 @@ main{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:2px;
-  padding-bottom:10px;
+
+  gap:0;
+
+  padding-bottom:14px;
+
   border-bottom:2px solid var(--tier-color);
+
   margin-bottom:4px;
+
   text-align:center;
 }
 
@@ -177,27 +213,46 @@ main{
   font-family:'Fraunces',serif;
   font-style:italic;
   font-weight:600;
-  font-size:30px;
+
+  /*
+    Previous 26px -> now 36.4px
+    roughly 40% larger.
+  */
+  font-size:36.4px;
+
   color:var(--tier-color);
   line-height:1;
 }
 
 .tier-label{
-  font-size:13.5px;
+  font-size:15.5px;
   font-weight:600;
+
+  margin-top:7px;
+
+  white-space:nowrap;
 }
 
 .tier-sub{
   font-family:'JetBrains Mono',monospace;
+
   font-size:10px;
+
   color:var(--text-faint);
+
   text-transform:uppercase;
   letter-spacing:.05em;
+
+  margin-top:7px;
+
+  white-space:nowrap;
 }
 
 .tier-meta{
   width:100%;
-  margin-top:4px;
+
+  margin-top:8px;
+
   display:flex;
   align-items:center;
   justify-content:center;
@@ -217,25 +272,44 @@ main{
 .empty-row{
   font-family:'JetBrains Mono',monospace;
   font-size:12px;
+
   color:var(--text-faint);
+
   padding:18px 4px;
+
   border:1px dashed var(--line-strong);
   border-radius:8px;
+
   text-align:center;
+
   margin:8px 0;
 }
 
+/* =========================================================
+   GAME ROW
+========================================================= */
+
 .row{
   display:flex;
-  flex-direction:column;
-  gap:6px;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:8px;
+
   padding:10px 10px;
   margin:6px 0;
+
   background:var(--surface);
+
   border-left:3px solid var(--tier-color);
+
   border-radius:6px;
+
   cursor:pointer;
-  transition:background .12s ease;
+
+  transition:
+    background .12s ease,
+    transform .12s ease;
 }
 
 .row:hover{
@@ -256,43 +330,91 @@ main{
 
 .row-top{
   display:flex;
-  align-items:baseline;
+  align-items:center;
+
   justify-content:space-between;
+
   gap:8px;
+
+  width:100%;
 }
 
 .row-name{
   font-size:13px;
   font-weight:500;
+
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
+
   flex:1;
+
+  min-width:0;
+
+  color:var(--text);
 }
 
 .row-score{
   font-family:'JetBrains Mono',monospace;
+
   font-weight:700;
+
   font-size:14px;
+
   color:var(--tier-color);
+
   flex-shrink:0;
 }
 
-/* Highlighted 9.6+ games */
+/* =========================================================
+   HIGHLIGHTED 9.5+
+========================================================= */
 
-.row.highlight{
+.row.highlighted{
   border-left-color:var(--highlight);
 }
 
-.row.highlight .row-name{
-  color:var(--highlight);
-  font-size:14px;
+.row.highlighted .row-name{
+  font-size:14.5px;
   font-weight:600;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--highlight),
+      var(--highlight-orange),
+      var(--highlight)
+    );
+
+  background-size:250% 100%;
+
+  -webkit-background-clip:text;
+  background-clip:text;
+
+  -webkit-text-fill-color:transparent;
+
+  animation:highlightGradient 7s ease-in-out infinite;
 }
 
-.row.highlight .row-score{
+.row.highlighted .row-score{
+  font-size:15.5px;
   color:var(--highlight);
-  font-size:15px;
+}
+
+@keyframes highlightGradient{
+
+  0%{
+    background-position:0% 50%;
+  }
+
+  50%{
+    background-position:100% 50%;
+  }
+
+  100%{
+    background-position:0% 50%;
+  }
+
 }
 
 /* =========================================================
@@ -302,16 +424,26 @@ main{
 .overlay{
   position:fixed;
   inset:0;
+
   background:rgba(5,4,9,.7);
+
   backdrop-filter:blur(3px);
+
   display:flex;
+
   align-items:flex-start;
   justify-content:center;
+
   padding:40px 16px;
+
   overflow-y:auto;
+
   z-index:100;
+
   opacity:0;
+
   pointer-events:none;
+
   transition:opacity .15s ease;
 }
 
@@ -322,30 +454,45 @@ main{
 
 .modal{
   background:var(--surface);
+
   border:1px solid var(--line-strong);
+
   border-radius:14px;
+
   width:100%;
   max-width:560px;
+
   padding:28px 28px 32px;
 }
 
 .modal-top{
   display:flex;
+
   align-items:flex-start;
   justify-content:space-between;
+
   gap:12px;
+
   margin-bottom:18px;
 }
 
 .modal-name{
   font-family:'Fraunces',serif;
+
   font-weight:600;
+
   font-size:26px;
+
   color:var(--text);
+
   background:transparent;
+
   border:none;
+
   border-bottom:1px solid transparent;
+
   width:100%;
+
   padding:2px 0;
 }
 
@@ -356,119 +503,175 @@ main{
 .modal-close{
   background:transparent;
   border:none;
+
   color:var(--text-faint);
+
   font-size:20px;
+
   cursor:pointer;
+
   padding:4px;
 }
 
+/* =========================================================
+   TIER PICKER
+========================================================= */
+
 .tier-picker{
   display:flex;
+
   gap:8px;
+
   margin-bottom:22px;
+
   flex-wrap:wrap;
 }
 
 .tier-chip{
   font-family:'JetBrains Mono',monospace;
+
   font-size:11.5px;
   font-weight:700;
+
   padding:6px 12px;
+
   border-radius:20px;
+
   border:1px solid var(--line-strong);
+
   background:transparent;
+
   cursor:pointer;
 }
 
+/* =========================================================
+   OVERALL
+========================================================= */
+
 .overall-line{
   display:flex;
+
   align-items:baseline;
+
   gap:10px;
+
   margin-bottom:20px;
+
   padding-bottom:18px;
+
   border-bottom:1px solid var(--line);
 }
 
 .overall-num{
   font-family:'JetBrains Mono',monospace;
+
   font-weight:700;
+
   font-size:34px;
+
   color:var(--gold);
 }
 
 .overall-label{
   font-size:11px;
+
   color:var(--text-faint);
+
   text-transform:uppercase;
+
   letter-spacing:.06em;
 }
 
-.manual-score-wrap{
-  display:none;
-  align-items:center;
-  gap:10px;
-  margin-top:-10px;
-  margin-bottom:18px;
+.manual-rating-wrap{
+  margin-top:-8px;
+  margin-bottom:20px;
+  padding-bottom:18px;
+
+  border-bottom:1px solid var(--line);
 }
 
-body.edit-mode .manual-score-wrap{
-  display:flex;
-}
+.manual-rating-label{
+  display:block;
 
-.manual-score-label{
   font-family:'JetBrains Mono',monospace;
+
   font-size:10px;
+
   color:var(--text-faint);
+
   text-transform:uppercase;
-  letter-spacing:.05em;
+
+  letter-spacing:.06em;
+
+  margin-bottom:7px;
 }
 
-.manual-score-input{
-  width:70px;
+.manual-rating-input{
+  width:100px;
+
   background:rgba(255,255,255,.03);
+
   border:1px solid var(--line-strong);
+
   border-radius:7px;
-  color:var(--gold);
+
+  color:var(--text);
+
   font-family:'JetBrains Mono',monospace;
-  font-weight:700;
-  font-size:13px;
-  padding:7px 8px;
+
+  font-size:14px;
+
+  padding:8px 10px;
 }
 
-.manual-score-clear{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
+.manual-rating-help{
+  margin-left:8px;
+
   color:var(--text-faint);
-  background:transparent;
-  border:none;
-  cursor:pointer;
+
+  font-size:11px;
 }
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
 
 .cat-row{
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
+
   gap:10px;
+
   padding:7px 0;
 }
 
 .cat-label{
   font-size:13px;
+
   color:var(--text-dim);
+
   width:130px;
+
   flex-shrink:0;
 }
 
 .stars{
   display:flex;
+
   gap:2px;
 }
 
 .star{
   width:15px;
   height:15px;
+
   cursor:pointer;
+
   flex-shrink:0;
+
   color:var(--line-strong);
 }
 
@@ -482,49 +685,85 @@ body.edit-mode .manual-score-wrap{
 
 .cat-num{
   font-family:'JetBrains Mono',monospace;
+
   font-size:11px;
+
   color:var(--text-faint);
+
   width:34px;
+
   text-align:right;
 }
 
+/* =========================================================
+   COMMENTARY
+========================================================= */
+
 .commentary-label{
   font-size:11px;
+
   color:var(--text-faint);
+
   text-transform:uppercase;
+
   letter-spacing:.06em;
+
   margin:22px 0 8px;
 }
 
 .commentary{
   width:100%;
+
   min-height:120px;
+
   background:rgba(255,255,255,.02);
+
   border:1px solid var(--line-strong);
+
   border-radius:8px;
+
   color:var(--text);
+
   font-family:'Inter',sans-serif;
+
   font-size:14px;
+
   line-height:1.55;
+
   padding:12px 14px;
+
   resize:vertical;
 }
 
+/* =========================================================
+   FOOTER BUTTONS
+========================================================= */
+
 .modal-footer{
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
+
   margin-top:24px;
 }
 
 .delete-btn{
   font-family:'JetBrains Mono',monospace;
+
   font-size:11.5px;
+
   color:var(--rust);
+
   background:transparent;
+
   border:none;
+
   cursor:pointer;
+
   padding:6px 10px;
+
   border-radius:6px;
 }
 
@@ -534,14 +773,25 @@ body.edit-mode .manual-score-wrap{
 
 .done-btn{
   font-weight:600;
+
   font-size:13.5px;
+
   background:var(--gold);
+
   color:#0f0e17;
+
   border:none;
+
   padding:9px 20px;
+
   border-radius:8px;
+
   cursor:pointer;
 }
+
+/* =========================================================
+   ADD MODAL
+========================================================= */
 
 .add-modal{
   max-width:400px;
@@ -549,57 +799,70 @@ body.edit-mode .manual-score-wrap{
 
 .field-label{
   font-size:11px;
+
   color:var(--text-faint);
+
   text-transform:uppercase;
+
   letter-spacing:.06em;
+
   margin-bottom:6px;
+
   display:block;
 }
 
 .name-input{
   width:100%;
+
   background:rgba(255,255,255,.03);
+
   border:1px solid var(--line-strong);
+
   border-radius:8px;
+
   color:var(--text);
+
   font-size:15px;
+
   padding:11px 12px;
+
   margin-bottom:18px;
 }
 
+/* =========================================================
+   LOADING / ERROR
+========================================================= */
+
 .loading-msg{
   width:100%;
+
   font-family:'JetBrains Mono',monospace;
+
   font-size:12px;
+
   color:var(--text-faint);
+
   text-align:center;
+
   padding:60px 20px;
 }
 
 .error-msg{
   width:100%;
+
   font-family:'JetBrains Mono',monospace;
+
   font-size:12px;
+
   color:var(--rust);
+
   text-align:center;
+
   padding:60px 20px;
 }
 
-.edit-only{
-  display:none!important;
-}
-
-body.edit-mode .edit-only{
-  display:inline-flex!important;
-}
-
-body.edit-mode .btn-add.edit-only,
-body.edit-mode .btn-edit.edit-only{
-  display:inline-block!important;
-}
-
 /* =========================================================
-   RESPONSIVE
+   MOBILE
 ========================================================= */
 
 @media(max-width:700px){
@@ -613,18 +876,20 @@ body.edit-mode .btn-edit.edit-only{
   }
 
   .brand p{
-    padding-left:0;
+    font-size:10px;
   }
 
-  .header-buttons{
+  .header-actions{
+    position:static;
+
+    margin-top:22px;
+
+    justify-content:center;
+  }
+
+  header.top{
     flex-direction:column;
-    align-items:stretch;
-  }
-
-  .btn-add,
-  .btn-edit{
-    padding:10px 14px;
-    font-size:13px;
+    align-items:center;
   }
 
   main{
@@ -634,24 +899,54 @@ body.edit-mode .btn-edit.edit-only{
   .tier{
     min-width:190px;
   }
+
+  .tier-letter{
+    font-size:32px;
+  }
+
 }
+
+/* =========================================================
+   EDIT MODE
+========================================================= */
+
+.edit-only{
+  display:none !important;
+}
+
+body.edit-mode .edit-only{
+  display:inline-flex !important;
+}
+
+body.edit-mode .manual-rating-wrap{
+  display:block;
+}
+
 </style>
+
 </head>
 
 <body>
 
+<!-- =======================================================
+     HEADER
+======================================================== -->
+
 <header class="top">
 
   <div class="brand">
+
     <h1>GAMES PLAYED BY BIEST1X</h1>
+
     <p>a personal tier list</p>
+
   </div>
 
-  <div class="header-buttons">
+  <div class="header-actions">
 
     <button
-      class="btn-edit edit-only"
-      id="headerEdit"
+      class="btn-edit"
+      id="editButton"
     >
       Edit
     </button>
@@ -667,25 +962,42 @@ body.edit-mode .btn-edit.edit-only{
 
 </header>
 
+<!-- =======================================================
+     MAIN
+======================================================== -->
+
 <main id="main">
+
   <div class="loading-msg">
     loading your list…
   </div>
+
 </main>
 
-<!-- ADD GAME -->
+<!-- =======================================================
+     ADD GAME
+======================================================== -->
 
-<div class="overlay" id="addOverlay">
+<div
+  class="overlay"
+  id="addOverlay"
+>
 
   <div class="modal add-modal">
 
     <div class="modal-top">
 
-      <div class="modal-name" style="font-size:20px;">
+      <div
+        class="modal-name"
+        style="font-size:20px;"
+      >
         Add a game
       </div>
 
-      <button class="modal-close" id="closeAdd">
+      <button
+        class="modal-close"
+        id="closeAdd"
+      >
         ✕
       </button>
 
@@ -729,9 +1041,14 @@ body.edit-mode .btn-edit.edit-only{
 
 </div>
 
-<!-- GAME -->
+<!-- =======================================================
+     GAME MODAL
+======================================================== -->
 
-<div class="overlay" id="gameOverlay">
+<div
+  class="overlay"
+  id="gameOverlay"
+>
 
   <div
     class="modal"
@@ -741,6 +1058,7 @@ body.edit-mode .btn-edit.edit-only{
 </div>
 
 <script>
+
 (function(){
 
 /* =========================================================
@@ -749,24 +1067,46 @@ body.edit-mode .btn-edit.edit-only{
 
 const API = '/api';
 
-const EDIT_PASSWORD = 'changeme';
-
-const TOKEN_KEY =
-  'played-admin-token';
-
 /* =========================================================
    CATEGORIES
 ========================================================= */
 
 const CATEGORIES = [
 
-  {key:'gameplay', label:'Gameplay'},
-  {key:'visuals',  label:'Visuals & Graphics'},
-  {key:'story',    label:'Story'},
-  {key:'music',    label:'Music'},
-  {key:'voice',    label:'Voice Acting'},
-  {key:'sound',    label:'Sound Design'},
-  {key:'writing',  label:'Writing'}
+  {
+    key:'gameplay',
+    label:'Gameplay'
+  },
+
+  {
+    key:'visuals',
+    label:'Visuals & Graphics'
+  },
+
+  {
+    key:'story',
+    label:'Story'
+  },
+
+  {
+    key:'music',
+    label:'Music'
+  },
+
+  {
+    key:'voice',
+    label:'Voice Acting'
+  },
+
+  {
+    key:'sound',
+    label:'Sound Design'
+  },
+
+  {
+    key:'writing',
+    label:'Writing'
+  }
 
 ];
 
@@ -844,46 +1184,46 @@ let dragId = null;
 function getTier(key){
 
   return (
-    TIERS.find(t => t.key === key) ||
-    TIERS[2]
+    TIERS.find(
+      t => t.key === key
+    ) || TIERS[2]
   );
-
-}
-
-function calculatedScore(game){
-
-  const values =
-    CATEGORIES.map(c =>
-      Number(game[c.key] || 0)
-    );
-
-  const average =
-    values.reduce((a,b) => a + b, 0) /
-    values.length;
-
-  return Math.round(average * 10) / 10;
 
 }
 
 function score(game){
 
+  const manual =
+    game.total_override;
+
   if(
-    game.manual_score !== null &&
-    game.manual_score !== undefined &&
-    game.manual_score !== ''
+    manual !== null &&
+    manual !== undefined &&
+    manual !== ''
   ){
 
-    return Number(game.manual_score);
+    const value =
+      Number(manual);
+
+    if(Number.isFinite(value))
+      return value;
 
   }
 
-  return calculatedScore(game);
+  const values =
+    CATEGORIES.map(
+      c => Number(game[c.key] || 0)
+    );
 
-}
+  const average =
+    values.reduce(
+      (a,b) => a + b,
+      0
+    ) / CATEGORIES.length;
 
-function isHighlighted(game){
-
-  return score(game) > 9.5;
+  return Math.round(
+    average * 10
+  ) / 10;
 
 }
 
@@ -914,7 +1254,7 @@ function gameById(id){
 function getToken(){
 
   return localStorage.getItem(
-    TOKEN_KEY
+    'played-admin-token'
   );
 
 }
@@ -939,8 +1279,98 @@ function authHeaders(){
 
 }
 
+async function login(){
+
+  const password =
+    prompt(
+      'Enter edit password:'
+    );
+
+  if(password === null)
+    return false;
+
+  try{
+
+    const response =
+      await fetch(
+        API + '/login',
+        {
+          method:'POST',
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
+          body:JSON.stringify({
+            password
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(
+      !response.ok ||
+      !data.success
+    ){
+
+      alert(
+        'Wrong password.'
+      );
+
+      return false;
+
+    }
+
+    localStorage.setItem(
+      'played-admin-token',
+      data.token
+    );
+
+    localStorage.setItem(
+      'played-edit-unlocked',
+      'yes'
+    );
+
+    editMode = true;
+
+    render();
+    renderHeader();
+
+    return true;
+
+  }catch(error){
+
+    alert(
+      'Could not log in: ' +
+      error.message
+    );
+
+    return false;
+
+  }
+
+}
+
+function logout(){
+
+  localStorage.removeItem(
+    'played-admin-token'
+  );
+
+  localStorage.removeItem(
+    'played-edit-unlocked'
+  );
+
+  editMode = false;
+
+  render();
+  renderHeader();
+
+}
+
 /* =========================================================
-   API
+   API GET
 ========================================================= */
 
 async function apiGetGames(){
@@ -995,6 +1425,7 @@ async function load(){
     await apiGetGames();
 
     render();
+    renderHeader();
 
   }catch(error){
 
@@ -1010,7 +1441,9 @@ async function load(){
 
           <br><br>
 
-          ${escapeHtml(error.message)}
+          ${escapeHtml(
+            error.message
+          )}
 
         </div>
 
@@ -1019,6 +1452,73 @@ async function load(){
   }
 
 }
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+function renderHeader(){
+
+  const button =
+    document.getElementById(
+      'editButton'
+    );
+
+  const add =
+    document.getElementById(
+      'openAdd'
+    );
+
+  if(editMode){
+
+    button.textContent =
+      'Exit';
+
+    button.classList.add(
+      'active'
+    );
+
+    add.style.display =
+      'inline-block';
+
+  }else{
+
+    button.textContent =
+      'Edit';
+
+    button.classList.remove(
+      'active'
+    );
+
+    add.style.display =
+      'none';
+
+  }
+
+}
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+document
+  .getElementById('editButton')
+  .addEventListener(
+    'click',
+    async () => {
+
+      if(editMode){
+
+        logout();
+
+        return;
+
+      }
+
+      await login();
+
+    }
+  );
 
 /* =========================================================
    RENDER
@@ -1038,25 +1538,31 @@ function render(){
 
   main.innerHTML = '';
 
-  TIERS.forEach(tier => {
+  TIERS.forEach(
+    tier => {
 
-    const tierGames =
-      games.filter(
-        g => g.tier === tier.key
+      const tierGames =
+        games.filter(
+          g => g.tier === tier.key
+        );
+
+      main.appendChild(
+        renderTier(
+          tier,
+          tierGames
+        )
       );
 
-    main.appendChild(
-      renderTier(
-        tier,
-        tierGames
-      )
-    );
-
-  });
+    }
+  );
 
   renderAddTierPicker();
 
 }
+
+/* =========================================================
+   RENDER TIER
+========================================================= */
 
 function renderTier(
   tier,
@@ -1095,16 +1601,12 @@ function renderTier(
       ${tier.letter}
     </span>
 
-    <div>
+    <div class="tier-label">
+      ${tier.label}
+    </div>
 
-      <div class="tier-label">
-        ${tier.label}
-      </div>
-
-      <div class="tier-sub">
-        ${tier.sub}
-      </div>
-
+    <div class="tier-sub">
+      ${tier.sub}
     </div>
 
     <div class="tier-meta">
@@ -1117,7 +1619,9 @@ function renderTier(
 
   `;
 
-  section.appendChild(head);
+  section.appendChild(
+    head
+  );
 
   const rows =
     document.createElement(
@@ -1143,30 +1647,40 @@ function renderTier(
     empty.textContent =
       'No games here yet.';
 
-    rows.appendChild(empty);
+    rows.appendChild(
+      empty
+    );
 
   }else{
 
-    tierGames.forEach(game => {
+    tierGames.forEach(
+      game => {
 
-      rows.appendChild(
-        renderRow(
-          game,
-          tier
-        )
-      );
+        rows.appendChild(
+          renderRow(
+            game,
+            tier
+          )
+        );
 
-    });
+      }
+    );
 
   }
 
-  section.appendChild(rows);
+  section.appendChild(
+    rows
+  );
 
   setupDnD(rows);
 
   return section;
 
 }
+
+/* =========================================================
+   RENDER GAME ROW
+========================================================= */
 
 function renderRow(
   game,
@@ -1181,19 +1695,22 @@ function renderRow(
   row.className =
     'row';
 
-  if(isHighlighted(game)){
-
-    row.classList.add(
-      'highlight'
-    );
-
-  }
-
   row.dataset.id =
     game.id;
 
   row.draggable =
     editMode;
+
+  const currentScore =
+    score(game);
+
+  if(currentScore > 9.5){
+
+    row.classList.add(
+      'highlighted'
+    );
+
+  }
 
   row.innerHTML = `
 
@@ -1201,13 +1718,17 @@ function renderRow(
 
       <div
         class="row-name"
-        title="${escapeHtml(game.name)}"
+        title="${escapeHtml(
+          game.name
+        )}"
       >
-        ${escapeHtml(game.name)}
+        ${escapeHtml(
+          game.name
+        )}
       </div>
 
       <div class="row-score">
-        ${score(game).toFixed(1)}
+        ${currentScore.toFixed(1)}
       </div>
 
     </div>
@@ -1237,7 +1758,7 @@ function renderRow(
 }
 
 /* =========================================================
-   DRAG / DROP
+   DRAG & DROP
 ========================================================= */
 
 function setupDnD(container){
@@ -1291,16 +1812,19 @@ function setupDnD(container){
         .querySelectorAll(
           '.row'
         )
-        .forEach(r => {
+        .forEach(
+          r => {
 
-          r.classList.remove(
-            'drag-over-top',
-            'drag-over-bottom'
-          );
+            r.classList.remove(
+              'drag-over-top',
+              'drag-over-bottom'
+            );
 
-        });
+          }
+        );
 
-      dragId = null;
+      dragId =
+        null;
 
     }
   );
@@ -1324,14 +1848,16 @@ function setupDnD(container){
         .querySelectorAll(
           '.row'
         )
-        .forEach(r => {
+        .forEach(
+          r => {
 
-          r.classList.remove(
-            'drag-over-top',
-            'drag-over-bottom'
-          );
+            r.classList.remove(
+              'drag-over-top',
+              'drag-over-bottom'
+            );
 
-        });
+          }
+        );
 
       if(after){
 
@@ -1421,11 +1947,13 @@ function setupDnD(container){
             API + '/games/move',
             {
               method:'POST',
-              headers:authHeaders(),
+              headers:
+                authHeaders(),
               body:JSON.stringify({
                 id:dragId,
                 tier:targetTier,
-                position:targetPosition
+                position:
+                  targetPosition
               })
             }
           );
@@ -1447,6 +1975,9 @@ function setupDnD(container){
 
         await apiGetGames();
 
+        dragId =
+          null;
+
         render();
 
       }catch(error){
@@ -1459,8 +1990,6 @@ function setupDnD(container){
         );
 
       }
-
-      dragId = null;
 
     }
   );
@@ -1480,7 +2009,10 @@ function getDragAfterElement(
     ];
 
   return rows.reduce(
-    (closest,child) => {
+    (
+      closest,
+      child
+    ) => {
 
       const box =
         child.getBoundingClientRect();
@@ -1529,54 +2061,56 @@ function renderAddTierPicker(){
 
   wrap.innerHTML = '';
 
-  TIERS.forEach(tier => {
+  TIERS.forEach(
+    tier => {
 
-    const chip =
-      document.createElement(
-        'button'
+      const chip =
+        document.createElement(
+          'button'
+        );
+
+      chip.className =
+        'tier-chip';
+
+      chip.textContent =
+        tier.letter;
+
+      chip.style.borderColor =
+        tier.color;
+
+      chip.style.color =
+        addTier === tier.key
+          ? '#0f0e17'
+          : tier.color;
+
+      chip.style.background =
+        addTier === tier.key
+          ? tier.color
+          : 'transparent';
+
+      chip.addEventListener(
+        'click',
+        () => {
+
+          addTier =
+            tier.key;
+
+          renderAddTierPicker();
+
+        }
       );
 
-    chip.className =
-      'tier-chip';
+      wrap.appendChild(
+        chip
+      );
 
-    chip.textContent =
-      tier.letter;
-
-    chip.style.borderColor =
-      tier.color;
-
-    chip.style.color =
-      addTier === tier.key
-        ? '#0f0e17'
-        : tier.color;
-
-    chip.style.background =
-      addTier === tier.key
-        ? tier.color
-        : 'transparent';
-
-    chip.addEventListener(
-      'click',
-      () => {
-
-        addTier =
-          tier.key;
-
-        renderAddTierPicker();
-
-      }
-    );
-
-    wrap.appendChild(chip);
-
-  });
+    }
+  );
 
 }
 
 document
-  .getElementById(
-    'openAdd'
-  )
+  .getElementById('openAdd')
   .addEventListener(
     'click',
     () => {
@@ -1587,9 +2121,11 @@ document
       document
         .getElementById(
           'addName'
-        ).value = '';
+        )
+        .value = '';
 
-      addTier = 'B';
+      addTier =
+        'B';
 
       renderAddTierPicker();
 
@@ -1602,12 +2138,15 @@ document
         );
 
       setTimeout(
-        () =>
+        () => {
+
           document
             .getElementById(
               'addName'
             )
-            .focus(),
+            .focus();
+
+        },
         50
       );
 
@@ -1615,9 +2154,7 @@ document
   );
 
 document
-  .getElementById(
-    'closeAdd'
-  )
+  .getElementById('closeAdd')
   .addEventListener(
     'click',
     () => {
@@ -1634,9 +2171,7 @@ document
   );
 
 document
-  .getElementById(
-    'addOverlay'
-  )
+  .getElementById('addOverlay')
   .addEventListener(
     'click',
     event => {
@@ -1681,7 +2216,8 @@ async function confirmAdd(){
         API + '/games',
         {
           method:'POST',
-          headers:authHeaders(),
+          headers:
+            authHeaders(),
           body:JSON.stringify({
             name,
             tier:addTier
@@ -1728,18 +2264,14 @@ async function confirmAdd(){
 }
 
 document
-  .getElementById(
-    'confirmAdd'
-  )
+  .getElementById('confirmAdd')
   .addEventListener(
     'click',
     confirmAdd
   );
 
 document
-  .getElementById(
-    'addName'
-  )
+  .getElementById('addName')
   .addEventListener(
     'keydown',
     event => {
@@ -1747,8 +2279,11 @@ document
       if(
         event.key ===
         'Enter'
-      )
+      ){
+
         confirmAdd();
+
+      }
 
     }
   );
@@ -1759,7 +2294,8 @@ document
 
 function openGame(id){
 
-  currentGameId = id;
+  currentGameId =
+    id;
 
   renderGameModal();
 
@@ -1783,7 +2319,8 @@ function closeGame(){
       'open'
     );
 
-  currentGameId = null;
+  currentGameId =
+    null;
 
   render();
 
@@ -1808,6 +2345,10 @@ document
 
     }
   );
+
+/* =========================================================
+   GAME MODAL RENDER
+========================================================= */
 
 function renderGameModal(){
 
@@ -1848,15 +2389,19 @@ function renderGameModal(){
               return `
 
                 <span
-                  class="
-                    star
-                    ${filled ? 'filled' : ''}
-                    ${editMode ? '' : 'readonly'}
-                  "
-                  data-cat="${category.key}"
-                  data-val="${i+1}"
+                  class="star
+                  ${filled ? 'filled' : ''}
+                  ${editMode ? '' : 'readonly'}"
+                  data-cat="${
+                    category.key
+                  }"
+                  data-val="${
+                    i + 1
+                  }"
                 >
+
                   ${starSvg()}
+
                 </span>
 
               `;
@@ -1889,9 +2434,14 @@ function renderGameModal(){
     ).join('');
 
   const manualValue =
-    game.manual_score !== null &&
-    game.manual_score !== undefined
-      ? Number(game.manual_score).toFixed(1)
+    game.total_override;
+
+  const manualDisplay =
+    manualValue !== null &&
+    manualValue !== undefined
+      ? Number(
+          manualValue
+        ).toFixed(1)
       : '';
 
   modal.innerHTML = `
@@ -1901,9 +2451,13 @@ function renderGameModal(){
       <input
         class="modal-name"
         id="editName"
-        value="${escapeHtml(game.name)}"
+        value="${escapeHtml(
+          game.name
+        )}"
         maxlength="80"
-        ${editMode ? '' : 'readonly'}
+        ${editMode
+          ? ''
+          : 'readonly'}
       >
 
       <button
@@ -1915,15 +2469,23 @@ function renderGameModal(){
 
     </div>
 
-    <div
-      class="tier-picker edit-only"
-      id="editTierPicker"
-    ></div>
+    ${
+      editMode
+        ? `
+          <div
+            class="tier-picker"
+            id="editTierPicker"
+          ></div>
+        `
+        : ''
+    }
 
     <div class="overall-line">
 
       <span class="overall-num">
+
         ${score(game).toFixed(1)}
+
       </span>
 
       <span class="overall-label">
@@ -1932,41 +2494,57 @@ function renderGameModal(){
 
     </div>
 
-    <div class="manual-score-wrap">
+    ${
+      editMode
+        ? `
 
-      <span class="manual-score-label">
-        Manual overall
-      </span>
+          <div
+            class="manual-rating-wrap"
+          >
 
-      <input
-        id="manualScore"
-        class="manual-score-input"
-        type="number"
-        min="0"
-        max="10"
-        step="0.1"
-        placeholder="auto"
-        value="${manualValue}"
-      >
+            <label
+              class="manual-rating-label"
+            >
+              Manual overall rating
+            </label>
 
-      <button
-        class="manual-score-clear"
-        id="clearManualScore"
-        title="Use calculated rating"
-      >
-        use auto
-      </button>
+            <input
+              class="manual-rating-input"
+              id="manualRating"
+              type="number"
+              min="0"
+              max="10"
+              step="0.1"
+              value="${manualDisplay}"
+              placeholder="Auto"
+            >
 
-    </div>
+            <span
+              class="manual-rating-help"
+            >
+              Leave empty to use calculated rating
+            </span>
+
+          </div>
+
+        `
+        : ''
+    }
 
     <div id="catRows">
+
       ${catRows}
+
     </div>
 
     <div class="commentary-label">
-      ${editMode
-        ? 'Your commentary'
-        : 'Commentary'}
+
+      ${
+        editMode
+          ? 'Your commentary'
+          : 'Commentary'
+      }
+
     </div>
 
     <textarea
@@ -1977,19 +2555,27 @@ function renderGameModal(){
           ? 'What did you think of it?'
           : 'No commentary yet.'
       }"
-      ${editMode ? '' : 'readonly'}
+      ${editMode
+        ? ''
+        : 'readonly'}
     >${escapeHtml(
       game.commentary || ''
     )}</textarea>
 
     <div class="modal-footer">
 
-      <button
-        class="delete-btn edit-only"
-        id="deleteGame"
-      >
-        Delete game
-      </button>
+      ${
+        editMode
+          ? `
+            <button
+              class="delete-btn"
+              id="deleteGame"
+            >
+              Delete game
+            </button>
+          `
+          : ''
+      }
 
       <button
         class="done-btn"
@@ -2057,15 +2643,18 @@ function renderGameModal(){
 
               const response =
                 await fetch(
-                  API + '/games/move',
+                  API +
+                  '/games/move',
                   {
                     method:'POST',
-                    headers:authHeaders(),
-                    body:JSON.stringify({
-                      id:game.id,
-                      tier:tier.key,
-                      position:0
-                    })
+                    headers:
+                      authHeaders(),
+                    body:
+                      JSON.stringify({
+                        id:game.id,
+                        tier:tier.key,
+                        position:0
+                      })
                   }
                 );
 
@@ -2110,7 +2699,7 @@ function renderGameModal(){
   }
 
   /* =======================================================
-     BUTTONS
+     CLOSE
   ======================================================= */
 
   document
@@ -2149,7 +2738,8 @@ function renderGameModal(){
 
             await updateGame({
               id:game.id,
-              name:event.target.value
+              name:
+                event.target.value
             });
 
           }catch(error){
@@ -2180,7 +2770,8 @@ function renderGameModal(){
 
             await updateGame({
               id:game.id,
-              commentary:event.target.value
+              commentary:
+                event.target.value
             });
 
           }catch(error){
@@ -2196,119 +2787,39 @@ function renderGameModal(){
       );
 
     /* =====================================================
-       MANUAL SCORE
+       MANUAL OVERALL
     ===================================================== */
-
-    const manualInput =
-      document.getElementById(
-        'manualScore'
-      );
-
-    manualInput
-      .addEventListener(
-        'change',
-        async () => {
-
-          let value =
-            manualInput.value.trim();
-
-          if(value === ''){
-
-            try{
-
-              await updateGame({
-                id:game.id,
-                manual_score:null
-              });
-
-              await apiGetGames();
-
-              renderGameModal();
-
-            }catch(error){
-
-              alert(
-                'Could not save rating: ' +
-                error.message
-              );
-
-            }
-
-            return;
-
-          }
-
-          let number =
-            Number(value);
-
-          if(
-            !Number.isFinite(number)
-          ){
-
-            manualInput.value =
-              manualValue;
-
-            return;
-
-          }
-
-          number =
-            Math.max(
-              0,
-              Math.min(
-                10,
-                Math.round(
-                  number * 10
-                ) / 10
-              )
-            );
-
-          try{
-
-            await updateGame({
-              id:game.id,
-              manual_score:number
-            });
-
-            await apiGetGames();
-
-            renderGameModal();
-
-          }catch(error){
-
-            alert(
-              'Could not save rating: ' +
-              error.message
-            );
-
-          }
-
-        }
-      );
 
     document
       .getElementById(
-        'clearManualScore'
+        'manualRating'
       )
       .addEventListener(
-        'click',
-        async () => {
+        'change',
+        async event => {
+
+          const value =
+            event.target.value.trim();
 
           try{
 
             await updateGame({
-              id:game.id,
-              manual_score:null
-            });
 
-            await apiGetGames();
+              id:game.id,
+
+              total_override:
+                value === ''
+                  ? null
+                  : Number(value)
+
+            });
 
             renderGameModal();
 
           }catch(error){
 
             alert(
-              'Could not reset rating: ' +
+              'Could not save manual rating: ' +
               error.message
             );
 
@@ -2356,8 +2867,12 @@ function renderGameModal(){
               try{
 
                 await updateGame({
+
                   id:game.id,
-                  [category]:newValue
+
+                  [category]:
+                    newValue
+
                 });
 
                 await apiGetGames();
@@ -2409,7 +2924,8 @@ function renderGameModal(){
                 ),
                 {
                   method:'DELETE',
-                  headers:authHeaders()
+                  headers:
+                    authHeaders()
                 }
               );
 
@@ -2461,10 +2977,12 @@ async function updateGame(
       API + '/games',
       {
         method:'PUT',
-        headers:authHeaders(),
-        body:JSON.stringify(
-          changes
-        )
+        headers:
+          authHeaders(),
+        body:
+          JSON.stringify(
+            changes
+          )
       }
     );
 
@@ -2484,8 +3002,6 @@ async function updateGame(
   }
 
   await apiGetGames();
-
-  render();
 
 }
 
@@ -2511,137 +3027,6 @@ function starSvg(){
     </svg>
 
   `;
-
-}
-
-/* =========================================================
-   EDIT MODE
-========================================================= */
-
-document
-  .getElementById(
-    'headerEdit'
-  )
-  .addEventListener(
-    'click',
-    () => {
-
-      if(editMode){
-
-        lockEdit();
-
-      }else{
-
-        tryUnlock();
-
-      }
-
-    }
-  );
-
-function tryUnlock(){
-
-  const password =
-    prompt(
-      'Enter edit password:'
-    );
-
-  if(password === null)
-    return;
-
-  if(
-    password ===
-    EDIT_PASSWORD
-  ){
-
-    loginAndUnlock(
-      password
-    );
-
-  }else{
-
-    alert(
-      'Wrong password.'
-    );
-
-  }
-
-}
-
-async function loginAndUnlock(
-  password
-){
-
-  try{
-
-    const response =
-      await fetch(
-        API + '/login',
-        {
-          method:'POST',
-          headers:{
-            'Content-Type':
-              'application/json'
-          },
-          body:JSON.stringify({
-            password
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(
-      !response.ok ||
-      !data.success
-    ){
-
-      throw new Error(
-        data.error ||
-        'Login failed'
-      );
-
-    }
-
-    localStorage.setItem(
-      TOKEN_KEY,
-      data.token
-    );
-
-    localStorage.setItem(
-      'played-edit-unlocked',
-      'yes'
-    );
-
-    editMode = true;
-
-    render();
-
-  }catch(error){
-
-    alert(
-      'Could not enter edit mode: ' +
-      error.message
-    );
-
-  }
-
-}
-
-function lockEdit(){
-
-  localStorage.removeItem(
-    'played-edit-unlocked'
-  );
-
-  localStorage.removeItem(
-    TOKEN_KEY
-  );
-
-  editMode = false;
-
-  render();
 
 }
 
@@ -2701,6 +3086,7 @@ document.addEventListener(
 load();
 
 })();
+
 </script>
 
 </body>
