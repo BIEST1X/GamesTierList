@@ -1,5 +1,3 @@
-let legacyTierMigrationDone = false;
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -49,52 +47,6 @@ export default {
           (tier_key, letter, label, sub)
           VALUES (?, ?, ?, ?)
         `).bind(...row).run();
-      }
-
-      // One-time normalization for the old tier keys.
-      // The old database used S/A/B/F while the current UI uses
-      // SS/S/A/B. The previous frontend only converted these in GET,
-      // so drag/drop could operate on the wrong stored tier.
-      if (!legacyTierMigrationDone) {
-        const legacyTierMap = [
-          ["S", "SS"],
-          ["A", "S"],
-          ["B", "A"],
-          ["F", "B"]
-        ];
-
-        for (const [oldTier, newTier] of legacyTierMap) {
-          await env.DB.prepare(`
-            UPDATE games
-            SET tier = ?
-            WHERE tier = ?
-          `).bind(newTier, oldTier).run();
-        }
-
-        const tierKeys = ["SS", "S", "A", "B", "C", "X", "G"];
-
-        for (const tierKey of tierKeys) {
-          const ordered = await env.DB.prepare(`
-            SELECT id
-            FROM games
-            WHERE tier = ?
-            ORDER BY position ASC, id ASC
-          `).bind(tierKey).all();
-
-          const statements = (ordered.results || []).map((game, index) =>
-            env.DB.prepare(`
-              UPDATE games
-              SET position = ?
-              WHERE id = ?
-            `).bind(index, game.id)
-          );
-
-          if (statements.length) {
-            await env.DB.batch(statements);
-          }
-        }
-
-        legacyTierMigrationDone = true;
       }
 
       // Seed the new rating table from the old seven rating columns.
@@ -160,11 +112,17 @@ export default {
     // LOGIN
     // =========================================================
 
-    if (url.pathname === "/api/login" && request.method === "POST") {
+    if (
+      url.pathname === "/api/login" &&
+      request.method === "POST"
+    ) {
       try {
         const body = await request.json();
 
-        if (!body.password || body.password !== env.ADMIN_PASSWORD) {
+        if (
+          !body.password ||
+          body.password !== env.ADMIN_PASSWORD
+        ) {
           return Response.json(
             {
               success: false,
@@ -178,6 +136,7 @@ export default {
           success: true,
           token: env.ADMIN_PASSWORD
         });
+
       } catch {
         return Response.json(
           {
@@ -190,10 +149,13 @@ export default {
     }
 
     // =========================================================
-    // SETUP / MIGRATION
+    // SETUP
     // =========================================================
 
-    if (url.pathname === "/api/setup" && request.method === "POST") {
+    if (
+      url.pathname === "/api/setup" &&
+      request.method === "POST"
+    ) {
       if (!isAdmin(request)) {
         return Response.json(
           {
@@ -211,6 +173,7 @@ export default {
           success: true,
           message: "Database setup completed safely."
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -228,16 +191,17 @@ export default {
 
     if (url.pathname === "/api/test") {
       try {
-        await setupDatabase();
-
         const result = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM games")
+          .prepare(
+            "SELECT COUNT(*) AS count FROM games"
+          )
           .first();
 
         return Response.json({
           success: true,
           games: result.count
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -253,9 +217,18 @@ export default {
     // GET GAMES
     // =========================================================
 
-    if (url.pathname === "/api/games" && request.method === "GET") {
+    if (
+      url.pathname === "/api/games" &&
+      request.method === "GET"
+    ) {
       try {
-        await setupDatabase();
+        /*
+         * IMPORTANT:
+         * Do NOT call setupDatabase() here.
+         *
+         * Database setup is a one-time operation.
+         * Calling it on every page load caused huge delays.
+         */
 
         const gamesResult = await env.DB.prepare(`
           SELECT
@@ -276,17 +249,16 @@ export default {
         `).all();
 
         const games = (gamesResult.results || []).map(game => {
-          let tier = game.tier;
 
-          const legacyMap = {
-            S: "SS",
-            A: "S",
-            B: "A",
-            F: "B",
-            X: "X"
-          };
+          /*
+           * IMPORTANT:
+           * Do NOT convert tiers here.
+           *
+           * The database tier is the actual tier.
+           * Manual category changes must remain untouched.
+           */
 
-          tier = legacyMap[tier] || tier;
+          const tier = game.tier;
 
           const ratings = [
             Number(game.gameplay || 0),
@@ -302,8 +274,10 @@ export default {
           const calculated =
             Math.round(
               (
-                ratings.reduce((a, b) => a + b, 0) /
-                ratings.length
+                ratings.reduce(
+                  (a, b) => a + b,
+                  0
+                ) / ratings.length
               ) * 10
             ) / 10;
 
@@ -347,6 +321,7 @@ export default {
           success: true,
           games
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -362,7 +337,10 @@ export default {
     // UPDATE GAME
     // =========================================================
 
-    if (url.pathname === "/api/games" && request.method === "PUT") {
+    if (
+      url.pathname === "/api/games" &&
+      request.method === "PUT"
+    ) {
       if (!isAdmin(request)) {
         return Response.json(
           {
@@ -374,8 +352,6 @@ export default {
       }
 
       try {
-        await setupDatabase();
-
         const body = await request.json();
 
         if (!body.id) {
@@ -383,7 +359,9 @@ export default {
         }
 
         const current = await env.DB
-          .prepare("SELECT * FROM games WHERE id = ?")
+          .prepare(
+            "SELECT * FROM games WHERE id = ?"
+          )
           .bind(body.id)
           .first();
 
@@ -406,8 +384,6 @@ export default {
             ? String(body.tier)
             : current.tier;
 
-        const storedTier = tier;
-
         await env.DB.prepare(`
           UPDATE games
           SET
@@ -417,7 +393,7 @@ export default {
           WHERE id = ?
         `).bind(
           name,
-          storedTier,
+          tier,
           commentary,
           body.id
         ).run();
@@ -460,7 +436,8 @@ export default {
           ) {
             customOverall = null;
           } else {
-            customOverall = Number(body.custom_overall);
+            customOverall =
+              Number(body.custom_overall);
 
             if (!Number.isFinite(customOverall)) {
               customOverall = null;
@@ -496,9 +473,12 @@ export default {
             writing = excluded.writing,
             voice_acting = excluded.voice_acting,
             music_audio = excluded.music_audio,
-            technical_performance = excluded.technical_performance,
-            emotional_impact = excluded.emotional_impact,
-            custom_overall = excluded.custom_overall
+            technical_performance =
+              excluded.technical_performance,
+            emotional_impact =
+              excluded.emotional_impact,
+            custom_overall =
+              excluded.custom_overall
         `).bind(
           body.id,
           values.gameplay,
@@ -515,6 +495,7 @@ export default {
         return Response.json({
           success: true
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -530,7 +511,10 @@ export default {
     // ADD GAME
     // =========================================================
 
-    if (url.pathname === "/api/games" && request.method === "POST") {
+    if (
+      url.pathname === "/api/games" &&
+      request.method === "POST"
+    ) {
       if (!isAdmin(request)) {
         return Response.json(
           {
@@ -542,22 +526,23 @@ export default {
       }
 
       try {
-        await setupDatabase();
-
         const body = await request.json();
 
         const id =
           body.id ||
           "g_" +
           Date.now().toString(36) +
-          Math.random().toString(36).substring(2, 7);
+          Math.random()
+            .toString(36)
+            .substring(2, 7);
 
-        const maxPosition = await env.DB
-          .prepare(`
-            SELECT MAX(position) AS maxPosition
-            FROM games
-          `)
-          .first();
+        const maxPosition =
+          await env.DB
+            .prepare(`
+              SELECT MAX(position) AS maxPosition
+              FROM games
+            `)
+            .first();
 
         const position =
           maxPosition?.maxPosition != null
@@ -608,6 +593,7 @@ export default {
           success: true,
           id
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -638,26 +624,29 @@ export default {
       }
 
       try {
-        await setupDatabase();
-
         const id =
           decodeURIComponent(
             url.pathname.split("/").pop()
           );
 
         await env.DB
-          .prepare("DELETE FROM game_ratings WHERE game_id = ?")
+          .prepare(
+            "DELETE FROM game_ratings WHERE game_id = ?"
+          )
           .bind(id)
           .run();
 
         await env.DB
-          .prepare("DELETE FROM games WHERE id = ?")
+          .prepare(
+            "DELETE FROM games WHERE id = ?"
+          )
           .bind(id)
           .run();
 
         return Response.json({
           success: true
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -688,114 +677,180 @@ export default {
       }
 
       try {
-        await setupDatabase();
-
         const body = await request.json();
 
         if (!body.id || !body.tier) {
-          throw new Error("Missing game ID or tier");
+          throw new Error(
+            "Missing game ID or tier"
+          );
         }
 
-        const movingId = String(body.id);
+        const gameId = String(body.id);
         const targetTier = String(body.tier);
 
-        const requestedPosition = Math.max(
-          0,
-          Number.isFinite(Number(body.position))
-            ? Number(body.position)
-            : 0
-        );
+        let requestedPosition =
+          Number(body.position);
 
-        const current = await env.DB
-          .prepare("SELECT tier FROM games WHERE id = ?")
-          .bind(movingId)
-          .first();
+        if (!Number.isFinite(requestedPosition)) {
+          requestedPosition = 0;
+        }
 
-        if (!current) {
+        requestedPosition =
+          Math.max(
+            0,
+            Math.floor(requestedPosition)
+          );
+
+        // -------------------------------------------------------
+        // Find the game's current tier.
+        // -------------------------------------------------------
+
+        const movingGame =
+          await env.DB
+            .prepare(`
+              SELECT id, tier
+              FROM games
+              WHERE id = ?
+            `)
+            .bind(gameId)
+            .first();
+
+        if (!movingGame) {
           throw new Error("Game not found");
         }
 
-        const oldTier = String(current.tier);
+        const sourceTier =
+          String(movingGame.tier);
 
-        const targetResult = await env.DB.prepare(`
-          SELECT id
-          FROM games
-          WHERE tier = ?
-            AND id <> ?
-          ORDER BY position ASC, id ASC
-        `).bind(
-          targetTier,
-          movingId
-        ).all();
+        // -------------------------------------------------------
+        // Get current games from source tier.
+        // -------------------------------------------------------
 
-        const targetIds =
-          (targetResult.results || []).map(row => row.id);
+        const sourceResult =
+          await env.DB.prepare(`
+            SELECT id
+            FROM games
+            WHERE tier = ?
+            AND id != ?
+            ORDER BY position ASC, id ASC
+          `).bind(
+            sourceTier,
+            gameId
+          ).all();
 
-        const insertAt = Math.min(
-          requestedPosition,
-          targetIds.length
-        );
+        const sourceIds =
+          (sourceResult.results || [])
+            .map(row => row.id);
+
+        // -------------------------------------------------------
+        // If changing category, get target tier separately.
+        // -------------------------------------------------------
+
+        let targetIds = [];
+
+        if (sourceTier === targetTier) {
+          targetIds = [...sourceIds];
+        } else {
+          const targetResult =
+            await env.DB.prepare(`
+              SELECT id
+              FROM games
+              WHERE tier = ?
+              ORDER BY position ASC, id ASC
+            `).bind(
+              targetTier
+            ).all();
+
+          targetIds =
+            (targetResult.results || [])
+              .map(row => row.id);
+        }
+
+        // -------------------------------------------------------
+        // Clamp requested position.
+        // -------------------------------------------------------
+
+        const insertPosition =
+          Math.min(
+            requestedPosition,
+            targetIds.length
+          );
 
         targetIds.splice(
-          insertAt,
+          insertPosition,
           0,
-          movingId
+          gameId
         );
 
-        const statements = [
-          env.DB.prepare(`
-            UPDATE games
-            SET tier = ?
-            WHERE id = ?
-          `).bind(
-            targetTier,
-            movingId
-          )
-        ];
+        // -------------------------------------------------------
+        // Build one D1 batch.
+        //
+        // This is much faster than doing a separate database
+        // request for every game.
+        // -------------------------------------------------------
 
-        targetIds.forEach((id, index) => {
+        const statements = [];
+
+        // First change tier if necessary.
+        if (sourceTier !== targetTier) {
+          statements.push(
+            env.DB.prepare(`
+              UPDATE games
+              SET tier = ?
+              WHERE id = ?
+            `).bind(
+              targetTier,
+              gameId
+            )
+          );
+        }
+
+        // Re-number source tier.
+        for (
+          let i = 0;
+          i < sourceIds.length;
+          i++
+        ) {
           statements.push(
             env.DB.prepare(`
               UPDATE games
               SET position = ?
               WHERE id = ?
             `).bind(
-              index,
-              id
+              i,
+              sourceIds[i]
             )
           );
-        });
-
-        if (oldTier !== targetTier) {
-          const oldResult = await env.DB.prepare(`
-            SELECT id
-            FROM games
-            WHERE tier = ?
-            ORDER BY position ASC, id ASC
-          `).bind(oldTier).all();
-
-          (oldResult.results || []).forEach((row, index) => {
-            statements.push(
-              env.DB.prepare(`
-                UPDATE games
-                SET position = ?
-                WHERE id = ?
-              `).bind(
-                index,
-                row.id
-              )
-            );
-          });
         }
 
-        // D1 batch() executes the reorder as one atomic batch,
-        // avoiding partial position updates and reducing
-        // network round trips.
-        await env.DB.batch(statements);
+        // Re-number target tier.
+        for (
+          let i = 0;
+          i < targetIds.length;
+          i++
+        ) {
+          statements.push(
+            env.DB.prepare(`
+              UPDATE games
+              SET position = ?
+              WHERE id = ?
+            `).bind(
+              i,
+              targetIds[i]
+            )
+          );
+        }
+
+        if (statements.length) {
+          await env.DB.batch(statements);
+        }
 
         return Response.json({
-          success: true
+          success: true,
+          tier: targetTier,
+          position: insertPosition
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -808,7 +863,7 @@ export default {
     }
 
     // =========================================================
-    // REORDER GAME
+    // REORDER
     // =========================================================
 
     if (
@@ -827,30 +882,49 @@ export default {
 
       try {
         const body = await request.json();
-        const positions = body.positions || {};
+
+        const positions =
+          body.positions || {};
 
         const statements = [];
 
-        for (const [id, position] of Object.entries(positions)) {
+        for (
+          const [id, position]
+          of Object.entries(positions)
+        ) {
+          const numericPosition =
+            Number(position);
+
+          if (
+            !Number.isFinite(
+              numericPosition
+            )
+          ) {
+            continue;
+          }
+
           statements.push(
             env.DB.prepare(`
               UPDATE games
               SET position = ?
               WHERE id = ?
             `).bind(
-              Number(position),
+              numericPosition,
               id
             )
           );
         }
 
         if (statements.length) {
-          await env.DB.batch(statements);
+          await env.DB.batch(
+            statements
+          );
         }
 
         return Response.json({
           success: true
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -871,30 +945,37 @@ export default {
       request.method === "GET"
     ) {
       try {
-        await setupDatabase();
+        /*
+         * IMPORTANT:
+         * No setupDatabase() here.
+         *
+         * This endpoint must be fast.
+         */
 
-        const result = await env.DB
-          .prepare(`
-            SELECT *
-            FROM tier_settings
-            ORDER BY
-              CASE tier_key
-                WHEN 'SS' THEN 1
-                WHEN 'S' THEN 2
-                WHEN 'A' THEN 3
-                WHEN 'B' THEN 4
-                WHEN 'C' THEN 5
-                WHEN 'X' THEN 6
-                WHEN 'G' THEN 7
-                ELSE 99
-              END
-          `)
-          .all();
+        const result =
+          await env.DB
+            .prepare(`
+              SELECT *
+              FROM tier_settings
+              ORDER BY
+                CASE tier_key
+                  WHEN 'SS' THEN 1
+                  WHEN 'S' THEN 2
+                  WHEN 'A' THEN 3
+                  WHEN 'B' THEN 4
+                  WHEN 'C' THEN 5
+                  WHEN 'X' THEN 6
+                  WHEN 'G' THEN 7
+                  ELSE 99
+                END
+            `)
+            .all();
 
         return Response.json({
           success: true,
           tiers: result.results || []
         });
+
       } catch (error) {
         return Response.json(
           {
@@ -905,6 +986,10 @@ export default {
         );
       }
     }
+
+    // =========================================================
+    // UPDATE TIER SETTINGS
+    // =========================================================
 
     if (
       url.pathname === "/api/tiers" &&
@@ -921,12 +1006,12 @@ export default {
       }
 
       try {
-        await setupDatabase();
-
         const body = await request.json();
 
         if (!body.tier_key) {
-          throw new Error("Tier key is required");
+          throw new Error(
+            "Tier key is required"
+          );
         }
 
         await env.DB.prepare(`
@@ -946,6 +1031,7 @@ export default {
         return Response.json({
           success: true
         });
+
       } catch (error) {
         return Response.json(
           {
