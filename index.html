@@ -7,6 +7,7 @@
 <title>GAMES PLAYED BY BIEST1X</title>
 
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 :root{
@@ -156,26 +157,18 @@ header.top{
 ========================================================= */
 
 main{
-  width:100%;
-  max-width:none;
+  max-width:1600px;
   margin:0 auto;
   padding:34px 24px 40px;
   display:flex;
   gap:20px;
   align-items:flex-start;
-  justify-content:center;
   overflow-x:auto;
 }
 
 .tier{
-  flex:0 0 max-content;
-  width:max-content;
-  min-width:250px;
-}
-
-.rows{
-  width:max-content;
-  min-width:100%;
+  flex:1 1 0;
+  min-width:210px;
 }
 
 .tier-head{
@@ -217,9 +210,9 @@ main{
   min-height:16px;
 }
 
-/* =========================================================
-   ROWS
-========================================================= */
+.tier-count{
+  display:none;
+}
 
 .rows{
   padding:6px 0 4px;
@@ -278,7 +271,7 @@ main{
   font-size:13px;
   line-height:1.3;
   font-weight:500;
-  flex:0 0 auto;
+  flex:1;
   min-width:0;
   white-space:nowrap;
   overflow:visible;
@@ -298,39 +291,24 @@ main{
 
 .row.highlighted .row-name,
 .row.highlighted .row-score{
-  font-family:'Inter',sans-serif;
-  font-size:16.5px;
+  font-size:15.5px;
   font-weight:700;
 
   background:linear-gradient(
     90deg,
-    #f55951 0%,
-    #f55951 35%,
-    #ff9a4a 55%,
-    #f55951 75%,
-    #f55951 100%
+    #b8f58d 0%,
+    #79e5bd 35%,
+    #8dd9ff 55%,
+    #b8f58d 75%,
+    #79e5bd 100%
   );
 
-  background-size:240% 100%;
+  background-size:250% 100%;
   -webkit-background-clip:text;
   background-clip:text;
   color:transparent;
 
-  animation:highlightGradient 5s ease-in-out infinite;
-}
-
-@keyframes highlightGradient{
-  0%{
-    background-position:0% 50%;
-  }
-
-  50%{
-    background-position:100% 50%;
-  }
-
-  100%{
-    background-position:0% 50%;
-  }
+  animation:emerald 5s ease-in-out infinite;
 }
 
 /* =========================================================
@@ -357,6 +335,85 @@ main{
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
+}
+
+/* =========================================================
+   SS FIRE EFFECT
+========================================================= */
+
+.tier[data-tier="SS"] .tier-letter{
+  position:relative;
+
+  text-shadow:
+    0 0 4px rgba(255,196,83,.55),
+    0 0 10px rgba(255,128,35,.30);
+
+  animation:ssFire 1.35s ease-in-out infinite;
+}
+
+.tier[data-tier="SS"] .tier-letter::before,
+.tier[data-tier="SS"] .tier-letter::after{
+  content:"";
+  position:absolute;
+  left:12%;
+  right:12%;
+  bottom:-7px;
+  height:13px;
+  pointer-events:none;
+  filter:blur(5px);
+  opacity:.65;
+
+  background:radial-gradient(
+    ellipse at 50% 100%,
+    rgba(255,205,93,.75) 0%,
+    rgba(255,116,35,.42) 35%,
+    rgba(255,70,20,0) 72%
+  );
+
+  animation:ssFlame 1.1s ease-in-out infinite alternate;
+}
+
+.tier[data-tier="SS"] .tier-letter::after{
+  left:28%;
+  right:28%;
+  bottom:-3px;
+  height:10px;
+  opacity:.45;
+  filter:blur(4px);
+  animation-delay:-.45s;
+}
+
+@keyframes ssFire{
+  0%,100%{
+    transform:translateY(0) scaleY(1);
+    text-shadow:
+      0 0 4px rgba(255,196,83,.55),
+      0 0 10px rgba(255,128,35,.30);
+  }
+
+  35%{
+    transform:translateY(-1px) scaleY(1.015);
+    text-shadow:
+      0 0 6px rgba(255,210,100,.72),
+      0 0 14px rgba(255,110,25,.40);
+  }
+
+  70%{
+    transform:translateY(1px) scaleY(.99);
+    text-shadow:
+      0 0 3px rgba(255,190,70,.48),
+      0 0 12px rgba(255,90,20,.34);
+  }
+}
+
+@keyframes ssFlame{
+  0%{
+    transform:translateY(1px) scaleX(.92) scaleY(.8);
+  }
+
+  100%{
+    transform:translateY(-4px) scaleX(1.08) scaleY(1.18);
+  }
 }
 
 /* =========================================================
@@ -689,6 +746,39 @@ body.edit-mode #editBar{
 }
 
 /* =========================================================
+   BACKUP TOOLS
+========================================================= */
+
+.backup-tools{
+  position:absolute;
+  left:24px;
+  top:calc(50% + 27px);
+  display:none;
+  gap:6px;
+}
+
+body.edit-mode .backup-tools{
+  display:flex;
+}
+
+.backup-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  color:var(--text-dim);
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--line-strong);
+  border-radius:6px;
+  padding:6px 9px;
+  cursor:pointer;
+}
+
+.backup-btn:hover{
+  color:var(--text);
+  background:rgba(255,255,255,.07);
+}
+
+/* =========================================================
    RESPONSIVE
 ========================================================= */
 
@@ -719,6 +809,11 @@ body.edit-mode #editBar{
 
   .edit-top-btn{
     left:16px;
+  }
+
+  .backup-tools{
+    left:16px;
+    top:calc(50% + 25px);
   }
 }
 
@@ -789,12 +884,31 @@ body.edit-mode #editBar{
     + Add game
   </button>
 
+  <div class="backup-tools edit-only">
+    <button class="backup-btn" id="exportBackup">
+      Export backup
+    </button>
+
+    <button class="backup-btn" id="importBackup">
+      Import backup
+    </button>
+
+    <input
+      id="backupFile"
+      type="file"
+      accept="application/json,.json"
+      hidden
+    >
+  </div>
+
 </header>
 
 <main id="main">
+
   <div class="loading-msg">
     loading your list…
   </div>
+
 </main>
 
 <!-- ADD GAME -->
@@ -871,6 +985,7 @@ body.edit-mode #editBar{
 </div>
 
 <script>
+
 (function(){
 
 "use strict";
@@ -897,7 +1012,7 @@ const TIER_COLORS = {
   S: "var(--teal)",
   A: "var(--orange)",
   B: "var(--sage)",
-  C: "#8f433b",
+  C: "var(--rust)",
   X: "var(--slate)",
   G: "var(--sage)"
 };
@@ -942,11 +1057,7 @@ const CATEGORIES = [
 ========================================================= */
 
 function getToken(){
-
-  return localStorage.getItem(
-    "played-admin-token"
-  ) || "";
-
+  return localStorage.getItem("played-admin-token") || "";
 }
 
 function authHeaders(){
@@ -956,7 +1067,6 @@ function authHeaders(){
   return token
     ? { Authorization:"Bearer " + token }
     : {};
-
 }
 
 async function apiFetch(path, options = {}){
@@ -973,7 +1083,6 @@ async function apiFetch(path, options = {}){
       headers
     }
   );
-
 }
 
 /* =========================================================
@@ -981,19 +1090,11 @@ async function apiFetch(path, options = {}){
 ========================================================= */
 
 function getTier(key){
-
-  return tiers.find(
-    t => t.tier_key === key
-  );
-
+  return tiers.find(t => t.tier_key === key);
 }
 
 function gameById(id){
-
-  return games.find(
-    g => g.id === id
-  );
-
+  return games.find(g => g.id === id);
 }
 
 function formatNumber(value){
@@ -1004,7 +1105,6 @@ function formatNumber(value){
     return "0";
 
   return String(n);
-
 }
 
 function score(game){
@@ -1015,15 +1115,16 @@ function score(game){
     game.custom_overall !== ""
   ){
 
-    return Number(
-      game.custom_overall
-    );
+    return Number(game.custom_overall);
 
   }
 
   const values =
-    CATEGORIES.map(c =>
-      Number(game[c.key] || 0)
+    CATEGORIES.map(
+      c =>
+        Number(
+          game[c.key] || 0
+        )
     );
 
   return Math.round(
@@ -1035,7 +1136,6 @@ function score(game){
       values.length
     ) * 10
   ) / 10;
-
 }
 
 function isHighlighted(game){
@@ -1049,16 +1149,18 @@ function escapeHtml(str){
   const d =
     document.createElement("div");
 
-  d.textContent = str ?? "";
+  d.textContent =
+    str ?? "";
 
   return d.innerHTML;
-
 }
 
 function colorForTier(key){
 
-  return TIER_COLORS[key]
-    || "var(--gold)";
+  return (
+    TIER_COLORS[key] ||
+    "var(--gold)"
+  );
 
 }
 
@@ -1091,7 +1193,8 @@ async function apiGetTiers(){
 
   }
 
-  tiers = data.tiers || [];
+  tiers =
+    data.tiers || [];
 
 }
 
@@ -1120,7 +1223,8 @@ async function apiGetGames(){
 
   }
 
-  games = data.games || [];
+  games =
+    data.games || [];
 
 }
 
@@ -1134,10 +1238,8 @@ async function load(){
 
   try{
 
-    await Promise.all([
-      apiGetTiers(),
-      apiGetGames()
-    ]);
+    await apiGetTiers();
+    await apiGetGames();
 
     render();
 
@@ -1182,7 +1284,9 @@ function render(){
 
     const tierGames =
       games.filter(
-        g => g.tier === tier.tier_key
+        g =>
+          g.tier ===
+          tier.tier_key
       );
 
     tierGames.sort(
@@ -1225,12 +1329,18 @@ function renderHeader(){
 
 }
 
-function renderTier(tier,tierGames){
+function renderTier(
+  tier,
+  tierGames
+){
 
   const section =
-    document.createElement("section");
+    document.createElement(
+      "section"
+    );
 
-  section.className = "tier";
+  section.className =
+    "tier";
 
   section.dataset.tier =
     tier.tier_key;
@@ -1246,7 +1356,9 @@ function renderTier(tier,tierGames){
   );
 
   const head =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   head.className =
     "tier-head";
@@ -1263,6 +1375,10 @@ function renderTier(tier,tierGames){
 
     <div class="tier-sub">
       ${escapeHtml(tier.sub)}
+    </div>
+
+    <div class="tier-count">
+      ${tierGames.length}
     </div>
 
     <div class="tier-edit-fields">
@@ -1289,20 +1405,26 @@ function renderTier(tier,tierGames){
       >
 
     </div>
-
   `;
 
-  section.appendChild(head);
+  section.appendChild(
+    head
+  );
 
   const rows =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  rows.className = "rows";
+  rows.className =
+    "rows";
 
   rows.dataset.tier =
     tier.tier_key;
 
-  if(tierGames.length === 0){
+  if(
+    tierGames.length === 0
+  ){
 
     const empty =
       document.createElement(
@@ -1315,24 +1437,30 @@ function renderTier(tier,tierGames){
     empty.textContent =
       "No games here yet.";
 
-    rows.appendChild(empty);
+    rows.appendChild(
+      empty
+    );
 
   }else{
 
-    tierGames.forEach(game => {
+    tierGames.forEach(
+      game => {
 
-      rows.appendChild(
-        renderRow(
-          game,
-          tier
-        )
-      );
+        rows.appendChild(
+          renderRow(
+            game,
+            tier
+          )
+        );
 
-    });
+      }
+    );
 
   }
 
-  section.appendChild(rows);
+  section.appendChild(
+    rows
+  );
 
   if(editMode){
 
@@ -1340,93 +1468,102 @@ function renderTier(tier,tierGames){
       .querySelectorAll(
         ".tier-edit-input"
       )
-      .forEach(input => {
+      .forEach(
+        input => {
 
-        input.addEventListener(
-          "change",
-          async event => {
+          input.addEventListener(
+            "change",
+            async event => {
 
-            const field =
-              event.target.dataset
-                .field;
+              const field =
+                event.target.dataset.field;
 
-            try{
+              try{
 
-              await apiFetch(
-                "/tiers",
-                {
-                  method:"PUT",
+                await apiFetch(
+                  "/tiers",
+                  {
+                    method:"PUT",
+                    headers:{
+                      "Content-Type":
+                        "application/json"
+                    },
+                    body:
+                      JSON.stringify({
+                        tier_key:
+                          tier.tier_key,
+                        letter:
+                          head.querySelector(
+                            '[data-field="letter"]'
+                          ).value,
+                        label:
+                          head.querySelector(
+                            '[data-field="label"]'
+                          ).value,
+                        sub:
+                          head.querySelector(
+                            '[data-field="sub"]'
+                          ).value
+                      })
+                  }
+                );
 
-                  headers:{
-                    "Content-Type":
-                      "application/json"
-                  },
+                await apiGetTiers();
 
-                  body:
-                    JSON.stringify({
-                      tier_key:
-                        tier.tier_key,
+                render();
 
-                      letter:
-                        field === "letter"
-                          ? event.target.value
-                          : tier.letter,
+              }catch(error){
 
-                      label:
-                        field === "label"
-                          ? event.target.value
-                          : tier.label,
+                alert(
+                  "Could not save category: " +
+                  error.message
+                );
 
-                      sub:
-                        field === "sub"
-                          ? event.target.value
-                          : tier.sub
-                    })
-                }
-              );
-
-              tier[field] =
-                event.target.value;
-
-              render();
-
-            }catch(error){
-
-              alert(
-                "Could not save category: " +
-                error.message
-              );
+              }
 
             }
+          );
 
-          }
-        );
-
-      });
+        }
+      );
 
   }
 
-  setupDnD(rows);
+  enableDropZone(
+    rows,
+    tier.tier_key
+  );
 
   return section;
 
 }
 
 /* =========================================================
-   GAME ROW
+   ROW
 ========================================================= */
 
-function renderRow(game,tier){
+function renderRow(
+  game,
+  tier
+){
 
   const row =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  row.className = "row";
+  row.className =
+    "row";
 
-  if(isHighlighted(game))
+  if(
+    isHighlighted(game)
+  ){
+
     row.classList.add(
       "highlighted"
     );
+
+  }
 
   row.dataset.id =
     game.id;
@@ -1445,10 +1582,7 @@ function renderRow(game,tier){
 
     <div class="row-top">
 
-      <div
-        class="row-name"
-        title="${escapeHtml(game.name)}"
-      >
+      <div class="row-name">
         ${escapeHtml(game.name)}
       </div>
 
@@ -1457,7 +1591,6 @@ function renderRow(game,tier){
       </div>
 
     </div>
-
   `;
 
   row.addEventListener(
@@ -1478,346 +1611,289 @@ function renderRow(game,tier){
     }
   );
 
+  if(editMode){
+
+    row.addEventListener(
+      "dragstart",
+      event => {
+
+        dragId =
+          game.id;
+
+        row.classList.add(
+          "dragging"
+        );
+
+        event.dataTransfer.effectAllowed =
+          "move";
+
+        event.dataTransfer.setData(
+          "text/plain",
+          game.id
+        );
+
+      }
+    );
+
+    row.addEventListener(
+      "dragend",
+      () => {
+
+        row.classList.remove(
+          "dragging"
+        );
+
+        dragId = null;
+
+        document
+          .querySelectorAll(
+            ".drag-over-top,.drag-over-bottom"
+          )
+          .forEach(
+            el => {
+
+              el.classList.remove(
+                "drag-over-top",
+                "drag-over-bottom"
+              );
+
+            }
+          );
+
+      }
+    );
+
+    row.addEventListener(
+      "dragover",
+      event => {
+
+        event.preventDefault();
+
+        if(
+          !dragId ||
+          dragId === game.id
+        )
+          return;
+
+        const rect =
+          row.getBoundingClientRect();
+
+        const before =
+          event.clientY <
+          rect.top +
+          rect.height / 2;
+
+        row.classList.toggle(
+          "drag-over-top",
+          before
+        );
+
+        row.classList.toggle(
+          "drag-over-bottom",
+          !before
+        );
+
+      }
+    );
+
+    row.addEventListener(
+      "dragleave",
+      () => {
+
+        row.classList.remove(
+          "drag-over-top",
+          "drag-over-bottom"
+        );
+
+      }
+    );
+
+    row.addEventListener(
+      "drop",
+      async event => {
+
+        event.preventDefault();
+
+        if(
+          !dragId ||
+          dragId === game.id
+        )
+          return;
+
+        const rect =
+          row.getBoundingClientRect();
+
+        const before =
+          event.clientY <
+          rect.top +
+          rect.height / 2;
+
+        row.classList.remove(
+          "drag-over-top",
+          "drag-over-bottom"
+        );
+
+        await moveGame(
+          dragId,
+          tier.tier_key,
+          game.id,
+          before
+        );
+
+      }
+    );
+
+  }
+
   return row;
 
 }
 
 /* =========================================================
-   DRAG & DROP
+   DROP ZONE
 ========================================================= */
 
-function setupDnD(container){
+function enableDropZone(
+  rows,
+  tierKey
+){
 
-  container.addEventListener(
-    "dragstart",
-    event => {
+  if(!editMode)
+    return;
 
-      if(!editMode)
-        return;
-
-      const row =
-        event.target.closest(
-          ".row"
-        );
-
-      if(!row)
-        return;
-
-      dragId =
-        row.dataset.id;
-
-      row.classList.add(
-        "dragging"
-      );
-
-      event.dataTransfer
-        .effectAllowed =
-        "move";
-
-    }
-  );
-
-  container.addEventListener(
-    "dragend",
-    event => {
-
-      const row =
-        event.target.closest(
-          ".row"
-        );
-
-      if(row)
-        row.classList.remove(
-          "dragging"
-        );
-
-      container
-        .querySelectorAll(
-          ".row"
-        )
-        .forEach(r =>
-          r.classList.remove(
-            "drag-over-top",
-            "drag-over-bottom"
-          )
-        );
-
-    }
-  );
-
-  container.addEventListener(
+  rows.addEventListener(
     "dragover",
     event => {
 
-      if(!editMode)
-        return;
-
       event.preventDefault();
-
-      const after =
-        getDragAfterElement(
-          container,
-          event.clientY
-        );
-
-      container
-        .querySelectorAll(
-          ".row"
-        )
-        .forEach(r =>
-          r.classList.remove(
-            "drag-over-top",
-            "drag-over-bottom"
-          )
-        );
-
-      if(after){
-
-        after.classList.add(
-          "drag-over-top"
-        );
-
-      }else{
-
-        const rows =
-          [
-            ...container
-              .querySelectorAll(
-                ".row:not(.dragging)"
-              )
-          ];
-
-        if(rows.length){
-
-          rows[
-            rows.length - 1
-          ].classList.add(
-            "drag-over-bottom"
-          );
-
-        }
-
-      }
 
     }
   );
 
-  container.addEventListener(
+  rows.addEventListener(
     "drop",
     async event => {
 
       event.preventDefault();
 
       if(
-        !editMode ||
         !dragId
       )
         return;
 
-      const targetTier =
-        container.dataset.tier;
-
-      const movingId =
-        dragId;
-
-      dragId = null;
-
-      const after =
-        getDragAfterElement(
-          container,
-          event.clientY
-        );
-
-      const targetGames =
-        games
-          .filter(
-            g =>
-              g.tier === targetTier &&
-              g.id !== movingId
-          )
-          .sort(
-            (a,b) =>
-              Number(
-                a.position || 0
-              ) -
-              Number(
-                b.position || 0
-              )
-          );
-
-      let position =
-        targetGames.length;
-
-      if(after){
-
-        const index =
-          targetGames.findIndex(
-            g =>
-              g.id ===
-              after.dataset.id
-          );
-
-        if(index >= 0)
-          position = index;
-
-      }
-
-      const moving =
-        gameById(
-          movingId
-        );
-
-      if(!moving)
+      if(
+        event.target.closest(
+          ".row"
+        )
+      )
         return;
 
-      const sourceTier =
-        moving.tier;
-
-      try{
-
-        const response =
-          await apiFetch(
-            "/games/move",
-            {
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify({
-                  id:movingId,
-                  tier:targetTier,
-                  position
-                })
-            }
-          );
-
-        const data =
-          await response.json();
-
-        if(
-          !response.ok ||
-          !data.success
-        ){
-
-          throw new Error(
-            data.error ||
-            "Failed to move game"
-          );
-
-        }
-
-        moving.tier =
-          targetTier;
-
-        if(
-          sourceTier !==
-          targetTier
-        ){
-
-          const sourceGames =
-            games
-              .filter(
-                g =>
-                  g.tier ===
-                    sourceTier &&
-                  g.id !==
-                    movingId
-              )
-              .sort(
-                (a,b) =>
-                  Number(
-                    a.position || 0
-                  ) -
-                  Number(
-                    b.position || 0
-                  )
-              );
-
-          sourceGames.forEach(
-            (g,i) => {
-              g.position = i;
-            }
-          );
-
-        }
-
-        targetGames.splice(
-          position,
-          0,
-          moving
-        );
-
-        targetGames.forEach(
-          (g,i) => {
-            g.position = i;
-          }
-        );
-
-        render();
-
-      }catch(error){
-
-        alert(
-          "Could not move game: " +
-          error.message
-        );
-
-      }
+      await moveGame(
+        dragId,
+        tierKey,
+        null,
+        false
+      );
 
     }
   );
 
 }
 
-function getDragAfterElement(
-  container,
-  y
+/* =========================================================
+   MOVE
+========================================================= */
+
+async function moveGame(
+  id,
+  targetTier,
+  targetId,
+  before
 ){
 
-  const rows =
-    [
-      ...container
-        .querySelectorAll(
-          ".row:not(.dragging)"
-        )
-    ];
+  const targetGames =
+    games
+      .filter(
+        g =>
+          g.tier ===
+          targetTier &&
+          g.id !== id
+      )
+      .sort(
+        (a,b) =>
+          Number(a.position || 0) -
+          Number(b.position || 0)
+      );
 
-  return rows.reduce(
-    (closest,child) => {
+  let position =
+    targetGames.length;
 
-      const box =
-        child.getBoundingClientRect();
+  if(targetId){
 
-      const offset =
-        y -
-        box.top -
-        box.height / 2;
+    const index =
+      targetGames.findIndex(
+        g =>
+          g.id === targetId
+      );
 
-      if(
-        offset < 0 &&
-        offset >
-          closest.offset
-      ){
+    if(index >= 0){
 
-        return {
-          offset,
-          element:child
-        };
+      position =
+        before
+          ? index
+          : index + 1;
 
-      }
-
-      return closest;
-
-    },
-    {
-      offset:-Infinity,
-      element:null
     }
-  ).element;
+
+  }
+
+  try{
+
+    const response =
+      await apiFetch(
+        "/games/move",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:
+            JSON.stringify({
+              id,
+              tier:targetTier,
+              position
+            })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(
+      !response.ok ||
+      !data.success
+    ){
+
+      throw new Error(
+        data.error ||
+        "Failed to move game"
+      );
+
+    }
+
+    await apiGetGames();
+
+    render();
+
+  }catch(error){
+
+    alert(
+      "Could not move game: " +
+      error.message
+    );
+
+  }
 
 }
 
@@ -1827,63 +1903,68 @@ function getDragAfterElement(
 
 function renderAddTierPicker(){
 
-  const wrap =
+  const picker =
     document.getElementById(
       "addTierPicker"
     );
 
-  if(!wrap)
+  if(!picker)
     return;
 
-  wrap.innerHTML = "";
+  picker.innerHTML = "";
 
-  tiers.forEach(tier => {
+  tiers.forEach(
+    tier => {
 
-    const chip =
-      document.createElement(
-        "button"
-      );
+      const button =
+        document.createElement(
+          "button"
+        );
 
-    chip.className =
-      "tier-chip";
+      button.type =
+        "button";
 
-    chip.textContent =
-      tier.letter;
+      button.className =
+        "tier-chip";
 
-    chip.style.borderColor =
-      colorForTier(
+      button.textContent =
+        tier.letter;
+
+      button.style.color =
+        colorForTier(
+          tier.tier_key
+        );
+
+      if(
+        addTier ===
         tier.tier_key
-      );
+      ){
 
-    chip.style.color =
-      addTier === tier.tier_key
-        ? "#0f0f0f"
-        : colorForTier(
+        button.style.borderColor =
+          colorForTier(
             tier.tier_key
           );
 
-    chip.style.background =
-      addTier === tier.tier_key
-        ? colorForTier(
-            tier.tier_key
-          )
-        : "transparent";
-
-    chip.addEventListener(
-      "click",
-      () => {
-
-        addTier =
-          tier.tier_key;
-
-        renderAddTierPicker();
-
       }
-    );
 
-    wrap.appendChild(chip);
+      button.addEventListener(
+        "click",
+        () => {
 
-  });
+          addTier =
+            tier.tier_key;
+
+          renderAddTierPicker();
+
+        }
+      );
+
+      picker.appendChild(
+        button
+      );
+
+    }
+  );
 
 }
 
@@ -1898,14 +1979,6 @@ document
       if(!editMode)
         return;
 
-      document.getElementById(
-        "addName"
-      ).value = "";
-
-      addTier = "A";
-
-      renderAddTierPicker();
-
       document
         .getElementById(
           "addOverlay"
@@ -1914,15 +1987,11 @@ document
           "open"
         );
 
-      setTimeout(
-        () =>
-          document
-            .getElementById(
-              "addName"
-            )
-            .focus(),
-        50
-      );
+      document
+        .getElementById(
+          "addName"
+        )
+        .focus();
 
     }
   );
@@ -1948,126 +2017,90 @@ document
 
 document
   .getElementById(
-    "addOverlay"
-  )
-  .addEventListener(
-    "click",
-    event => {
-
-      if(
-        event.target.id ===
-        "addOverlay"
-      ){
-
-        event.currentTarget
-          .classList.remove(
-            "open"
-          );
-
-      }
-
-    }
-  );
-
-async function confirmAdd(){
-
-  const input =
-    document.getElementById(
-      "addName"
-    );
-
-  const name =
-    input.value.trim();
-
-  if(!name){
-
-    input.focus();
-
-    return;
-
-  }
-
-  try{
-
-    const response =
-      await apiFetch(
-        "/games",
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({
-              name,
-              tier:addTier
-            })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(
-      !response.ok ||
-      !data.success
-    ){
-
-      throw new Error(
-        data.error ||
-        "Failed to add game"
-      );
-
-    }
-
-    await apiGetGames();
-
-    render();
-
-    document
-      .getElementById(
-        "addOverlay"
-      )
-      .classList.remove(
-        "open"
-      );
-
-  }catch(error){
-
-    alert(
-      "Could not add game: " +
-      error.message
-    );
-
-  }
-
-}
-
-document
-  .getElementById(
     "confirmAdd"
   )
   .addEventListener(
     "click",
-    confirmAdd
-  );
+    async () => {
 
-document
-  .getElementById(
-    "addName"
-  )
-  .addEventListener(
-    "keydown",
-    event => {
+      const name =
+        document
+          .getElementById(
+            "addName"
+          )
+          .value
+          .trim();
 
-      if(
-        event.key ===
-        "Enter"
-      )
-        confirmAdd();
+      if(!name){
+
+        alert(
+          "Enter a game name."
+        );
+
+        return;
+
+      }
+
+      try{
+
+        const response =
+          await apiFetch(
+            "/games",
+            {
+              method:"POST",
+              headers:{
+                "Content-Type":
+                  "application/json"
+              },
+              body:
+                JSON.stringify({
+                  name,
+                  tier:addTier
+                })
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if(
+          !response.ok ||
+          !data.success
+        ){
+
+          throw new Error(
+            data.error ||
+            "Failed to add game"
+          );
+
+        }
+
+        document
+          .getElementById(
+            "addName"
+          )
+          .value = "";
+
+        document
+          .getElementById(
+            "addOverlay"
+          )
+          .classList.remove(
+            "open"
+          );
+
+        await apiGetGames();
+
+        render();
+
+      }catch(error){
+
+        alert(
+          "Could not add game: " +
+          error.message
+        );
+
+      }
 
     }
   );
@@ -2095,6 +2128,9 @@ function openGame(id){
 
 function closeGame(){
 
+  currentGameId =
+    null;
+
   document
     .getElementById(
       "gameOverlay"
@@ -2103,32 +2139,7 @@ function closeGame(){
       "open"
     );
 
-  currentGameId =
-    null;
-
-  render();
-
 }
-
-document
-  .getElementById(
-    "gameOverlay"
-  )
-  .addEventListener(
-    "click",
-    event => {
-
-      if(
-        event.target.id ===
-        "gameOverlay"
-      ){
-
-        closeGame();
-
-      }
-
-    }
-  );
 
 function renderGameModal(){
 
@@ -2145,97 +2156,33 @@ function renderGameModal(){
       "gameModal"
     );
 
-  const catRows =
-    CATEGORIES.map(
-      category => {
+  const tier =
+    getTier(
+      game.tier
+    );
 
-        const value =
-          Number(
-            game[
-              category.key
-            ] || 0
-          );
-
-        const stars =
-          Array.from({
-            length:10
-          })
-          .map(
-            (_,i) => {
-
-              const filled =
-                i < value;
-
-              return `
-                <span
-                  class="star
-                  ${
-                    filled
-                      ? "filled"
-                      : ""
-                  }
-                  ${
-                    editMode
-                      ? ""
-                      : "readonly"
-                  }"
-                  data-cat="${
-                    category.key
-                  }"
-                  data-val="${
-                    i+1
-                  }"
-                >
-                  ${starSvg()}
-                </span>
-              `;
-
-            }
-          )
-          .join("");
-
-        return `
-
-          <div class="cat-row">
-
-            <div class="cat-label">
-              ${escapeHtml(
-                category.label
-              )}
-            </div>
-
-            <div class="stars">
-              ${stars}
-            </div>
-
-            <div class="cat-num">
-              ${formatNumber(value)}/10
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
+  const overall =
+    score(game);
 
   modal.innerHTML = `
 
     <div class="modal-top">
 
-      <input
-        class="modal-name"
-        id="editName"
-        value="${escapeHtml(
-          game.name
-        )}"
-        maxlength="120"
-        ${
-          editMode
-            ? ""
-            : "readonly"
-        }
-      >
+      ${
+        editMode
+          ? `
+            <input
+              class="modal-name"
+              id="gameNameInput"
+              value="${escapeHtml(game.name)}"
+            >
+          `
+          : `
+            <div class="modal-name">
+              ${escapeHtml(game.name)}
+            </div>
+          `
+      }
 
       <button
         class="modal-close"
@@ -2247,32 +2194,27 @@ function renderGameModal(){
     </div>
 
     <div
-      class="tier-picker edit-only"
-      id="editTierPicker"
+      class="tier-picker"
+      id="gameTierPicker"
     ></div>
 
     <div class="overall-line">
 
-      <span class="overall-num">
-        ${formatNumber(
-          score(game)
-        )}
-      </span>
+      <div class="overall-num">
+        ${formatNumber(overall)}
+      </div>
 
-      <span class="overall-label">
-        / 10 overall
-      </span>
+      <div class="overall-label">
+        Overall rating
+      </div>
 
     </div>
 
-    <div id="catRows">
-      ${catRows}
-    </div>
+    <div id="categoryList"></div>
 
     ${
       editMode
         ? `
-
           <div class="custom-rating-wrap">
 
             <label>
@@ -2280,220 +2222,79 @@ function renderGameModal(){
             </label>
 
             <input
-              id="customRating"
               class="custom-rating"
+              id="customOverall"
               type="number"
               step="any"
               value="${
-                game.custom_overall !== null &&
-                game.custom_overall !== undefined
-                  ? escapeHtml(
+                game.custom_overall === null ||
+                game.custom_overall === undefined
+                  ? ""
+                  : formatNumber(
                       game.custom_overall
                     )
-                  : ""
               }"
-              placeholder="automatic"
+              placeholder="Auto"
             >
-
-            <button
-              class="lock-btn"
-              id="clearCustomRating"
-              style="
-                padding:7px 10px;
-                cursor:pointer;
-              "
-            >
-              Auto
-            </button>
 
           </div>
-
         `
         : ""
     }
 
     <div class="commentary-label">
-      ${
-        editMode
-          ? "Your commentary"
-          : "Commentary"
-      }
+      Commentary
     </div>
 
-    <textarea
-      class="commentary"
-      id="commentary"
-      placeholder="${
-        editMode
-          ? "What did you think of it?"
-          : "No commentary yet."
-      }"
-      ${
-        editMode
-          ? ""
-          : "readonly"
-      }
-    >${escapeHtml(
-      game.commentary || ""
-    )}</textarea>
+    ${
+      editMode
+        ? `
+          <textarea
+            class="commentary"
+            id="commentaryInput"
+          >${escapeHtml(
+            game.commentary || ""
+          )}</textarea>
+        `
+        : `
+          <div class="commentary">
+            ${escapeHtml(
+              game.commentary || ""
+            )}
+          </div>
+        `
+    }
 
     <div class="modal-footer">
 
-      <button
-        class="delete-btn edit-only"
-        id="deleteGame"
-      >
-        Delete game
-      </button>
+      ${
+        editMode
+          ? `
+            <button
+              class="delete-btn"
+              id="deleteGame"
+            >
+              Delete game
+            </button>
+          `
+          : `<div></div>`
+      }
 
-      <button
-        class="done-btn"
-        id="doneGame"
-        style="margin-left:auto"
-      >
-        Done
-      </button>
+      ${
+        editMode
+          ? `
+            <button
+              class="done-btn"
+              id="saveGame"
+            >
+              Save
+            </button>
+          `
+          : ""
+      }
 
     </div>
-
   `;
-
-  /* =======================================================
-     TIER PICKER
-  ======================================================= */
-
-  if(editMode){
-
-    const tierWrap =
-      document.getElementById(
-        "editTierPicker"
-      );
-
-    tiers.forEach(tier => {
-
-      const chip =
-        document.createElement(
-          "button"
-        );
-
-      chip.className =
-        "tier-chip";
-
-      chip.textContent =
-        tier.letter +
-        " — " +
-        tier.label;
-
-      chip.style.borderColor =
-        colorForTier(
-          tier.tier_key
-        );
-
-      chip.style.color =
-        game.tier ===
-        tier.tier_key
-          ? "#0f0f0f"
-          : colorForTier(
-              tier.tier_key
-            );
-
-      chip.style.background =
-        game.tier ===
-        tier.tier_key
-          ? colorForTier(
-              tier.tier_key
-            )
-          : "transparent";
-
-      chip.addEventListener(
-        "click",
-        async () => {
-
-          if(
-            game.tier ===
-            tier.tier_key
-          )
-            return;
-
-          try{
-
-            const response =
-              await apiFetch(
-                "/games/move",
-                {
-                  method:"POST",
-
-                  headers:{
-                    "Content-Type":
-                      "application/json"
-                  },
-
-                  body:
-                    JSON.stringify({
-                      id:game.id,
-                      tier:tier.tier_key,
-                      position:0
-                    })
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if(
-              !response.ok ||
-              !data.success
-            ){
-
-              throw new Error(
-                data.error ||
-                "Failed to move game"
-              );
-
-            }
-
-            game.tier =
-              tier.tier_key;
-
-            const tierGames =
-              games.filter(
-                g =>
-                  g.tier ===
-                  tier.tier_key
-              );
-
-            tierGames.forEach(
-              (g,i) => {
-                g.position = i;
-              }
-            );
-
-            renderGameModal();
-            render();
-
-          }catch(error){
-
-            alert(
-              "Could not move game: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-      tierWrap.appendChild(
-        chip
-      );
-
-    });
-
-  }
-
-  /* =======================================================
-     CLOSE / DONE
-  ======================================================= */
 
   document
     .getElementById(
@@ -2504,124 +2305,20 @@ function renderGameModal(){
       closeGame
     );
 
-  document
-    .getElementById(
-      "doneGame"
-    )
-    .addEventListener(
-      "click",
-      closeGame
-    );
+  renderGameTierPicker(
+    game,
+    tier
+  );
 
-  /* =======================================================
-     NAME
-  ======================================================= */
+  renderCategories(
+    game
+  );
 
   if(editMode){
 
     document
       .getElementById(
-        "editName"
-      )
-      .addEventListener(
-        "change",
-        async event => {
-
-          try{
-
-            await updateGame({
-              id:game.id,
-              name:event.target.value
-            });
-
-          }catch(error){
-
-            alert(
-              "Could not save name: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-    /* =====================================================
-       COMMENTARY
-    ===================================================== */
-
-    document
-      .getElementById(
-        "commentary"
-      )
-      .addEventListener(
-        "change",
-        async event => {
-
-          try{
-
-            await updateGame({
-              id:game.id,
-              commentary:
-                event.target.value
-            });
-
-          }catch(error){
-
-            alert(
-              "Could not save commentary: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-    /* =====================================================
-       CUSTOM RATING
-    ===================================================== */
-
-    const customInput =
-      document.getElementById(
-        "customRating"
-      );
-
-    customInput.addEventListener(
-      "change",
-      async () => {
-
-        const raw =
-          customInput.value.trim();
-
-        try{
-
-          await updateGame({
-            id:game.id,
-
-            custom_overall:
-              raw === ""
-                ? null
-                : Number(raw)
-          });
-
-          renderGameModal();
-
-        }catch(error){
-
-          alert(
-            "Could not save custom rating: " +
-            error.message
-          );
-
-        }
-
-      }
-    );
-
-    document
-      .getElementById(
-        "clearCustomRating"
+        "saveGame"
       )
       .addEventListener(
         "click",
@@ -2629,17 +2326,47 @@ function renderGameModal(){
 
           try{
 
-            await updateGame({
+            const changes = {
               id:game.id,
-              custom_overall:null
-            });
+              name:
+                document
+                  .getElementById(
+                    "gameNameInput"
+                  )
+                  .value
+                  .trim(),
 
-            renderGameModal();
+              commentary:
+                document
+                  .getElementById(
+                    "commentaryInput"
+                  )
+                  .value
+            };
+
+            const custom =
+              document
+                .getElementById(
+                  "customOverall"
+                )
+                .value
+                .trim();
+
+            changes.custom_overall =
+              custom === ""
+                ? null
+                : Number(custom);
+
+            await updateGame(
+              changes
+            );
+
+            closeGame();
 
           }catch(error){
 
             alert(
-              "Could not clear custom rating: " +
+              "Could not save game: " +
               error.message
             );
 
@@ -2648,34 +2375,194 @@ function renderGameModal(){
         }
       );
 
-    /* =====================================================
-       RATINGS
-    ===================================================== */
+  }
 
-    modal
-      .querySelectorAll(
-        ".star"
-      )
-      .forEach(star => {
+}
+
+function renderGameTierPicker(
+  game,
+  tier
+){
+
+  const picker =
+    document.getElementById(
+      "gameTierPicker"
+    );
+
+  picker.innerHTML = "";
+
+  tiers.forEach(
+    t => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.className =
+        "tier-chip";
+
+      button.textContent =
+        t.letter;
+
+      button.style.color =
+        colorForTier(
+          t.tier_key
+        );
+
+      if(
+        t.tier_key ===
+        game.tier
+      ){
+
+        button.style.borderColor =
+          colorForTier(
+            t.tier_key
+          );
+
+      }
+
+      if(editMode){
+
+        button.addEventListener(
+          "click",
+          async () => {
+
+            try{
+
+              await updateGame({
+                id:game.id,
+                tier:t.tier_key
+              });
+
+              renderGameModal();
+
+            }catch(error){
+
+              alert(
+                "Could not change category: " +
+                error.message
+              );
+
+            }
+
+          }
+        );
+
+      }
+
+      picker.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+function renderCategories(
+  game
+){
+
+  const list =
+    document.getElementById(
+      "categoryList"
+    );
+
+  list.innerHTML = "";
+
+  CATEGORIES.forEach(
+    category => {
+
+      const value =
+        Number(
+          game[category.key] || 0
+        );
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "cat-row";
+
+      row.innerHTML = `
+
+        <div class="cat-label">
+          ${escapeHtml(
+            category.label
+          )}
+        </div>
+
+        <div class="stars">
+
+          ${Array.from(
+            {length:10},
+            (_,index) => `
+
+              <div
+                class="star ${
+                  index < value
+                    ? "filled"
+                    : ""
+                } ${
+                  editMode
+                    ? ""
+                    : "readonly"
+                }"
+                data-value="${index + 1}"
+                data-category="${category.key}"
+              >
+                ${starSvg()}
+              </div>
+
+            `
+          ).join("")}
+
+        </div>
+
+        <div class="cat-num">
+          ${formatNumber(value)}
+        </div>
+
+      `;
+
+      list.appendChild(
+        row
+      );
+
+    }
+  );
+
+  if(!editMode)
+    return;
+
+  list
+    .querySelectorAll(
+      ".star"
+    )
+    .forEach(
+      star => {
 
         star.addEventListener(
           "click",
           async () => {
 
             const category =
-              star.dataset.cat;
+              star.dataset.category;
 
             const value =
-              parseInt(
-                star.dataset.val,
-                10
+              Number(
+                star.dataset.value
               );
 
             const current =
               Number(
-                game[
-                  category
-                ] || 0
+                game[category] || 0
               );
 
             const newValue =
@@ -2691,6 +2578,8 @@ function renderGameModal(){
                   newValue
               });
 
+              await apiGetGames();
+
               renderGameModal();
 
             }catch(error){
@@ -2705,92 +2594,117 @@ function renderGameModal(){
           }
         );
 
-      });
-
-    /* =====================================================
-       DELETE
-    ===================================================== */
-
-    document
-      .getElementById(
-        "deleteGame"
-      )
-      .addEventListener(
-        "click",
-        async () => {
-
-          if(
-            !confirm(
-              `Delete "${game.name}"? This can't be undone.`
-            )
-          )
-            return;
-
-          try{
-
-            const response =
-              await apiFetch(
-                "/games/" +
-                encodeURIComponent(
-                  game.id
-                ),
-                {
-                  method:"DELETE"
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if(
-              !response.ok ||
-              !data.success
-            ){
-
-              throw new Error(
-                data.error ||
-                "Failed to delete game"
-              );
-
-            }
-
-            await apiGetGames();
-
-            closeGame();
-
-          }catch(error){
-
-            alert(
-              "Could not delete game: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-  }
+      }
+    );
 
 }
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+document
+  .getElementById(
+    "deleteGame"
+  );
+
+/*
+ * Delete button is created dynamically,
+ * so use delegation.
+ */
+
+document
+  .getElementById(
+    "gameModal"
+  )
+  .addEventListener(
+    "click",
+    async event => {
+
+      if(
+        event.target.id !==
+        "deleteGame"
+      )
+        return;
+
+      const game =
+        gameById(
+          currentGameId
+        );
+
+      if(!game)
+        return;
+
+      if(
+        !confirm(
+          `Delete "${game.name}"? This can't be undone.`
+        )
+      )
+        return;
+
+      try{
+
+        const response =
+          await apiFetch(
+            "/games/" +
+            encodeURIComponent(
+              game.id
+            ),
+            {
+              method:"DELETE"
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if(
+          !response.ok ||
+          !data.success
+        ){
+
+          throw new Error(
+            data.error ||
+            "Failed to delete game"
+          );
+
+        }
+
+        await apiGetGames();
+
+        closeGame();
+
+        render();
+
+      }catch(error){
+
+        alert(
+          "Could not delete game: " +
+          error.message
+        );
+
+      }
+
+    }
+  );
 
 /* =========================================================
    UPDATE
 ========================================================= */
 
-async function updateGame(changes){
+async function updateGame(
+  changes
+){
 
   const response =
     await apiFetch(
       "/games",
       {
         method:"PUT",
-
         headers:{
           "Content-Type":
             "application/json"
         },
-
         body:
           JSON.stringify(
             changes
@@ -2813,32 +2727,7 @@ async function updateGame(changes){
 
   }
 
-  if(changes.id){
-
-    const localGame =
-      gameById(
-        changes.id
-      );
-
-    if(localGame){
-
-      Object.keys(
-        changes
-      ).forEach(
-        key => {
-
-          if(
-            key !== "id"
-          )
-            localGame[key] =
-              changes[key];
-
-        }
-      );
-
-    }
-
-  }
+  await apiGetGames();
 
   render();
 
@@ -2851,23 +2740,354 @@ async function updateGame(changes){
 function starSvg(){
 
   return `
-
     <svg
       viewBox="0 0 24 24"
       fill="currentColor"
       width="100%"
       height="100%"
     >
-
       <path
         d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"
       />
-
     </svg>
-
   `;
 
 }
+
+/* =========================================================
+   BACKUP / RESTORE
+========================================================= */
+
+function downloadJson(
+  filename,
+  data
+){
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          data,
+          null,
+          2
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+  const a =
+    document.createElement(
+      "a"
+    );
+
+  a.href =
+    url;
+
+  a.download =
+    filename;
+
+  document.body.appendChild(
+    a
+  );
+
+  a.click();
+
+  a.remove();
+
+  URL.revokeObjectURL(
+    url
+  );
+
+}
+
+async function exportBackup(){
+
+  if(!editMode)
+    return;
+
+  const backup = {
+
+    format:
+      "played-tier-list-backup",
+
+    version:1,
+
+    exported_at:
+      new Date().toISOString(),
+
+    tiers:
+      tiers.map(
+        t => ({
+          tier_key:
+            t.tier_key,
+          letter:
+            t.letter,
+          label:
+            t.label,
+          sub:
+            t.sub
+        })
+      ),
+
+    games:
+      games.map(
+        g => ({
+
+          id:g.id,
+
+          name:g.name,
+
+          tier:g.tier,
+
+          position:
+            Number(
+              g.position || 0
+            ),
+
+          commentary:
+            g.commentary || "",
+
+          gameplay:
+            Number(
+              g.gameplay || 0
+            ),
+
+          graphics:
+            Number(
+              g.graphics || 0
+            ),
+
+          story_pacing:
+            Number(
+              g.story_pacing || 0
+            ),
+
+          writing:
+            Number(
+              g.writing || 0
+            ),
+
+          voice_acting:
+            Number(
+              g.voice_acting || 0
+            ),
+
+          music_audio:
+            Number(
+              g.music_audio || 0
+            ),
+
+          technical_performance:
+            Number(
+              g.technical_performance || 0
+            ),
+
+          emotional_impact:
+            Number(
+              g.emotional_impact || 0
+            ),
+
+          custom_overall:
+            (
+              g.custom_overall === null ||
+              g.custom_overall === undefined ||
+              g.custom_overall === ""
+            )
+              ? null
+              : Number(
+                  g.custom_overall
+                )
+
+        })
+      )
+
+  };
+
+  downloadJson(
+    "played-tier-list-backup-" +
+    new Date()
+      .toISOString()
+      .slice(0,10) +
+    ".json",
+    backup
+  );
+
+}
+
+async function importBackupFile(
+  file
+){
+
+  if(!editMode)
+    return;
+
+  const text =
+    await file.text();
+
+  let backup;
+
+  try{
+
+    backup =
+      JSON.parse(
+        text
+      );
+
+  }catch{
+
+    throw new Error(
+      "Backup file is not valid JSON."
+    );
+
+  }
+
+  if(
+    backup?.format !==
+      "played-tier-list-backup" ||
+    !Array.isArray(
+      backup.games
+    )
+  ){
+
+    throw new Error(
+      "This is not a valid Played tier-list backup."
+    );
+
+  }
+
+  if(
+    !confirm(
+      "Restore this backup?\n\n" +
+      "This will replace the current games, ratings, positions and tier descriptions with the saved backup."
+    )
+  )
+    return;
+
+  const response =
+    await apiFetch(
+      "/backup/import",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":
+            "application/json"
+        },
+        body:
+          JSON.stringify(
+            backup
+          )
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if(
+    !response.ok ||
+    !data.success
+  ){
+
+    throw new Error(
+      data.error ||
+      "Failed to restore backup"
+    );
+
+  }
+
+  await apiGetTiers();
+  await apiGetGames();
+
+  render();
+
+  alert(
+    "Backup restored successfully."
+  );
+
+}
+
+document
+  .getElementById(
+    "exportBackup"
+  )
+  .addEventListener(
+    "click",
+    () => {
+
+      exportBackup()
+        .catch(
+          error =>
+            alert(
+              "Could not export backup: " +
+              error.message
+            )
+        );
+
+    }
+  );
+
+document
+  .getElementById(
+    "importBackup"
+  )
+  .addEventListener(
+    "click",
+    () => {
+
+      if(!editMode)
+        return;
+
+      document
+        .getElementById(
+          "backupFile"
+        )
+        .click();
+
+    }
+  );
+
+document
+  .getElementById(
+    "backupFile"
+  )
+  .addEventListener(
+    "change",
+    async event => {
+
+      const file =
+        event.target
+          .files?.[0];
+
+      event.target.value =
+        "";
+
+      if(!file)
+        return;
+
+      try{
+
+        await importBackupFile(
+          file
+        );
+
+      }catch(error){
+
+        alert(
+          "Could not restore backup: " +
+          error.message
+        );
+
+      }
+
+    }
+  );
 
 /* =========================================================
    EDIT LOGIN
@@ -2890,12 +3110,10 @@ async function tryUnlock(){
         API + "/login",
         {
           method:"POST",
-
           headers:{
             "Content-Type":
               "application/json"
           },
-
           body:
             JSON.stringify({
               password
@@ -2929,7 +3147,8 @@ async function tryUnlock(){
       "yes"
     );
 
-    editMode = true;
+    editMode =
+      true;
 
     render();
 
@@ -2954,7 +3173,8 @@ function lockEdit(){
     "played-edit-unlocked"
   );
 
-  editMode = false;
+  editMode =
+    false;
 
   closeGame();
 
@@ -3034,6 +3254,7 @@ document.addEventListener(
 load();
 
 })();
+
 </script>
 
 </body>
