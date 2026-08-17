@@ -1,19 +1,11 @@
+let legacyTierMigrationDone = false;
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    function json(data, status = 200) {
-      return Response.json(data, { status });
-    }
-
-    function isAdmin(request) {
-      const auth = request.headers.get("Authorization") || "";
-      const token = auth.startsWith("Bearer ") ? auth.slice(7) : auth;
-      return !!env.ADMIN_PASSWORD && token === env.ADMIN_PASSWORD;
-    }
-
     // =========================================================
-    // ONE-TIME DATABASE SETUP / MIGRATION
+    // DATABASE SETUP
     // =========================================================
 
     async function setupDatabase() {
@@ -54,63 +46,58 @@ export default {
       for (const row of defaults) {
         await env.DB.prepare(`
           INSERT OR IGNORE INTO tier_settings
-            (tier_key, letter, label, sub)
+          (tier_key, letter, label, sub)
           VALUES (?, ?, ?, ?)
         `).bind(...row).run();
       }
 
-      // The original database used S/A/B/F/X for the old five-tier list.
-      // Only perform this conversion when it is clearly an old database:
-      // there are F-tier games and none of the new-only SS/C/G tiers yet.
-      const legacyCheck = await env.DB.prepare(`
-        SELECT
-          SUM(CASE WHEN tier = 'F' THEN 1 ELSE 0 END) AS f_count,
-          SUM(CASE WHEN tier IN ('SS','C','G') THEN 1 ELSE 0 END) AS new_count
-        FROM games
-      `).first();
+      // One-time normalization for the old tier keys.
+      // The old database used S/A/B/F while the current UI uses
+      // SS/S/A/B. The previous frontend only converted these in GET,
+      // so drag/drop could operate on the wrong stored tier.
+      if (!legacyTierMigrationDone) {
+        const legacyTierMap = [
+          ["S", "SS"],
+          ["A", "S"],
+          ["B", "A"],
+          ["F", "B"]
+        ];
 
-      if (
-        Number(legacyCheck?.f_count || 0) > 0 &&
-        Number(legacyCheck?.new_count || 0) === 0
-      ) {
-        // Temporary names prevent collisions during conversion.
+        for (const [oldTier, newTier] of legacyTierMap) {
+          await env.DB.prepare(`
+            UPDATE games
+            SET tier = ?
+            WHERE tier = ?
+          `).bind(newTier, oldTier).run();
+        }
 
-        await env.DB.prepare(
-          "UPDATE games SET tier = '__LEGACY_SS' WHERE tier = 'S'"
-        ).run();
+        const tierKeys = ["SS", "S", "A", "B", "C", "X", "G"];
 
-        await env.DB.prepare(
-          "UPDATE games SET tier = '__LEGACY_S' WHERE tier = 'A'"
-        ).run();
+        for (const tierKey of tierKeys) {
+          const ordered = await env.DB.prepare(`
+            SELECT id
+            FROM games
+            WHERE tier = ?
+            ORDER BY position ASC, id ASC
+          `).bind(tierKey).all();
 
-        await env.DB.prepare(
-          "UPDATE games SET tier = '__LEGACY_A' WHERE tier = 'B'"
-        ).run();
+          const statements = (ordered.results || []).map((game, index) =>
+            env.DB.prepare(`
+              UPDATE games
+              SET position = ?
+              WHERE id = ?
+            `).bind(index, game.id)
+          );
 
-        await env.DB.prepare(
-          "UPDATE games SET tier = '__LEGACY_B' WHERE tier = 'F'"
-        ).run();
+          if (statements.length) {
+            await env.DB.batch(statements);
+          }
+        }
 
-        await env.DB.prepare(
-          "UPDATE games SET tier = 'SS' WHERE tier = '__LEGACY_SS'"
-        ).run();
-
-        await env.DB.prepare(
-          "UPDATE games SET tier = 'S' WHERE tier = '__LEGACY_S'"
-        ).run();
-
-        await env.DB.prepare(
-          "UPDATE games SET tier = 'A' WHERE tier = '__LEGACY_A'"
-        ).run();
-
-        await env.DB.prepare(
-          "UPDATE games SET tier = 'B' WHERE tier = '__LEGACY_B'"
-        ).run();
+        legacyTierMigrationDone = true;
       }
 
-      // Copy the old seven ratings into the new eight-category table
-      // only for games that do not already have a rating row.
-
+      // Seed the new rating table from the old seven rating columns.
       const oldGames = await env.DB.prepare(`
         SELECT
           id,
@@ -156,113 +143,108 @@ export default {
     }
 
     // =========================================================
+    // AUTH
+    // =========================================================
+
+    function isAdmin(request) {
+      const auth = request.headers.get("Authorization");
+
+      if (!auth) return false;
+
+      const token = auth.replace(/^Bearer\s+/i, "");
+
+      return token === env.ADMIN_PASSWORD;
+    }
+
+    // =========================================================
     // LOGIN
     // =========================================================
 
-    if (
-      url.pathname === "/api/login" &&
-      request.method === "POST"
-    ) {
+    if (url.pathname === "/api/login" && request.method === "POST") {
       try {
         const body = await request.json();
 
-        if (
-          !body.password ||
-          body.password !== env.ADMIN_PASSWORD
-        ) {
-          return json(
+        if (!body.password || body.password !== env.ADMIN_PASSWORD) {
+          return Response.json(
             {
               success: false,
               error: "Invalid password"
             },
-            401
+            { status: 401 }
           );
         }
 
-        return json({
+        return Response.json({
           success: true,
           token: env.ADMIN_PASSWORD
         });
-
       } catch {
-        return json(
+        return Response.json(
           {
             success: false,
             error: "Invalid request"
           },
-          400
+          { status: 400 }
         );
       }
     }
 
     // =========================================================
     // SETUP / MIGRATION
-    //
-    // This is NOT run automatically on every request.
-    // Run once manually if the database has not already been
-    // prepared by the previous worker.
     // =========================================================
 
-    if (
-      (
-        url.pathname === "/api/setup" ||
-        url.pathname === "/api/migrate"
-      ) &&
-      request.method === "POST"
-    ) {
+    if (url.pathname === "/api/setup" && request.method === "POST") {
       if (!isAdmin(request)) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
       }
 
       try {
         await setupDatabase();
 
-        return json({
+        return Response.json({
           success: true,
-          message: "Database setup / migration completed."
+          message: "Database setup completed safely."
         });
-
       } catch (error) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: error.message
           },
-          500
+          { status: 500 }
         );
       }
     }
 
     // =========================================================
-    // TEST D1
+    // TEST
     // =========================================================
 
     if (url.pathname === "/api/test") {
       try {
+        await setupDatabase();
+
         const result = await env.DB
-          .prepare(
-            "SELECT COUNT(*) AS count FROM games"
-          )
+          .prepare("SELECT COUNT(*) AS count FROM games")
           .first();
 
-        return json({
+        return Response.json({
           success: true,
           games: result.count
         });
-
       } catch (error) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: error.message
           },
-          500
+          { status: 500 }
         );
       }
     }
@@ -271,19 +253,13 @@ export default {
     // GET GAMES
     // =========================================================
 
-    if (
-      url.pathname === "/api/games" &&
-      request.method === "GET"
-    ) {
+    if (url.pathname === "/api/games" && request.method === "GET") {
       try {
-        const result = await env.DB.prepare(`
-          SELECT
-            g.id,
-            g.name,
-            g.tier,
-            g.commentary,
-            g.position,
+        await setupDatabase();
 
+        const gamesResult = await env.DB.prepare(`
+          SELECT
+            g.*,
             r.gameplay,
             r.graphics,
             r.story_pacing,
@@ -293,198 +269,144 @@ export default {
             r.technical_performance,
             r.emotional_impact,
             r.custom_overall
-
           FROM games g
-
           LEFT JOIN game_ratings r
             ON g.id = r.game_id
-
           ORDER BY g.position ASC
         `).all();
 
-        // Compatibility with databases that still contain the
-        // original five-tier values.
-        const legacyMap = {
-          S: "SS",
-          A: "S",
-          B: "A",
-          F: "B"
-        };
+        const games = (gamesResult.results || []).map(game => {
+          let tier = game.tier;
 
-        const games =
-          (result.results || []).map(game => {
+          const legacyMap = {
+            S: "SS",
+            A: "S",
+            B: "A",
+            F: "B",
+            X: "X"
+          };
 
-            const ratings = [
-              Number(game.gameplay || 0),
-              Number(game.graphics || 0),
-              Number(game.story_pacing || 0),
-              Number(game.writing || 0),
-              Number(game.voice_acting || 0),
-              Number(game.music_audio || 0),
+          tier = legacyMap[tier] || tier;
+
+          const ratings = [
+            Number(game.gameplay || 0),
+            Number(game.graphics || 0),
+            Number(game.story_pacing || 0),
+            Number(game.writing || 0),
+            Number(game.voice_acting || 0),
+            Number(game.music_audio || 0),
+            Number(game.technical_performance || 0),
+            Number(game.emotional_impact || 0)
+          ];
+
+          const calculated =
+            Math.round(
+              (
+                ratings.reduce((a, b) => a + b, 0) /
+                ratings.length
+              ) * 10
+            ) / 10;
+
+          const overall =
+            game.custom_overall !== null &&
+            game.custom_overall !== undefined &&
+            game.custom_overall !== ""
+              ? Number(game.custom_overall)
+              : calculated;
+
+          return {
+            id: game.id,
+            name: game.name,
+            tier,
+            commentary: game.commentary || "",
+            position: Number(game.position || 0),
+
+            gameplay: Number(game.gameplay || 0),
+            graphics: Number(game.graphics || 0),
+            story_pacing: Number(game.story_pacing || 0),
+            writing: Number(game.writing || 0),
+            voice_acting: Number(game.voice_acting || 0),
+            music_audio: Number(game.music_audio || 0),
+            technical_performance:
               Number(game.technical_performance || 0),
-              Number(game.emotional_impact || 0)
-            ];
+            emotional_impact:
+              Number(game.emotional_impact || 0),
 
-            const calculated =
-              Math.round(
-                (
-                  ratings.reduce(
-                    (a, b) => a + b,
-                    0
-                  ) /
-                  ratings.length
-                ) * 10
-              ) / 10;
+            custom_overall:
+              game.custom_overall === null ||
+              game.custom_overall === undefined ||
+              game.custom_overall === ""
+                ? null
+                : Number(game.custom_overall),
 
-            const custom =
-              game.custom_overall !== null &&
-              game.custom_overall !== undefined &&
-              game.custom_overall !== ""
-                ? Number(game.custom_overall)
-                : null;
+            overall
+          };
+        });
 
-            return {
-              id: game.id,
-
-              name: game.name,
-
-              tier:
-                legacyMap[game.tier] ||
-                game.tier,
-
-              commentary:
-                game.commentary || "",
-
-              position:
-                Number(game.position || 0),
-
-              gameplay:
-                Number(game.gameplay || 0),
-
-              graphics:
-                Number(game.graphics || 0),
-
-              story_pacing:
-                Number(game.story_pacing || 0),
-
-              writing:
-                Number(game.writing || 0),
-
-              voice_acting:
-                Number(game.voice_acting || 0),
-
-              music_audio:
-                Number(game.music_audio || 0),
-
-              technical_performance:
-                Number(
-                  game.technical_performance || 0
-                ),
-
-              emotional_impact:
-                Number(
-                  game.emotional_impact || 0
-                ),
-
-              custom_overall:
-                custom,
-
-              overall:
-                custom !== null &&
-                Number.isFinite(custom)
-                  ? custom
-                  : calculated
-            };
-          });
-
-        return json({
+        return Response.json({
           success: true,
           games
         });
-
       } catch (error) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: error.message
           },
-          500
+          { status: 500 }
         );
       }
     }
 
     // =========================================================
     // UPDATE GAME
-    //
-    // Partial update.
-    // Missing fields are preserved.
     // =========================================================
 
-    if (
-      url.pathname === "/api/games" &&
-      request.method === "PUT"
-    ) {
+    if (url.pathname === "/api/games" && request.method === "PUT") {
       if (!isAdmin(request)) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
       }
 
       try {
+        await setupDatabase();
+
         const body = await request.json();
 
         if (!body.id) {
-          return json(
-            {
-              success: false,
-              error: "Game ID is required"
-            },
-            400
-          );
+          throw new Error("Game ID is required");
         }
 
-        const current =
-          await env.DB
-            .prepare(`
-              SELECT
-                id,
-                name,
-                tier,
-                commentary
-              FROM games
-              WHERE id = ?
-            `)
-            .bind(body.id)
-            .first();
+        const current = await env.DB
+          .prepare("SELECT * FROM games WHERE id = ?")
+          .bind(body.id)
+          .first();
 
         if (!current) {
-          return json(
-            {
-              success: false,
-              error: "Game not found"
-            },
-            404
-          );
+          throw new Error("Game not found");
         }
 
         const name =
           body.name !== undefined
             ? String(body.name)
-            : String(current.name || "");
-
-        const tier =
-          body.tier !== undefined
-            ? String(body.tier)
-            : String(current.tier || "B");
+            : current.name;
 
         const commentary =
           body.commentary !== undefined
             ? String(body.commentary)
-            : String(current.commentary || "");
+            : current.commentary || "";
+
+        const tier =
+          body.tier !== undefined
+            ? String(body.tier)
+            : current.tier;
+
+        const storedTier = tier;
 
         await env.DB.prepare(`
           UPDATE games
@@ -495,20 +417,19 @@ export default {
           WHERE id = ?
         `).bind(
           name,
-          tier,
+          storedTier,
           commentary,
           body.id
         ).run();
 
-        const old =
-          await env.DB
-            .prepare(`
-              SELECT *
-              FROM game_ratings
-              WHERE game_id = ?
-            `)
-            .bind(body.id)
-            .first();
+        const oldRatings = await env.DB
+          .prepare(`
+            SELECT *
+            FROM game_ratings
+            WHERE game_id = ?
+          `)
+          .bind(body.id)
+          .first();
 
         const fields = [
           "gameplay",
@@ -524,60 +445,33 @@ export default {
         const values = {};
 
         for (const field of fields) {
-
-          if (
-            Object.prototype.hasOwnProperty.call(
-              body,
-              field
-            )
-          ) {
-            const n = Number(body[field]);
-
-            values[field] =
-              Number.isFinite(n)
-                ? n
-                : 0;
-
-          } else {
-
-            values[field] =
-              Number(old?.[field] || 0);
-          }
+          values[field] =
+            body[field] !== undefined
+              ? Number(body[field]) || 0
+              : Number(oldRatings?.[field] || 0);
         }
 
         let customOverall;
 
-        if (
-          Object.prototype.hasOwnProperty.call(
-            body,
-            "custom_overall"
-          )
-        ) {
-
+        if (body.custom_overall !== undefined) {
           if (
             body.custom_overall === null ||
             body.custom_overall === ""
           ) {
-
             customOverall = null;
-
           } else {
+            customOverall = Number(body.custom_overall);
 
-            const n =
-              Number(body.custom_overall);
-
-            customOverall =
-              Number.isFinite(n)
-                ? n
-                : null;
+            if (!Number.isFinite(customOverall)) {
+              customOverall = null;
+            }
           }
-
         } else {
-
           customOverall =
-            old?.custom_overall == null
+            oldRatings?.custom_overall === null ||
+            oldRatings?.custom_overall === undefined
               ? null
-              : Number(old.custom_overall);
+              : Number(oldRatings.custom_overall);
         }
 
         await env.DB.prepare(`
@@ -593,48 +487,18 @@ export default {
             emotional_impact,
             custom_overall
           )
-
-          VALUES (
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?,
-            ?
-          )
-
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(game_id)
           DO UPDATE SET
-            gameplay =
-              excluded.gameplay,
-
-            graphics =
-              excluded.graphics,
-
-            story_pacing =
-              excluded.story_pacing,
-
-            writing =
-              excluded.writing,
-
-            voice_acting =
-              excluded.voice_acting,
-
-            music_audio =
-              excluded.music_audio,
-
-            technical_performance =
-              excluded.technical_performance,
-
-            emotional_impact =
-              excluded.emotional_impact,
-
-            custom_overall =
-              excluded.custom_overall
+            gameplay = excluded.gameplay,
+            graphics = excluded.graphics,
+            story_pacing = excluded.story_pacing,
+            writing = excluded.writing,
+            voice_acting = excluded.voice_acting,
+            music_audio = excluded.music_audio,
+            technical_performance = excluded.technical_performance,
+            emotional_impact = excluded.emotional_impact,
+            custom_overall = excluded.custom_overall
         `).bind(
           body.id,
           values.gameplay,
@@ -648,17 +512,16 @@ export default {
           customOverall
         ).run();
 
-        return json({
+        return Response.json({
           success: true
         });
-
       } catch (error) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: error.message
           },
-          500
+          { status: 500 }
         );
       }
     }
@@ -667,57 +530,38 @@ export default {
     // ADD GAME
     // =========================================================
 
-    if (
-      url.pathname === "/api/games" &&
-      request.method === "POST"
-    ) {
+    if (url.pathname === "/api/games" && request.method === "POST") {
       if (!isAdmin(request)) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
       }
 
       try {
+        await setupDatabase();
 
-        const body =
-          await request.json();
+        const body = await request.json();
 
         const id =
           body.id ||
-          (
-            "g_" +
-            Date.now().toString(36) +
-            Math.random()
-              .toString(36)
-              .substring(2, 7)
-          );
+          "g_" +
+          Date.now().toString(36) +
+          Math.random().toString(36).substring(2, 7);
 
-        const tier =
-          String(body.tier || "A");
-
-        const maxPosition =
-          await env.DB
-            .prepare(`
-              SELECT
-                MAX(position)
-                AS maxPosition
-
-              FROM games
-
-              WHERE tier = ?
-            `)
-            .bind(tier)
-            .first();
+        const maxPosition = await env.DB
+          .prepare(`
+            SELECT MAX(position) AS maxPosition
+            FROM games
+          `)
+          .first();
 
         const position =
           maxPosition?.maxPosition != null
-            ? Number(
-                maxPosition.maxPosition
-              ) + 1
+            ? Number(maxPosition.maxPosition) + 1
             : 0;
 
         await env.DB.prepare(`
@@ -735,25 +579,11 @@ export default {
             commentary,
             position
           )
-
-          VALUES (
-            ?,
-            ?,
-            ?,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            ?,
-            ?
-          )
+          VALUES (?, ?, ?, 0, 0, 0, 0, 0, 0, 0, ?, ?)
         `).bind(
           id,
           body.name || "New Game",
-          tier,
+          body.tier || "A",
           body.commentary || "",
           position
         ).run();
@@ -771,426 +601,20 @@ export default {
             emotional_impact,
             custom_overall
           )
-
-          VALUES (
-            ?,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            NULL
-          )
+          VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0, NULL)
         `).bind(id).run();
 
-        return json({
+        return Response.json({
           success: true,
           id
         });
-
       } catch (error) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: error.message
           },
-          500
-        );
-      }
-    }
-
-    // =========================================================
-    // MOVE / REORDER GAME
-    // =========================================================
-
-    if (
-      url.pathname === "/api/games/move" &&
-      request.method === "POST"
-    ) {
-      if (!isAdmin(request)) {
-        return json(
-          {
-            success: false,
-            error: "Unauthorized"
-          },
-          401
-        );
-      }
-
-      try {
-
-        const body =
-          await request.json();
-
-        if (
-          !body.id ||
-          !body.tier
-        ) {
-          return json(
-            {
-              success: false,
-              error:
-                "Missing game ID or tier"
-            },
-            400
-          );
-        }
-
-        const targetTier =
-          String(body.tier);
-
-        const moving =
-          await env.DB
-            .prepare(`
-              SELECT
-                id,
-                tier
-              FROM games
-              WHERE id = ?
-            `)
-            .bind(body.id)
-            .first();
-
-        if (!moving) {
-          return json(
-            {
-              success: false,
-              error: "Game not found"
-            },
-            404
-          );
-        }
-
-        const sourceTier =
-          String(
-            moving.tier || ""
-          );
-
-        let targetPosition =
-          Number(body.position);
-
-        if (
-          !Number.isFinite(
-            targetPosition
-          )
-        ) {
-          targetPosition = 0;
-        }
-
-        targetPosition =
-          Math.max(
-            0,
-            Math.floor(
-              targetPosition
-            )
-          );
-
-        const targetRows =
-          await env.DB.prepare(`
-            SELECT id
-            FROM games
-            WHERE tier = ?
-              AND id != ?
-            ORDER BY position ASC
-          `).bind(
-            targetTier,
-            body.id
-          ).all();
-
-        const targetIds =
-          (
-            targetRows.results || []
-          ).map(row => row.id);
-
-        targetPosition =
-          Math.min(
-            targetPosition,
-            targetIds.length
-          );
-
-        targetIds.splice(
-          targetPosition,
-          0,
-          body.id
-        );
-
-        // Compact old tier if necessary.
-
-        if (
-          sourceTier !==
-          targetTier
-        ) {
-
-          const sourceRows =
-            await env.DB.prepare(`
-              SELECT id
-              FROM games
-              WHERE tier = ?
-                AND id != ?
-              ORDER BY position ASC
-            `).bind(
-              sourceTier,
-              body.id
-            ).all();
-
-          const sourceIds =
-            (
-              sourceRows.results || []
-            ).map(row => row.id);
-
-          for (
-            let i = 0;
-            i < sourceIds.length;
-            i++
-          ) {
-
-            await env.DB
-              .prepare(`
-                UPDATE games
-                SET position = ?
-                WHERE id = ?
-              `)
-              .bind(
-                i,
-                sourceIds[i]
-              )
-              .run();
-          }
-        }
-
-        // Rewrite only the destination tier.
-
-        for (
-          let i = 0;
-          i < targetIds.length;
-          i++
-        ) {
-
-          await env.DB
-            .prepare(`
-              UPDATE games
-              SET
-                tier = ?,
-                position = ?
-              WHERE id = ?
-            `)
-            .bind(
-              targetTier,
-              i,
-              targetIds[i]
-            )
-            .run();
-        }
-
-        return json({
-          success: true
-        });
-
-      } catch (error) {
-        return json(
-          {
-            success: false,
-            error: error.message
-          },
-          500
-        );
-      }
-    }
-
-    // =========================================================
-    // REORDER POSITIONS
-    // =========================================================
-
-    if (
-      url.pathname === "/api/games/reorder" &&
-      request.method === "POST"
-    ) {
-      if (!isAdmin(request)) {
-        return json(
-          {
-            success: false,
-            error: "Unauthorized"
-          },
-          401
-        );
-      }
-
-      try {
-
-        const body =
-          await request.json();
-
-        const positions =
-          body.positions || {};
-
-        for (
-          const [id, position]
-          of Object.entries(
-            positions
-          )
-        ) {
-
-          const n =
-            Number(position);
-
-          if (
-            !Number.isFinite(n)
-          ) {
-            continue;
-          }
-
-          await env.DB
-            .prepare(`
-              UPDATE games
-              SET position = ?
-              WHERE id = ?
-            `)
-            .bind(
-              n,
-              id
-            )
-            .run();
-        }
-
-        return json({
-          success: true
-        });
-
-      } catch (error) {
-
-        return json(
-          {
-            success: false,
-            error: error.message
-          },
-          500
-        );
-      }
-    }
-
-    // =========================================================
-    // GET TIER SETTINGS
-    // =========================================================
-
-    if (
-      url.pathname === "/api/tiers" &&
-      request.method === "GET"
-    ) {
-      try {
-
-        const result =
-          await env.DB.prepare(`
-            SELECT
-              tier_key,
-              letter,
-              label,
-              sub
-
-            FROM tier_settings
-
-            ORDER BY CASE tier_key
-              WHEN 'SS' THEN 1
-              WHEN 'S' THEN 2
-              WHEN 'A' THEN 3
-              WHEN 'B' THEN 4
-              WHEN 'C' THEN 5
-              WHEN 'X' THEN 6
-              WHEN 'G' THEN 7
-              ELSE 99
-            END
-          `).all();
-
-        return json({
-          success: true,
-          tiers:
-            result.results || []
-        });
-
-      } catch (error) {
-
-        return json(
-          {
-            success: false,
-            error: error.message
-          },
-          500
-        );
-      }
-    }
-
-    // =========================================================
-    // UPDATE TIER SETTINGS
-    // =========================================================
-
-    if (
-      url.pathname === "/api/tiers" &&
-      request.method === "PUT"
-    ) {
-      if (!isAdmin(request)) {
-        return json(
-          {
-            success: false,
-            error: "Unauthorized"
-          },
-          401
-        );
-      }
-
-      try {
-
-        const body =
-          await request.json();
-
-        if (!body.tier_key) {
-          return json(
-            {
-              success: false,
-              error:
-                "Tier key is required"
-            },
-            400
-          );
-        }
-
-        await env.DB.prepare(`
-          UPDATE tier_settings
-
-          SET
-            letter = ?,
-            label = ?,
-            sub = ?
-
-          WHERE tier_key = ?
-        `).bind(
-          String(
-            body.letter ?? ""
-          ),
-          String(
-            body.label ?? ""
-          ),
-          String(
-            body.sub ?? ""
-          ),
-          String(
-            body.tier_key
-          )
-        ).run();
-
-        return json({
-          success: true
-        });
-
-      } catch (error) {
-
-        return json(
-          {
-            success: false,
-            error: error.message
-          },
-          500
+          { status: 500 }
         );
       }
     }
@@ -1200,102 +624,335 @@ export default {
     // =========================================================
 
     if (
-      url.pathname.startsWith(
-        "/api/games/"
-      ) &&
+      url.pathname.startsWith("/api/games/") &&
       request.method === "DELETE"
     ) {
       if (!isAdmin(request)) {
-        return json(
+        return Response.json(
           {
             success: false,
             error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
       }
 
       try {
+        await setupDatabase();
 
         const id =
           decodeURIComponent(
-            url.pathname
-              .split("/")
-              .pop()
+            url.pathname.split("/").pop()
           );
 
-        const game =
-          await env.DB
-            .prepare(`
-              SELECT tier
-              FROM games
-              WHERE id = ?
-            `)
-            .bind(id)
-            .first();
-
         await env.DB
-          .prepare(`
-            DELETE FROM game_ratings
-            WHERE game_id = ?
-          `)
+          .prepare("DELETE FROM game_ratings WHERE game_id = ?")
           .bind(id)
           .run();
 
         await env.DB
-          .prepare(`
-            DELETE FROM games
-            WHERE id = ?
-          `)
+          .prepare("DELETE FROM games WHERE id = ?")
           .bind(id)
           .run();
 
-        if (game?.tier) {
-
-          const rows =
-            await env.DB.prepare(`
-              SELECT id
-              FROM games
-              WHERE tier = ?
-              ORDER BY position ASC
-            `).bind(
-              game.tier
-            ).all();
-
-          for (
-            let i = 0;
-            i < (
-              rows.results || []
-            ).length;
-            i++
-          ) {
-
-            await env.DB
-              .prepare(`
-                UPDATE games
-                SET position = ?
-                WHERE id = ?
-              `)
-              .bind(
-                i,
-                rows.results[i].id
-              )
-              .run();
-          }
-        }
-
-        return json({
+        return Response.json({
           success: true
         });
-
       } catch (error) {
-
-        return json(
+        return Response.json(
           {
             success: false,
             error: error.message
           },
-          500
+          { status: 500 }
+        );
+      }
+    }
+
+    // =========================================================
+    // MOVE GAME
+    // =========================================================
+
+    if (
+      url.pathname === "/api/games/move" &&
+      request.method === "POST"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
+          {
+            success: false,
+            error: "Unauthorized"
+          },
+          { status: 401 }
+        );
+      }
+
+      try {
+        await setupDatabase();
+
+        const body = await request.json();
+
+        if (!body.id || !body.tier) {
+          throw new Error("Missing game ID or tier");
+        }
+
+        const movingId = String(body.id);
+        const targetTier = String(body.tier);
+
+        const requestedPosition = Math.max(
+          0,
+          Number.isFinite(Number(body.position))
+            ? Number(body.position)
+            : 0
+        );
+
+        const current = await env.DB
+          .prepare("SELECT tier FROM games WHERE id = ?")
+          .bind(movingId)
+          .first();
+
+        if (!current) {
+          throw new Error("Game not found");
+        }
+
+        const oldTier = String(current.tier);
+
+        const targetResult = await env.DB.prepare(`
+          SELECT id
+          FROM games
+          WHERE tier = ?
+            AND id <> ?
+          ORDER BY position ASC, id ASC
+        `).bind(
+          targetTier,
+          movingId
+        ).all();
+
+        const targetIds =
+          (targetResult.results || []).map(row => row.id);
+
+        const insertAt = Math.min(
+          requestedPosition,
+          targetIds.length
+        );
+
+        targetIds.splice(
+          insertAt,
+          0,
+          movingId
+        );
+
+        const statements = [
+          env.DB.prepare(`
+            UPDATE games
+            SET tier = ?
+            WHERE id = ?
+          `).bind(
+            targetTier,
+            movingId
+          )
+        ];
+
+        targetIds.forEach((id, index) => {
+          statements.push(
+            env.DB.prepare(`
+              UPDATE games
+              SET position = ?
+              WHERE id = ?
+            `).bind(
+              index,
+              id
+            )
+          );
+        });
+
+        if (oldTier !== targetTier) {
+          const oldResult = await env.DB.prepare(`
+            SELECT id
+            FROM games
+            WHERE tier = ?
+            ORDER BY position ASC, id ASC
+          `).bind(oldTier).all();
+
+          (oldResult.results || []).forEach((row, index) => {
+            statements.push(
+              env.DB.prepare(`
+                UPDATE games
+                SET position = ?
+                WHERE id = ?
+              `).bind(
+                index,
+                row.id
+              )
+            );
+          });
+        }
+
+        // D1 batch() executes the reorder as one atomic batch,
+        // avoiding partial position updates and reducing
+        // network round trips.
+        await env.DB.batch(statements);
+
+        return Response.json({
+          success: true
+        });
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // =========================================================
+    // REORDER GAME
+    // =========================================================
+
+    if (
+      url.pathname === "/api/games/reorder" &&
+      request.method === "POST"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
+          {
+            success: false,
+            error: "Unauthorized"
+          },
+          { status: 401 }
+        );
+      }
+
+      try {
+        const body = await request.json();
+        const positions = body.positions || {};
+
+        const statements = [];
+
+        for (const [id, position] of Object.entries(positions)) {
+          statements.push(
+            env.DB.prepare(`
+              UPDATE games
+              SET position = ?
+              WHERE id = ?
+            `).bind(
+              Number(position),
+              id
+            )
+          );
+        }
+
+        if (statements.length) {
+          await env.DB.batch(statements);
+        }
+
+        return Response.json({
+          success: true
+        });
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // =========================================================
+    // TIER SETTINGS
+    // =========================================================
+
+    if (
+      url.pathname === "/api/tiers" &&
+      request.method === "GET"
+    ) {
+      try {
+        await setupDatabase();
+
+        const result = await env.DB
+          .prepare(`
+            SELECT *
+            FROM tier_settings
+            ORDER BY
+              CASE tier_key
+                WHEN 'SS' THEN 1
+                WHEN 'S' THEN 2
+                WHEN 'A' THEN 3
+                WHEN 'B' THEN 4
+                WHEN 'C' THEN 5
+                WHEN 'X' THEN 6
+                WHEN 'G' THEN 7
+                ELSE 99
+              END
+          `)
+          .all();
+
+        return Response.json({
+          success: true,
+          tiers: result.results || []
+        });
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (
+      url.pathname === "/api/tiers" &&
+      request.method === "PUT"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
+          {
+            success: false,
+            error: "Unauthorized"
+          },
+          { status: 401 }
+        );
+      }
+
+      try {
+        await setupDatabase();
+
+        const body = await request.json();
+
+        if (!body.tier_key) {
+          throw new Error("Tier key is required");
+        }
+
+        await env.DB.prepare(`
+          UPDATE tier_settings
+          SET
+            letter = ?,
+            label = ?,
+            sub = ?
+          WHERE tier_key = ?
+        `).bind(
+          String(body.letter ?? ""),
+          String(body.label ?? ""),
+          String(body.sub ?? ""),
+          body.tier_key
+        ).run();
+
+        return Response.json({
+          success: true
+        });
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
         );
       }
     }
