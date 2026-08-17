@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PLAYED. — a personal scoreboard</title>
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root{
   --bg:#0f0e17;
@@ -29,25 +30,45 @@
   --slate-dim:rgba(115,110,143,0.18);
 }
 
-*{box-sizing:border-box; margin:0; padding:0;}
-html,body{background:var(--bg); color:var(--text);}
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  background:var(--bg);
+  color:var(--text);
+}
+
 body{
-  font-family:'Inter', sans-serif;
+  font-family:'Inter',sans-serif;
   min-height:100vh;
   padding-bottom:80px;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--gold-dim); color:var(--gold);}
-::-webkit-scrollbar{width:10px; height:10px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:6px;}
-:focus-visible{outline:2px solid var(--gold); outline-offset:2px; border-radius:3px;}
 
-@media (prefers-reduced-motion: reduce){
-  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+::selection{
+  background:var(--gold-dim);
+  color:var(--gold);
 }
 
-/* ---------- Header ---------- */
+::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+::-webkit-scrollbar-thumb{
+  background:var(--line-strong);
+  border-radius:6px;
+}
+
+:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:2px;
+  border-radius:3px;
+}
+
 header.top{
   max-width:1400px;
   margin:0 auto;
@@ -58,24 +79,25 @@ header.top{
   gap:20px;
   border-bottom:1px solid var(--line);
 }
+
 .brand h1{
-  font-family:'Fraunces', serif;
+  font-family:'Fraunces',serif;
   font-weight:600;
   font-style:italic;
   font-size:42px;
-  letter-spacing:-0.01em;
   color:var(--text);
 }
+
 .brand p{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-size:12px;
   color:var(--text-faint);
-  letter-spacing:0.06em;
+  letter-spacing:.06em;
   text-transform:uppercase;
   margin-top:6px;
 }
+
 .btn-add{
-  font-family:'Inter', sans-serif;
   font-weight:600;
   font-size:14px;
   color:#0f0e17;
@@ -84,13 +106,12 @@ header.top{
   padding:12px 20px;
   border-radius:8px;
   cursor:pointer;
-  white-space:nowrap;
-  transition:transform .12s ease, filter .12s ease;
 }
-.btn-add:hover{ filter:brightness(1.08); transform:translateY(-1px); }
-.btn-add:active{ transform:translateY(0px); }
 
-/* ---------- Tier sections ---------- */
+.btn-add:hover{
+  filter:brightness(1.08);
+}
+
 main{
   max-width:1400px;
   margin:0 auto;
@@ -100,69 +121,76 @@ main{
   align-items:flex-start;
   overflow-x:auto;
 }
+
 .tier{
   flex:0 0 auto;
   min-width:200px;
 }
+
 .tier-head{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   gap:2px;
   padding-bottom:10px;
-  border-bottom:2px solid var(--tier-color, var(--line-strong));
+  border-bottom:2px solid var(--tier-color);
   margin-bottom:4px;
 }
+
 .tier-letter{
-  font-family:'Fraunces', serif;
+  font-family:'Fraunces',serif;
   font-style:italic;
   font-weight:600;
   font-size:26px;
   color:var(--tier-color);
   line-height:1;
 }
+
 .tier-label{
   font-size:13.5px;
   font-weight:600;
-  color:var(--text);
 }
+
 .tier-sub{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-size:10px;
   color:var(--text-faint);
   text-transform:uppercase;
   letter-spacing:.05em;
 }
+
 .tier-meta{
   width:100%;
   margin-top:4px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:10px;
 }
+
 .tier-count{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-size:12px;
   color:var(--text-dim);
 }
+
 .resort-btn{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-size:11px;
   color:var(--tier-color);
   background:transparent;
   border:1px solid var(--tier-color);
-  opacity:.75;
   padding:4px 9px;
   border-radius:20px;
   cursor:pointer;
-  transition:opacity .12s ease, background .12s ease;
 }
-.resort-btn:hover{ opacity:1; background:var(--tier-dim); }
 
-.rows{ padding:6px 0 4px; min-height:14px; }
+.rows{
+  padding:6px 0 4px;
+  min-height:14px;
+}
+
 .empty-row{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-size:12px;
   color:var(--text-faint);
   padding:18px 4px;
@@ -181,14 +209,25 @@ main{
   background:var(--surface);
   border-left:3px solid var(--tier-color);
   border-radius:6px;
-  cursor:grab;
-  transition:background .12s ease, transform .1s ease;
+  cursor:pointer;
+  transition:background .12s ease;
 }
-.row:hover{ background:var(--surface-hover); }
-.row:active{ cursor:grabbing; }
-.row.dragging{ opacity:.35; }
-.row.drag-over-top{ box-shadow: inset 0 2px 0 var(--tier-color); }
-.row.drag-over-bottom{ box-shadow: inset 0 -2px 0 var(--tier-color); }
+
+.row:hover{
+  background:var(--surface-hover);
+}
+
+.row.dragging{
+  opacity:.35;
+}
+
+.row.drag-over-top{
+  box-shadow:inset 0 2px 0 var(--tier-color);
+}
+
+.row.drag-over-bottom{
+  box-shadow:inset 0 -2px 0 var(--tier-color);
+}
 
 .row-top{
   display:flex;
@@ -196,21 +235,23 @@ main{
   justify-content:space-between;
   gap:8px;
 }
+
 .row-name{
   font-size:13px;
   font-weight:500;
-  color:var(--text);
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
   flex:1;
 }
+
 .row-eq{
   display:flex;
   align-items:flex-end;
   gap:2.5px;
   height:16px;
 }
+
 .row-eq i{
   display:block;
   width:4px;
@@ -219,21 +260,29 @@ main{
   border-radius:1px;
   min-height:2px;
 }
+
 .row-score{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-weight:700;
   font-size:14px;
   color:var(--tier-color);
   flex-shrink:0;
 }
-.row-score sub{ font-size:10px; color:var(--text-faint); font-weight:400; }
 
-/* ---------- Modal ---------- */
+.row-score sub{
+  font-size:10px;
+  color:var(--text-faint);
+  font-weight:400;
+}
+
 .overlay{
-  position:fixed; inset:0;
-  background:rgba(5,4,9,0.7);
-  backdrop-filter: blur(3px);
-  display:flex; align-items:flex-start; justify-content:center;
+  position:fixed;
+  inset:0;
+  background:rgba(5,4,9,.7);
+  backdrop-filter:blur(3px);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
   padding:40px 16px;
   overflow-y:auto;
   z-index:100;
@@ -241,7 +290,12 @@ main{
   pointer-events:none;
   transition:opacity .15s ease;
 }
-.overlay.open{ opacity:1; pointer-events:auto; }
+
+.overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+
 .modal{
   background:var(--surface);
   border:1px solid var(--line-strong);
@@ -249,14 +303,18 @@ main{
   width:100%;
   max-width:560px;
   padding:28px 28px 32px;
-  transform:translateY(8px);
-  transition:transform .15s ease;
 }
-.overlay.open .modal{ transform:translateY(0); }
 
-.modal-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:18px; }
+.modal-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+}
+
 .modal-name{
-  font-family:'Fraunces', serif;
+  font-family:'Fraunces',serif;
   font-weight:600;
   font-size:26px;
   color:var(--text);
@@ -266,118 +324,217 @@ main{
   width:100%;
   padding:2px 0;
 }
-.modal-name:focus{ border-bottom:1px solid var(--line-strong); }
-.modal-close{
-  background:transparent; border:none; color:var(--text-faint);
-  font-size:20px; cursor:pointer; line-height:1; padding:4px;
-}
-.modal-close:hover{ color:var(--text); }
 
-.tier-picker{ display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap; }
+.modal-name:focus{
+  border-bottom:1px solid var(--line-strong);
+}
+
+.modal-close{
+  background:transparent;
+  border:none;
+  color:var(--text-faint);
+  font-size:20px;
+  cursor:pointer;
+  padding:4px;
+}
+
+.tier-picker{
+  display:flex;
+  gap:8px;
+  margin-bottom:22px;
+  flex-wrap:wrap;
+}
+
 .tier-chip{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-size:11.5px;
   font-weight:700;
   padding:6px 12px;
   border-radius:20px;
   border:1px solid var(--line-strong);
   background:transparent;
-  color:var(--text-dim);
   cursor:pointer;
-  transition:all .12s ease;
 }
-.tier-chip.active{ color:#0f0e17; }
 
 .overall-line{
-  display:flex; align-items:baseline; gap:10px;
+  display:flex;
+  align-items:baseline;
+  gap:10px;
   margin-bottom:20px;
   padding-bottom:18px;
   border-bottom:1px solid var(--line);
 }
-.overall-num{ font-family:'JetBrains Mono', monospace; font-weight:700; font-size:34px; color:var(--gold); }
-.overall-label{ font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em; }
 
-.cat-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0; }
-.cat-label{ font-size:13px; color:var(--text-dim); width:130px; flex-shrink:0; }
-.stars{ display:flex; gap:2px; }
-.star{
-  width:15px; height:15px; cursor:pointer; flex-shrink:0;
-  color:var(--line-strong);
-  transition:color .08s ease, transform .08s ease;
+.overall-num{
+  font-family:'JetBrains Mono',monospace;
+  font-weight:700;
+  font-size:34px;
+  color:var(--gold);
 }
-.star.filled{ color:var(--gold); }
-.star:hover{ transform:scale(1.15); }
-.cat-num{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-faint); width:34px; text-align:right; flex-shrink:0; }
+
+.overall-label{
+  font-size:11px;
+  color:var(--text-faint);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+.cat-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 0;
+}
+
+.cat-label{
+  font-size:13px;
+  color:var(--text-dim);
+  width:130px;
+  flex-shrink:0;
+}
+
+.stars{
+  display:flex;
+  gap:2px;
+}
+
+.star{
+  width:15px;
+  height:15px;
+  cursor:pointer;
+  flex-shrink:0;
+  color:var(--line-strong);
+}
+
+.star.filled{
+  color:var(--gold);
+}
+
+.star.readonly{
+  cursor:default;
+}
+
+.star.readonly:hover{
+  transform:none;
+}
+
+.cat-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--text-faint);
+  width:34px;
+  text-align:right;
+}
 
 .commentary-label{
-  font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em;
+  font-size:11px;
+  color:var(--text-faint);
+  text-transform:uppercase;
+  letter-spacing:.06em;
   margin:22px 0 8px;
 }
+
 .commentary{
-  width:100%; min-height:120px;
-  background:rgba(255,255,255,0.02);
+  width:100%;
+  min-height:120px;
+  background:rgba(255,255,255,.02);
   border:1px solid var(--line-strong);
   border-radius:8px;
   color:var(--text);
-  font-family:'Inter', sans-serif;
+  font-family:'Inter',sans-serif;
   font-size:14px;
   line-height:1.55;
   padding:12px 14px;
   resize:vertical;
 }
-.commentary:focus{ border-color:var(--gold); }
-.commentary::placeholder{ color:var(--text-faint); }
 
-.modal-footer{ display:flex; justify-content:space-between; align-items:center; margin-top:24px; }
+.modal-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:24px;
+}
+
 .delete-btn{
-  font-family:'JetBrains Mono', monospace;
+  font-family:'JetBrains Mono',monospace;
   font-size:11.5px;
   color:var(--rust);
   background:transparent;
-  border:1px solid transparent;
+  border:none;
   cursor:pointer;
   padding:6px 10px;
   border-radius:6px;
 }
-.delete-btn:hover{ background:var(--rust-dim); }
-.done-btn{
-  font-family:'Inter', sans-serif;
-  font-weight:600; font-size:13.5px;
-  background:var(--gold); color:#0f0e17;
-  border:none; padding:9px 20px; border-radius:8px; cursor:pointer;
+
+.delete-btn:hover{
+  background:var(--rust-dim);
 }
 
-/* ---------- Add-game modal ---------- */
-.add-modal{ max-width:400px; }
-.field-label{ font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; display:block; }
+.done-btn{
+  font-weight:600;
+  font-size:13.5px;
+  background:var(--gold);
+  color:#0f0e17;
+  border:none;
+  padding:9px 20px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.add-modal{
+  max-width:400px;
+}
+
+.field-label{
+  font-size:11px;
+  color:var(--text-faint);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin-bottom:6px;
+  display:block;
+}
+
 .name-input{
   width:100%;
-  background:rgba(255,255,255,0.03);
+  background:rgba(255,255,255,.03);
   border:1px solid var(--line-strong);
   border-radius:8px;
   color:var(--text);
-  font-family:'Inter', sans-serif;
   font-size:15px;
   padding:11px 12px;
   margin-bottom:18px;
 }
-.name-input:focus{ border-color:var(--gold); }
 
 .loading-msg{
-  font-family:'JetBrains Mono', monospace;
-  font-size:12px; color:var(--text-faint);
-  text-align:center; padding:60px 20px;
+  width:100%;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--text-faint);
+  text-align:center;
+  padding:60px 20px;
 }
 
-/* ---------- Edit mode ---------- */
-.edit-only{ display:none !important; }
-body.edit-mode .edit-only{ display:inline-flex !important; }
-body.edit-mode .btn-add.edit-only{ display:inline-block !important; }
-body.edit-mode .tier-picker.edit-only{ display:flex !important; }
+.error-msg{
+  width:100%;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--rust);
+  text-align:center;
+  padding:60px 20px;
+}
 
-.star.readonly{ cursor:default; }
-.star.readonly:hover{ transform:none; }
-.modal-name[readonly], .commentary[readonly]{ color:var(--text-dim); cursor:default; }
+.edit-only{
+  display:none!important;
+}
+
+body.edit-mode .edit-only{
+  display:inline-flex!important;
+}
+
+body.edit-mode .btn-add.edit-only{
+  display:inline-block!important;
+}
 
 #editBar{
   position:fixed;
@@ -391,13 +548,17 @@ body.edit-mode .tier-picker.edit-only{ display:flex !important; }
   border:1px solid var(--line-strong);
   border-radius:30px;
   padding:8px 8px 8px 16px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.35);
-  font-family:'JetBrains Mono', monospace;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  font-family:'JetBrains Mono',monospace;
   font-size:11.5px;
 }
-#editBar .status{ color:var(--text-faint); }
+
+#editBar .status{
+  color:var(--text-faint);
+}
+
 #editBar button{
-  font-family:'Inter', sans-serif;
+  font-family:'Inter',sans-serif;
   font-weight:600;
   font-size:12.5px;
   border:none;
@@ -405,12 +566,47 @@ body.edit-mode .tier-picker.edit-only{ display:flex !important; }
   padding:8px 14px;
   cursor:pointer;
 }
-#editBar .lock-btn{ background:transparent; color:var(--text-dim); border:1px solid var(--line-strong); }
-#editBar .lock-btn:hover{ color:var(--text); }
-#editBar .export-btn{ background:var(--gold); color:#0f0e17; }
-#editBar .export-btn:hover{ filter:brightness(1.08); }
+
+.lock-btn{
+  background:transparent;
+  color:var(--text-dim);
+  border:1px solid var(--line-strong)!important;
+}
+
+.export-btn{
+  background:var(--gold);
+  color:#0f0e17;
+}
+
+@media(max-width:700px){
+  header.top{
+    padding:32px 16px 24px;
+  }
+
+  .brand h1{
+    font-size:34px;
+  }
+
+  main{
+    padding:24px 16px 40px;
+  }
+
+  .tier{
+    min-width:190px;
+  }
+
+  #editBar{
+    right:10px;
+    bottom:10px;
+  }
+
+  #editBar .status{
+    display:none;
+  }
+}
 </style>
 </head>
+
 <body>
 
 <header class="top">
@@ -418,31 +614,51 @@ body.edit-mode .tier-picker.edit-only{ display:flex !important; }
     <h1>PLAYED.</h1>
     <p>a personal scoreboard</p>
   </div>
-  <button class="btn-add edit-only" id="openAdd">+ Add game</button>
+
+  <button class="btn-add edit-only" id="openAdd">
+    + Add game
+  </button>
 </header>
 
 <main id="main">
   <div class="loading-msg">loading your list…</div>
 </main>
 
-<!-- Add game overlay -->
+<!-- ADD GAME -->
 <div class="overlay" id="addOverlay">
   <div class="modal add-modal">
+
     <div class="modal-top">
-      <div class="modal-name" style="font-size:20px;">Add a game</div>
+      <div class="modal-name" style="font-size:20px;">
+        Add a game
+      </div>
+
       <button class="modal-close" id="closeAdd">✕</button>
     </div>
+
     <label class="field-label">Name</label>
-    <input class="name-input" id="addName" placeholder="e.g. Disco Elysium" maxlength="80">
+
+    <input
+      class="name-input"
+      id="addName"
+      placeholder="e.g. Disco Elysium"
+      maxlength="80"
+    >
+
     <label class="field-label">Tier</label>
+
     <div class="tier-picker" id="addTierPicker"></div>
-    <div class="modal-footer" style="justify-content:flex-end;">
-      <button class="done-btn" id="confirmAdd">Add game</button>
+
+    <div class="modal-footer" style="justify-content:flex-end">
+      <button class="done-btn" id="confirmAdd">
+        Add game
+      </button>
     </div>
+
   </div>
 </div>
 
-<!-- Game detail overlay -->
+<!-- GAME -->
 <div class="overlay" id="gameOverlay">
   <div class="modal" id="gameModal"></div>
 </div>
@@ -452,6 +668,18 @@ body.edit-mode .tier-picker.edit-only{ display:flex !important; }
 <script>
 (function(){
 
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const API = '/api';
+
+const EDIT_PASSWORD = 'changeme';
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
 const CATEGORIES = [
   {key:'gameplay', label:'Gameplay'},
   {key:'visuals',  label:'Visuals & Graphics'},
@@ -459,617 +687,1474 @@ const CATEGORIES = [
   {key:'music',    label:'Music'},
   {key:'voice',    label:'Voice Acting'},
   {key:'sound',    label:'Sound Design'},
-  {key:'writing',  label:'Writing'},
+  {key:'writing',  label:'Writing'}
 ];
+
+/* =========================================================
+   TIERS
+========================================================= */
 
 const TIERS = [
-  {key:'S', letter:'SS', label:'Masterpiece',           sub:'Best games',            color:'var(--gold)',  varname:'--gold',  dim:'var(--gold-dim)'},
-  {key:'A', letter:'S',  label:'Amazing game',           sub:'Great games',           color:'var(--teal)',  varname:'--teal',  dim:'var(--teal-dim)'},
-  {key:'B', letter:'A',  label:'Good / Okay',            sub:'Solid games',           color:'var(--sage)',  varname:'--sage',  dim:'var(--sage-dim)'},
-  {key:'F', letter:'B',  label:'Nothing special / meh',  sub:'Forgettable',           color:'var(--rust)',  varname:'--rust',  dim:'var(--rust-dim)'},
-  {key:'X', letter:'\u2014', label:'Dislike / dropped',  sub:'Not for me',            color:'var(--slate)', varname:'--slate', dim:'var(--slate-dim)'},
+  {
+    key:'S',
+    letter:'SS',
+    label:'Masterpiece',
+    sub:'Best games',
+    color:'var(--gold)',
+    dim:'var(--gold-dim)'
+  },
+  {
+    key:'A',
+    letter:'S',
+    label:'Amazing game',
+    sub:'Great games',
+    color:'var(--teal)',
+    dim:'var(--teal-dim)'
+  },
+  {
+    key:'B',
+    letter:'A',
+    label:'Good / Okay',
+    sub:'Solid games',
+    color:'var(--sage)',
+    dim:'var(--sage-dim)'
+  },
+  {
+    key:'F',
+    letter:'B',
+    label:'Nothing special / meh',
+    sub:'Forgettable',
+    color:'var(--rust)',
+    dim:'var(--rust-dim)'
+  },
+  {
+    key:'X',
+    letter:'—',
+    label:'Dislike / dropped',
+    sub:'Not for me',
+    color:'var(--slate)',
+    dim:'var(--slate-dim)'
+  }
 ];
 
-let state = { games:{}, tiers:{} };
-let saveTimer = null;
-let currentGameId = null;
-let dragId = null;
+/* =========================================================
+   STATE
+========================================================= */
+
+let games = [];
 let editMode = false;
+let currentGameId = null;
+let addTier = 'B';
+let dragId = null;
 
-// ---- Public/edit split ----
-// Change this before you publish the site. Anyone who knows this
-// password can click "Edit" and unlock editing in their own browser.
-// This is a simple front-door lock, not real security — the page is
-// fully public source code, so treat it as a deterrent for casual
-// visitors, not a vault.
-const EDIT_PASSWORD = 'changeme';
+/* =========================================================
+   HELPERS
+========================================================= */
 
-// This is the published, read-only data everyone sees when they load
-// the page fresh. It starts out empty (null) so the very first version
-// of the site falls back to SEED_LISTS below. After you make edits and
-// click "Export site" in edit mode, this block gets replaced with your
-// real data in the downloaded file — upload that file to GitHub to
-// publish your changes to everyone.
-/*EMBEDDED_DATA_START*/
-const EMBEDDED_DATA = null;
-/*EMBEDDED_DATA_END*/
-
-// Seeded from the user's existing tier list — only used the first time
-// the board is opened (i.e. no saved data yet). Order is preserved
-// exactly as given; ratings start at 0 and are auto-sort-off so the
-// curated order sticks until ratings are added.
-const SEED_LISTS = {
-  S: [ // Masterpiece
-    'The Last of Us Part 1 & Part 2','Cyberpunk 2077 & DLC','Clair Obscur: Expedition 33',
-    'Red Dead Redemption 2','God of War 2018 & Ragnarok','Alan Wake 2','Uncharted 4',
-    'Detroit: Become Human','The Witcher 3: Wild Hunt','Resident Evil 4 Remake','Dispatch',
-    'Max Payne 3','Metal Gear Solid','Grand Theft Auto: San Andreas','Resident Evil Requiem',
-    'SOMA','Quantum Break','007 First Light'
-  ],
-  A: [ // Amazing game
-    'Alan Wake','Red Dead Redemption + DLC','Grand Theft Auto V','Call of Duty: Modern Warfare 2019',
-    'Call of Duty: Black Ops','Control','Grand Theft Auto IV','Far Cry 3','Fallout 4','Portal 1 & 2',
-    'Little Nightmares 1 & 2','Wolfenstein II','Wolfenstein: New Order','Metro 2033 / Last Light / Exodus',
-    'Grand Theft Auto IV','It Takes Two','God of War 3','Mafia: Definitive Edition','Mafia II',
-    'Sleeping Dogs','South Park 1 / 2','Ratchet & Clank: Rift Apart','Horizon: Zero Dawn',
-    "Marvel's Spider-Man 1 / 2",'Devil May Cry 1-5','Mafia: The Old Country','Silent Hill f',
-    'Silent Hill 2 Remake','Grand Theft Auto IV: TBOGT DLC','Hades 2','RE2 & RE3 Remakes','PRAGMATA',
-    'Hollow Knight','Hollow Knight: Silksong','FINAL FANTASY 7 Remake & Rebirth','Astro Bot',
-    'FINAL FANTASY XVI','Horizon: Forbidden West'
-  ],
-  B: [ // Good / Okay
-    'Resident Evil 7','Resident Evil Village','Dying Light 1 & 2',"Mirror's Edge",'Outlast',
-    'Dead Island 1 & 2','Deathloop','Outlast 2','Dishonored 1 & 2','Until Dawn',
-    "Marvel's Guardians of the Galaxy",'Darksiders 3','Far Cry 4','Far Cry 5','Far Cry 6',
-    'Call of Duty: Black Ops Cold War','RAGE 2','Doom 2016','Prototype 1 / 2','Mad Max','Trepang2',
-    'Dead Space Remake','Superliminal','Tomb Raider Trilogy','Resident Evil 5','Stanley Parable',
-    'REANIMAL','Batman Arkham Games','Cronos: The New Dawn','Prince of Persia: The Lost Crown',
-    'Mouse: P.I. for Hire'
-  ],
-  F: [ // Nothing special / meh
-    'Still Wakes The Deep','Scorn'
-  ],
-  X: [ // Dislike / dropped
-    'Elden Ring','Lies of P'
-  ]
-};
-
-function seedFromList(){
-  Object.keys(SEED_LISTS).forEach(tierKey => {
-    const ids = [];
-    SEED_LISTS[tierKey].forEach(name => {
-      const id = newId();
-      state.games[id] = { id, name, tier: tierKey, ratings: emptyRatings(), commentary:'' };
-      ids.push(id);
-    });
-    state.tiers[tierKey] = { order: ids, auto: false };
-  });
-}
-
-function emptyRatings(){
-  const r = {};
-  CATEGORIES.forEach(c => r[c.key] = 0);
-  return r;
-}
-
-function newId(){
-  return 'g_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+function getTier(key){
+  return TIERS.find(t => t.key === key) || TIERS[2];
 }
 
 function score(game){
-  const vals = CATEGORIES.map(c => game.ratings[c.key] || 0);
-  const avg = vals.reduce((a,b)=>a+b,0) / vals.length;
-  return Math.round(avg * 10) / 10;
+
+  const values = CATEGORIES.map(c =>
+    Number(game[c.key] || 0)
+  );
+
+  const average =
+    values.reduce((a,b) => a + b, 0) /
+    values.length;
+
+  return Math.round(average * 10) / 10;
 }
 
-function ensureTiers(){
-  TIERS.forEach(t => {
-    if(!state.tiers[t.key]) state.tiers[t.key] = { order:[], auto:true };
-  });
+function escapeHtml(str){
+
+  const d = document.createElement('div');
+
+  d.textContent = str ?? '';
+
+  return d.innerHTML;
 }
+
+function gameById(id){
+  return games.find(g => g.id === id);
+}
+
+/* =========================================================
+   API
+========================================================= */
+
+async function apiGetGames(){
+
+  const response = await fetch(API + '/games', {
+    cache:'no-store'
+  });
+
+  if(!response.ok){
+    throw new Error('Failed to load games');
+  }
+
+  const data = await response.json();
+
+  if(!data.success){
+    throw new Error(data.error || 'Failed to load games');
+  }
+
+  games = data.games || [];
+}
+
+/* =========================================================
+   LOAD
+========================================================= */
 
 async function load(){
-  editMode = localStorage.getItem('played-edit-unlocked') === 'yes';
 
-  let base = null;
-  if(editMode){
-    try{
-      const raw = localStorage.getItem('played-games-draft');
-      if(raw) base = JSON.parse(raw);
-    }catch(e){
-      console.error('draft load failed', e);
-    }
+  editMode =
+    localStorage.getItem('played-edit-unlocked') === 'yes';
+
+  try{
+
+    await apiGetGames();
+
+    render();
+    renderEditBar();
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById('main').innerHTML = `
+      <div class="error-msg">
+        Failed to load games.<br><br>
+        ${escapeHtml(error.message)}
+      </div>
+    `;
+
   }
-  if(!base) base = EMBEDDED_DATA;
-
-  if(base){
-    state.games = base.games || {};
-    state.tiers = base.tiers || {};
-  } else {
-    seedFromList();
-  }
-
-  ensureTiers();
-  render();
-  renderEditBar();
 }
 
-function save(){
-  if(!editMode) return;
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    try{
-      localStorage.setItem('played-games-draft', JSON.stringify(state));
-    }catch(e){
-      console.error('save failed', e);
-    }
-  }, 200);
-}
-
-function sortTier(tierKey){
-  const t = state.tiers[tierKey];
-  t.order.sort((a,b) => {
-    const sb = score(state.games[b]) - score(state.games[a]);
-    if(sb !== 0) return sb;
-    return state.games[a].name.localeCompare(state.games[b].name);
-  });
-}
-
-function autoSortIfNeeded(tierKey){
-  const t = state.tiers[tierKey];
-  if(t.auto) sortTier(tierKey);
-}
-
-/* ---------- Rendering ---------- */
+/* =========================================================
+   RENDER
+========================================================= */
 
 function render(){
-  document.body.classList.toggle('edit-mode', editMode);
-  const main = document.getElementById('main');
+
+  document.body.classList.toggle(
+    'edit-mode',
+    editMode
+  );
+
+  const main =
+    document.getElementById('main');
+
   main.innerHTML = '';
+
   TIERS.forEach(tier => {
-    autoSortIfNeeded(tier.key);
-    main.appendChild(renderTier(tier));
+
+    const tierGames =
+      games.filter(g => g.tier === tier.key);
+
+    main.appendChild(
+      renderTier(tier, tierGames)
+    );
+
   });
-  renderTierPicker();
+
+  renderAddTierPicker();
 }
 
-function renderTier(tier){
-  const t = state.tiers[tier.key];
-  const section = document.createElement('section');
-  section.className = 'tier';
-  section.style.setProperty('--tier-color', tier.color);
-  section.style.setProperty('--tier-dim', tier.dim);
+function renderTier(tier, tierGames){
 
-  const head = document.createElement('div');
+  const section =
+    document.createElement('section');
+
+  section.className = 'tier';
+
+  section.style.setProperty(
+    '--tier-color',
+    tier.color
+  );
+
+  section.style.setProperty(
+    '--tier-dim',
+    tier.dim
+  );
+
+  const head =
+    document.createElement('div');
+
   head.className = 'tier-head';
+
   head.innerHTML = `
-    <span class="tier-letter">${tier.letter}</span>
+    <span class="tier-letter">
+      ${tier.letter}
+    </span>
+
     <div>
-      <div class="tier-label">${tier.label}</div>
-      <div class="tier-sub">${tier.sub}</div>
+      <div class="tier-label">
+        ${tier.label}
+      </div>
+
+      <div class="tier-sub">
+        ${tier.sub}
+      </div>
     </div>
+
     <div class="tier-meta">
-      ${(!t.auto && editMode) ? '<button class="resort-btn" data-resort="'+tier.key+'">sort by rating</button>' : ''}
-      <span class="tier-count">${t.order.length}</span>
+
+      <button
+        class="resort-btn edit-only"
+        data-tier="${tier.key}"
+      >
+        sort by rating
+      </button>
+
+      <span class="tier-count">
+        ${tierGames.length}
+      </span>
+
     </div>
   `;
+
   section.appendChild(head);
 
-  const rows = document.createElement('div');
+  const rows =
+    document.createElement('div');
+
   rows.className = 'rows';
+
   rows.dataset.tier = tier.key;
 
-  if(t.order.length === 0){
-    const empty = document.createElement('div');
+  if(tierGames.length === 0){
+
+    const empty =
+      document.createElement('div');
+
     empty.className = 'empty-row';
-    empty.textContent = 'No games here yet.';
+
+    empty.textContent =
+      'No games here yet.';
+
     rows.appendChild(empty);
-  } else {
-    t.order.forEach((id, idx) => {
-      const g = state.games[id];
-      if(!g) return;
-      rows.appendChild(renderRow(g, idx, tier));
+
+  }else{
+
+    tierGames.forEach(game => {
+
+      rows.appendChild(
+        renderRow(game, tier)
+      );
+
     });
+
   }
 
   section.appendChild(rows);
 
-  const resortBtn = head.querySelector('[data-resort]');
-  if(resortBtn){
-    resortBtn.addEventListener('click', () => {
-      t.auto = true;
-      sortTier(tier.key);
-      save();
-      render();
-    });
-  }
+  head.querySelector('.resort-btn')
+    ?.addEventListener('click', async () => {
 
-  setupDnD(rows, tier.key);
+      const sorted =
+        [...games.filter(g => g.tier === tier.key)]
+        .sort((a,b) => score(b) - score(a));
+
+      const positions = {};
+
+      sorted.forEach((game,index) => {
+        positions[game.id] = index;
+      });
+
+      try{
+
+        await fetch(API + '/games/reorder', {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({
+            tier:tier.key,
+            positions
+          })
+        });
+
+        await apiGetGames();
+        render();
+
+      }catch(error){
+
+        alert(
+          'Could not reorder games: ' +
+          error.message
+        );
+
+      }
+
+    });
+
+  setupDnD(rows);
 
   return section;
 }
 
-function renderRow(game, idx, tier){
-  const row = document.createElement('div');
+function renderRow(game,tier){
+
+  const row =
+    document.createElement('div');
+
   row.className = 'row';
-  row.draggable = editMode;
+
   row.dataset.id = game.id;
 
-  const eq = CATEGORIES.map(c => {
-    const v = game.ratings[c.key] || 0;
-    const h = Math.max(2, (v/10) * 16);
-    return `<i style="height:${h}px"></i>`;
-  }).join('');
+  row.draggable = editMode;
 
-  const s = score(game);
+  const eq =
+    CATEGORIES.map(c => {
+
+      const value =
+        Number(game[c.key] || 0);
+
+      const height =
+        Math.max(
+          2,
+          (value / 10) * 16
+        );
+
+      return `
+        <i style="height:${height}px"></i>
+      `;
+
+    }).join('');
 
   row.innerHTML = `
+
     <div class="row-top">
-      <div class="row-name" title="${escapeHtml(game.name)}">${escapeHtml(game.name)}</div>
-      <div class="row-score">${s.toFixed(1)}<sub>/10</sub></div>
+
+      <div
+        class="row-name"
+        title="${escapeHtml(game.name)}"
+      >
+        ${escapeHtml(game.name)}
+      </div>
+
+      <div class="row-score">
+        ${score(game).toFixed(1)}
+        <sub>/10</sub>
+      </div>
+
     </div>
-    <div class="row-eq">${eq}</div>
+
+    <div class="row-eq">
+      ${eq}
+    </div>
   `;
 
-  row.addEventListener('click', (e) => {
-    if(row.classList.contains('dragging')) return;
+  row.addEventListener('click', () => {
+
+    if(row.classList.contains('dragging'))
+      return;
+
     openGame(game.id);
+
   });
 
   return row;
 }
 
-function escapeHtml(str){
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
+/* =========================================================
+   DRAG / DROP
+========================================================= */
+
+function setupDnD(container){
+
+  container.addEventListener(
+    'dragstart',
+    event => {
+
+      if(!editMode)
+        return;
+
+      const row =
+        event.target.closest('.row');
+
+      if(!row)
+        return;
+
+      dragId = row.dataset.id;
+
+      row.classList.add('dragging');
+
+      event.dataTransfer.effectAllowed =
+        'move';
+    }
+  );
+
+  container.addEventListener(
+    'dragend',
+    event => {
+
+      const row =
+        event.target.closest('.row');
+
+      if(row)
+        row.classList.remove('dragging');
+
+      container
+        .querySelectorAll('.row')
+        .forEach(r => {
+
+          r.classList.remove(
+            'drag-over-top',
+            'drag-over-bottom'
+          );
+
+        });
+
+    }
+  );
+
+  container.addEventListener(
+    'dragover',
+    event => {
+
+      if(!editMode)
+        return;
+
+      event.preventDefault();
+
+      const after =
+        getDragAfterElement(
+          container,
+          event.clientY
+        );
+
+      container
+        .querySelectorAll('.row')
+        .forEach(r => {
+
+          r.classList.remove(
+            'drag-over-top',
+            'drag-over-bottom'
+          );
+
+        });
+
+      if(after){
+
+        after.classList.add(
+          'drag-over-top'
+        );
+
+      }else{
+
+        const rows =
+          [
+            ...container.querySelectorAll(
+              '.row:not(.dragging)'
+            )
+          ];
+
+        if(rows.length){
+
+          rows[rows.length - 1]
+            .classList.add(
+              'drag-over-bottom'
+            );
+
+        }
+
+      }
+
+    }
+  );
+
+  container.addEventListener(
+    'drop',
+    async event => {
+
+      event.preventDefault();
+
+      if(!editMode || !dragId)
+        return;
+
+      const targetTier =
+        container.dataset.tier;
+
+      const after =
+        getDragAfterElement(
+          container,
+          event.clientY
+        );
+
+      const tierGames =
+        games.filter(
+          g => g.tier === targetTier &&
+          g.id !== dragId
+        );
+
+      let targetPosition;
+
+      if(after){
+
+        const index =
+          tierGames.findIndex(
+            g => g.id === after.dataset.id
+          );
+
+        targetPosition =
+          index < 0
+            ? tierGames.length
+            : index;
+
+      }else{
+
+        targetPosition =
+          tierGames.length;
+
+      }
+
+      try{
+
+        await fetch(
+          API + '/games/move',
+          {
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+              id:dragId,
+              tier:targetTier,
+              position:targetPosition
+            })
+          }
+        );
+
+        dragId = null;
+
+        await apiGetGames();
+
+        render();
+
+      }catch(error){
+
+        console.error(error);
+
+        alert(
+          'Could not move game: ' +
+          error.message
+        );
+
+      }
+
+    }
+  );
 }
 
-/* ---------- Drag & drop reorder ---------- */
+function getDragAfterElement(container,y){
 
-function setupDnD(container, tierKey){
-  container.addEventListener('dragstart', (e) => {
-    if(!editMode) return;
-    const row = e.target.closest('.row');
-    if(!row) return;
-    dragId = row.dataset.id;
-    row.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-  });
+  const rows =
+    [
+      ...container.querySelectorAll(
+        '.row:not(.dragging)'
+      )
+    ];
 
-  container.addEventListener('dragend', (e) => {
-    const row = e.target.closest('.row');
-    if(row) row.classList.remove('dragging');
-    container.querySelectorAll('.row').forEach(r => {
-      r.classList.remove('drag-over-top','drag-over-bottom');
-    });
-  });
+  return rows.reduce(
+    (closest,child) => {
 
-  container.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const afterEl = getDragAfterElement(container, e.clientY);
-    container.querySelectorAll('.row').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
-    if(afterEl){
-      afterEl.classList.add('drag-over-top');
-    } else {
-      const rows = [...container.querySelectorAll('.row:not(.dragging)')];
-      if(rows.length) rows[rows.length-1].classList.add('drag-over-bottom');
-    }
-  });
+      const box =
+        child.getBoundingClientRect();
 
-  container.addEventListener('drop', (e) => {
-    e.preventDefault();
-    if(!editMode || !dragId) return;
-    const t = state.tiers[tierKey];
+      const offset =
+        y -
+        box.top -
+        box.height / 2;
 
-    // remove dragId from whichever tier currently has it
-    let fromTierKey = null;
-    TIERS.forEach(tt => {
-      const arr = state.tiers[tt.key].order;
-      const i = arr.indexOf(dragId);
-      if(i !== -1){ fromTierKey = tt.key; arr.splice(i,1); }
-    });
+      if(
+        offset < 0 &&
+        offset > closest.offset
+      ){
 
-    const afterEl = getDragAfterElement(container, e.clientY);
-    if(afterEl){
-      const idx = t.order.indexOf(afterEl.dataset.id);
-      t.order.splice(idx, 0, dragId);
-    } else {
-      t.order.push(dragId);
-    }
+        return {
+          offset,
+          element:child
+        };
 
-    // moving/reordering breaks auto-sort for the destination tier
-    t.auto = false;
-    if(fromTierKey && fromTierKey !== tierKey){
-      state.games[dragId].tier = tierKey;
-    }
+      }
 
-    dragId = null;
-    save();
-    render();
-  });
-}
-
-function getDragAfterElement(container, y){
-  const rows = [...container.querySelectorAll('.row:not(.dragging)')];
-  return rows.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height/2;
-    if(offset < 0 && offset > closest.offset){
-      return {offset, element: child};
-    } else {
       return closest;
+
+    },
+    {
+      offset:-Infinity,
+      element:null
     }
-  }, {offset:-Infinity, element:null}).element;
+  ).element;
 }
 
-/* ---------- Add game modal ---------- */
+/* =========================================================
+   ADD GAME
+========================================================= */
 
-let addTier = 'B';
+function renderAddTierPicker(){
 
-function renderTierPicker(){
-  const wrap = document.getElementById('addTierPicker');
+  const wrap =
+    document.getElementById(
+      'addTierPicker'
+    );
+
+  if(!wrap)
+    return;
+
   wrap.innerHTML = '';
-  TIERS.forEach(t => {
-    const chip = document.createElement('button');
-    chip.className = 'tier-chip' + (addTier === t.key ? ' active' : '');
-    chip.textContent = t.letter;
-    chip.style.borderColor = t.color;
-    chip.style.color = addTier === t.key ? '#0f0e17' : t.color;
-    chip.style.background = addTier === t.key ? t.color : 'transparent';
-    chip.addEventListener('click', () => { addTier = t.key; renderTierPicker(); });
+
+  TIERS.forEach(tier => {
+
+    const chip =
+      document.createElement('button');
+
+    chip.className =
+      'tier-chip' +
+      (
+        addTier === tier.key
+          ? ' active'
+          : ''
+      );
+
+    chip.textContent =
+      tier.letter;
+
+    chip.style.borderColor =
+      tier.color;
+
+    chip.style.color =
+      addTier === tier.key
+        ? '#0f0e17'
+        : tier.color;
+
+    chip.style.background =
+      addTier === tier.key
+        ? tier.color
+        : 'transparent';
+
+    chip.addEventListener(
+      'click',
+      () => {
+
+        addTier = tier.key;
+
+        renderAddTierPicker();
+
+      }
+    );
+
     wrap.appendChild(chip);
+
   });
 }
 
-document.getElementById('openAdd').addEventListener('click', () => {
-  if(!editMode) return;
-  document.getElementById('addName').value = '';
-  addTier = 'B';
-  renderTierPicker();
-  document.getElementById('addOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('addName').focus(), 50);
-});
+document
+  .getElementById('openAdd')
+  .addEventListener(
+    'click',
+    () => {
 
-document.getElementById('closeAdd').addEventListener('click', () => {
-  document.getElementById('addOverlay').classList.remove('open');
-});
-document.getElementById('addOverlay').addEventListener('click', (e) => {
-  if(e.target.id === 'addOverlay') document.getElementById('addOverlay').classList.remove('open');
-});
+      if(!editMode)
+        return;
 
-function confirmAdd(){
-  const nameInput = document.getElementById('addName');
-  const name = nameInput.value.trim();
-  if(!name) { nameInput.focus(); return; }
+      document.getElementById(
+        'addName'
+      ).value = '';
 
-  const id = newId();
-  state.games[id] = { id, name, tier: addTier, ratings: emptyRatings(), commentary:'' };
-  state.tiers[addTier].order.unshift(id);
-  state.tiers[addTier].auto = true;
-  sortTier(addTier);
+      addTier = 'B';
 
-  save();
-  render();
-  document.getElementById('addOverlay').classList.remove('open');
+      renderAddTierPicker();
+
+      document
+        .getElementById('addOverlay')
+        .classList.add('open');
+
+      setTimeout(
+        () =>
+          document
+            .getElementById('addName')
+            .focus(),
+        50
+      );
+
+    }
+  );
+
+document
+  .getElementById('closeAdd')
+  .addEventListener(
+    'click',
+    () => {
+
+      document
+        .getElementById('addOverlay')
+        .classList.remove('open');
+
+    }
+  );
+
+document
+  .getElementById('addOverlay')
+  .addEventListener(
+    'click',
+    event => {
+
+      if(event.target.id === 'addOverlay'){
+
+        event.currentTarget
+          .classList.remove('open');
+
+      }
+
+    }
+  );
+
+async function confirmAdd(){
+
+  const input =
+    document.getElementById(
+      'addName'
+    );
+
+  const name =
+    input.value.trim();
+
+  if(!name){
+
+    input.focus();
+
+    return;
+  }
+
+  try{
+
+    const response =
+      await fetch(
+        API + '/games',
+        {
+          method:'POST',
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
+          body:JSON.stringify({
+            name,
+            tier:addTier
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok || !data.success){
+
+      throw new Error(
+        data.error ||
+        'Failed to add game'
+      );
+
+    }
+
+    await apiGetGames();
+
+    render();
+
+    document
+      .getElementById('addOverlay')
+      .classList.remove('open');
+
+  }catch(error){
+
+    alert(
+      'Could not add game: ' +
+      error.message
+    );
+
+  }
 }
 
-document.getElementById('confirmAdd').addEventListener('click', confirmAdd);
-document.getElementById('addName').addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') confirmAdd();
-});
+document
+  .getElementById('confirmAdd')
+  .addEventListener(
+    'click',
+    confirmAdd
+  );
 
-/* ---------- Game detail modal ---------- */
+document
+  .getElementById('addName')
+  .addEventListener(
+    'keydown',
+    event => {
+
+      if(event.key === 'Enter')
+        confirmAdd();
+
+    }
+  );
+
+/* =========================================================
+   GAME MODAL
+========================================================= */
 
 function openGame(id){
+
   currentGameId = id;
+
   renderGameModal();
-  document.getElementById('gameOverlay').classList.add('open');
+
+  document
+    .getElementById('gameOverlay')
+    .classList.add('open');
 }
 
 function closeGame(){
-  document.getElementById('gameOverlay').classList.remove('open');
+
+  document
+    .getElementById('gameOverlay')
+    .classList.remove('open');
+
   currentGameId = null;
+
   render();
 }
 
-document.getElementById('gameOverlay').addEventListener('click', (e) => {
-  if(e.target.id === 'gameOverlay') closeGame();
-});
+document
+  .getElementById('gameOverlay')
+  .addEventListener(
+    'click',
+    event => {
+
+      if(
+        event.target.id ===
+        'gameOverlay'
+      ){
+
+        closeGame();
+
+      }
+
+    }
+  );
 
 function renderGameModal(){
-  const game = state.games[currentGameId];
-  if(!game) return;
-  const modal = document.getElementById('gameModal');
 
-  const catRows = CATEGORIES.map(c => {
-    const val = game.ratings[c.key] || 0;
-    const stars = Array.from({length:10}).map((_, i) => {
-      const filled = i < val;
-      return `<span class="star ${filled ? 'filled':''} ${editMode ? '' : 'readonly'}" data-cat="${c.key}" data-val="${i+1}">${starSvg()}</span>`;
+  const game =
+    gameById(currentGameId);
+
+  if(!game)
+    return;
+
+  const modal =
+    document.getElementById(
+      'gameModal'
+    );
+
+  const catRows =
+    CATEGORIES.map(category => {
+
+      const value =
+        Number(
+          game[category.key] || 0
+        );
+
+      const stars =
+        Array.from({length:10})
+          .map((_,i) => {
+
+            const filled =
+              i < value;
+
+            return `
+              <span
+                class="star
+                ${filled ? 'filled' : ''}
+                ${editMode ? '' : 'readonly'}"
+                data-cat="${category.key}"
+                data-val="${i+1}"
+              >
+                ${starSvg()}
+              </span>
+            `;
+
+          })
+          .join('');
+
+      return `
+        <div class="cat-row">
+
+          <div class="cat-label">
+            ${category.label}
+          </div>
+
+          <div class="stars">
+            ${stars}
+          </div>
+
+          <div class="cat-num">
+            ${value}/10
+          </div>
+
+        </div>
+      `;
+
     }).join('');
-    return `
-      <div class="cat-row">
-        <div class="cat-label">${c.label}</div>
-        <div class="stars">${stars}</div>
-        <div class="cat-num">${val}/10</div>
-      </div>
-    `;
-  }).join('');
 
   modal.innerHTML = `
+
     <div class="modal-top">
-      <input class="modal-name" id="editName" value="${escapeHtml(game.name)}" maxlength="80" ${editMode ? '' : 'readonly'}>
-      <button class="modal-close" id="closeGame">✕</button>
+
+      <input
+        class="modal-name"
+        id="editName"
+        value="${escapeHtml(game.name)}"
+        maxlength="80"
+        ${editMode ? '' : 'readonly'}
+      >
+
+      <button
+        class="modal-close"
+        id="closeGame"
+      >
+        ✕
+      </button>
+
     </div>
-    <div class="tier-picker edit-only" id="editTierPicker"></div>
+
+    <div
+      class="tier-picker edit-only"
+      id="editTierPicker"
+    ></div>
+
     <div class="overall-line">
-      <span class="overall-num">${score(game).toFixed(1)}</span>
-      <span class="overall-label">/ 10 overall</span>
+
+      <span class="overall-num">
+        ${score(game).toFixed(1)}
+      </span>
+
+      <span class="overall-label">
+        / 10 overall
+      </span>
+
     </div>
-    <div id="catRows">${catRows}</div>
-    <div class="commentary-label">${editMode ? 'Your commentary' : 'Commentary'}</div>
-    <textarea class="commentary" id="commentary" placeholder="${editMode ? 'What did you think of it?' : 'No commentary yet.'}" ${editMode ? '' : 'readonly'}>${escapeHtml(game.commentary || '')}</textarea>
+
+    <div id="catRows">
+      ${catRows}
+    </div>
+
+    <div class="commentary-label">
+      ${editMode ? 'Your commentary' : 'Commentary'}
+    </div>
+
+    <textarea
+      class="commentary"
+      id="commentary"
+      placeholder="${editMode ? 'What did you think of it?' : 'No commentary yet.'}"
+      ${editMode ? '' : 'readonly'}
+    >${escapeHtml(game.commentary || '')}</textarea>
+
     <div class="modal-footer">
-      <button class="delete-btn edit-only" id="deleteGame">Delete game</button>
-      <button class="done-btn" id="doneGame" style="margin-left:auto;">Done</button>
+
+      <button
+        class="delete-btn edit-only"
+        id="deleteGame"
+      >
+        Delete game
+      </button>
+
+      <button
+        class="done-btn"
+        id="doneGame"
+        style="margin-left:auto"
+      >
+        Done
+      </button>
+
     </div>
   `;
 
-  // tier picker
+  /* TIER PICKER */
+
   if(editMode){
-    const tierWrap = document.getElementById('editTierPicker');
-    TIERS.forEach(t => {
-      const chip = document.createElement('button');
-      chip.className = 'tier-chip' + (game.tier === t.key ? ' active' : '');
-      chip.textContent = t.letter + ' \u2014 ' + t.label;
-      chip.style.borderColor = t.color;
-      chip.style.color = game.tier === t.key ? '#0f0e17' : t.color;
-      chip.style.background = game.tier === t.key ? t.color : 'transparent';
-      chip.addEventListener('click', () => {
-        if(game.tier === t.key) return;
-        const oldTier = game.tier;
-        const oldArr = state.tiers[oldTier].order;
-        const i = oldArr.indexOf(game.id);
-        if(i !== -1) oldArr.splice(i,1);
-        game.tier = t.key;
-        state.tiers[t.key].order.push(game.id);
-        if(state.tiers[t.key].auto) sortTier(t.key);
-        save();
-        renderGameModal();
-      });
+
+    const tierWrap =
+      document.getElementById(
+        'editTierPicker'
+      );
+
+    TIERS.forEach(tier => {
+
+      const chip =
+        document.createElement('button');
+
+      chip.className =
+        'tier-chip' +
+        (
+          game.tier === tier.key
+            ? ' active'
+            : ''
+        );
+
+      chip.textContent =
+        tier.letter +
+        ' — ' +
+        tier.label;
+
+      chip.style.borderColor =
+        tier.color;
+
+      chip.style.color =
+        game.tier === tier.key
+          ? '#0f0e17'
+          : tier.color;
+
+      chip.style.background =
+        game.tier === tier.key
+          ? tier.color
+          : 'transparent';
+
+      chip.addEventListener(
+        'click',
+        async () => {
+
+          if(game.tier === tier.key)
+            return;
+
+          try{
+
+            const response =
+              await fetch(
+                API + '/games/move',
+                {
+                  method:'POST',
+                  headers:{
+                    'Content-Type':
+                      'application/json'
+                  },
+                  body:JSON.stringify({
+                    id:game.id,
+                    tier:tier.key,
+                    position:0
+                  })
+                }
+              );
+
+            const data =
+              await response.json();
+
+            if(!response.ok ||
+               !data.success){
+
+              throw new Error(
+                data.error ||
+                'Failed to move game'
+              );
+
+            }
+
+            await apiGetGames();
+
+            renderGameModal();
+
+          }catch(error){
+
+            alert(
+              'Could not move game: ' +
+              error.message
+            );
+
+          }
+
+        }
+      );
+
       tierWrap.appendChild(chip);
+
     });
+
   }
 
-  document.getElementById('closeGame').addEventListener('click', closeGame);
-  document.getElementById('doneGame').addEventListener('click', closeGame);
+  /* BUTTONS */
+
+  document
+    .getElementById('closeGame')
+    .addEventListener(
+      'click',
+      closeGame
+    );
+
+  document
+    .getElementById('doneGame')
+    .addEventListener(
+      'click',
+      closeGame
+    );
+
+  /* NAME */
 
   if(editMode){
-    document.getElementById('editName').addEventListener('input', (e) => {
-      game.name = e.target.value;
-      save();
-    });
 
-    document.getElementById('commentary').addEventListener('input', (e) => {
-      game.commentary = e.target.value;
-      save();
-    });
+    document
+      .getElementById('editName')
+      .addEventListener(
+        'change',
+        async event => {
 
-    modal.querySelectorAll('.star').forEach(starEl => {
-      starEl.addEventListener('click', () => {
-        const cat = starEl.dataset.cat;
-        const val = parseInt(starEl.dataset.val, 10);
-        game.ratings[cat] = (game.ratings[cat] === val) ? val - 1 : val;
-        if(state.tiers[game.tier].auto) sortTier(game.tier);
-        save();
-        renderGameModal();
+          await updateGame({
+            id:game.id,
+            name:event.target.value
+          });
+
+        }
+      );
+
+    /* COMMENTARY */
+
+    document
+      .getElementById('commentary')
+      .addEventListener(
+        'change',
+        async event => {
+
+          await updateGame({
+            id:game.id,
+            commentary:event.target.value
+          });
+
+        }
+      );
+
+    /* RATINGS */
+
+    modal
+      .querySelectorAll('.star')
+      .forEach(star => {
+
+        star.addEventListener(
+          'click',
+          async () => {
+
+            const category =
+              star.dataset.cat;
+
+            const value =
+              parseInt(
+                star.dataset.val,
+                10
+              );
+
+            const current =
+              Number(
+                game[category] || 0
+              );
+
+            const newValue =
+              current === value
+                ? value - 1
+                : value;
+
+            try{
+
+              await updateGame({
+                id:game.id,
+                [category]:newValue
+              });
+
+              await apiGetGames();
+
+              renderGameModal();
+
+            }catch(error){
+
+              alert(
+                'Could not save rating: ' +
+                error.message
+              );
+
+            }
+
+          }
+        );
+
       });
-    });
 
-    document.getElementById('deleteGame').addEventListener('click', () => {
-      if(!confirm(`Delete "${game.name}"? This can't be undone.`)) return;
-      const arr = state.tiers[game.tier].order;
-      const i = arr.indexOf(game.id);
-      if(i !== -1) arr.splice(i,1);
-      delete state.games[game.id];
-      save();
-      closeGame();
-    });
+    /* DELETE */
+
+    document
+      .getElementById('deleteGame')
+      .addEventListener(
+        'click',
+        async () => {
+
+          if(
+            !confirm(
+              `Delete "${game.name}"? This can't be undone.`
+            )
+          )
+            return;
+
+          try{
+
+            const response =
+              await fetch(
+                API + '/games/' +
+                encodeURIComponent(game.id),
+                {
+                  method:'DELETE'
+                }
+              );
+
+            const data =
+              await response.json();
+
+            if(!response.ok ||
+               !data.success){
+
+              throw new Error(
+                data.error ||
+                'Failed to delete game'
+              );
+
+            }
+
+            await apiGetGames();
+
+            closeGame();
+
+          }catch(error){
+
+            alert(
+              'Could not delete game: ' +
+              error.message
+            );
+
+          }
+
+        }
+      );
+
   }
 }
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+async function updateGame(changes){
+
+  const response =
+    await fetch(
+      API + '/games',
+      {
+        method:'PUT',
+        headers:{
+          'Content-Type':
+            'application/json'
+        },
+        body:JSON.stringify(changes)
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if(!response.ok ||
+     !data.success){
+
+    throw new Error(
+      data.error ||
+      'Failed to save'
+    );
+
+  }
+
+  await apiGetGames();
+
+  render();
+}
+
+/* =========================================================
+   STAR SVG
+========================================================= */
 
 function starSvg(){
-  return `<svg viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%"><path d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"/></svg>`;
+
+  return `
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      width="100%"
+      height="100%"
+    >
+      <path
+        d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"
+      />
+    </svg>
+  `;
 }
 
-/* ---------- Edit bar / publish flow ---------- */
+/* =========================================================
+   EDIT MODE
+========================================================= */
 
 function renderEditBar(){
-  const bar = document.getElementById('editBar');
+
+  const bar =
+    document.getElementById(
+      'editBar'
+    );
+
   if(editMode){
+
     bar.innerHTML = `
-      <span class="status">editing (only visible to you)</span>
-      <button class="export-btn" id="exportBtn">Export site</button>
-      <button class="lock-btn" id="lockBtn">Exit</button>
+
+      <span class="status">
+        editing
+      </span>
+
+      <button
+        class="lock-btn"
+        id="lockBtn"
+      >
+        Exit
+      </button>
+
     `;
-    document.getElementById('exportBtn').addEventListener('click', exportSite);
-    document.getElementById('lockBtn').addEventListener('click', lockEdit);
-  } else {
-    bar.innerHTML = `<button class="lock-btn" id="unlockBtn">Edit</button>`;
-    document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
+
+    document
+      .getElementById('lockBtn')
+      .addEventListener(
+        'click',
+        lockEdit
+      );
+
+  }else{
+
+    bar.innerHTML = `
+
+      <button
+        class="lock-btn"
+        id="unlockBtn"
+      >
+        Edit
+      </button>
+
+    `;
+
+    document
+      .getElementById('unlockBtn')
+      .addEventListener(
+        'click',
+        tryUnlock
+      );
+
   }
 }
 
 function tryUnlock(){
-  const pw = prompt('Enter edit password:');
-  if(pw === null) return;
-  if(pw === EDIT_PASSWORD){
-    localStorage.setItem('played-edit-unlocked', 'yes');
+
+  const password =
+    prompt(
+      'Enter edit password:'
+    );
+
+  if(password === null)
+    return;
+
+  if(password === EDIT_PASSWORD){
+
+    localStorage.setItem(
+      'played-edit-unlocked',
+      'yes'
+    );
+
     editMode = true;
-    if(!localStorage.getItem('played-games-draft')){
-      localStorage.setItem('played-games-draft', JSON.stringify(state));
-    }
+
     render();
+
     renderEditBar();
-  } else {
+
+  }else{
+
     alert('Wrong password.');
+
   }
 }
 
 function lockEdit(){
-  localStorage.removeItem('played-edit-unlocked');
+
+  localStorage.removeItem(
+    'played-edit-unlocked'
+  );
+
   editMode = false;
-  // reload from the published data, discarding nothing — the draft
-  // stays saved in this browser for next time you unlock edit mode.
-  const base = EMBEDDED_DATA;
-  if(base){
-    state.games = base.games || {};
-    state.tiers = base.tiers || {};
-  } else {
-    state = { games:{}, tiers:{} };
-    seedFromList();
-  }
-  ensureTiers();
+
   render();
+
   renderEditBar();
+
 }
 
-async function exportSite(){
-  try{
-    const res = await fetch(window.location.href, { cache:'no-store' });
-    if(!res.ok) throw new Error('fetch failed');
-    let html = await res.text();
-    const marker = /\/\*EMBEDDED_DATA_START\*\/[\s\S]*?\/\*EMBEDDED_DATA_END\*\//;
-    if(!marker.test(html)) throw new Error('marker not found');
-    const replacement = '/*EMBEDDED_DATA_START*/\nconst EMBEDDED_DATA = ' + JSON.stringify(state) + ';\n/*EMBEDDED_DATA_END*/';
-    html = html.replace(marker, replacement);
+/* =========================================================
+   KEYBOARD
+========================================================= */
 
-    const blob = new Blob([html], { type:'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'index.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }catch(e){
-    console.error('export failed', e);
-    alert("Couldn't export automatically — this can happen if the page isn't loaded over http(s) (e.g. GitHub Pages). Try exporting from the live published site instead of a local file.");
-  }
-}
+document.addEventListener(
+  'keydown',
+  event => {
 
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape'){
-    if(document.getElementById('gameOverlay').classList.contains('open')) closeGame();
-    if(document.getElementById('addOverlay').classList.contains('open')) document.getElementById('addOverlay').classList.remove('open');
+    if(event.key !== 'Escape')
+      return;
+
+    const gameOverlay =
+      document.getElementById(
+        'gameOverlay'
+      );
+
+    const addOverlay =
+      document.getElementById(
+        'addOverlay'
+      );
+
+    if(
+      gameOverlay.classList.contains(
+        'open'
+      )
+    ){
+
+      closeGame();
+
+    }
+
+    if(
+      addOverlay.classList.contains(
+        'open'
+      )
+    ){
+
+      addOverlay.classList.remove(
+        'open'
+      );
+
+    }
+
   }
-});
+);
+
+/* =========================================================
+   START
+========================================================= */
 
 load();
 
 })();
 </script>
+
 </body>
 </html>
