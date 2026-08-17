@@ -3,758 +3,556 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>GAMES PLAYED BY BIEST1X</title>
+<title>Games Played by BIEST1X</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap');
-
-:root{
-  --bg:#0f0f0f;
-  --surface:#151515;
-  --surface-hover:#1d1d1d;
-  --text:#ececec;
-  --text-dim:#aaa;
-  --text-faint:#777;
-  --line:rgba(255,255,255,.09);
-  --line-strong:rgba(255,255,255,.16);
-
-  --gold:#e8b563;
-  --gold-dim:rgba(232,181,99,.18);
-
-  --teal:#6fc7c0;
-  --teal-dim:rgba(111,199,192,.18);
-
-  --orange:#d98b45;
-  --orange-dim:rgba(217,139,69,.18);
-
-  --sage:#a3b56b;
-  --sage-dim:rgba(163,181,107,.18);
-
-  --rust:#d1673f;
-  --rust-dim:rgba(209,103,63,.18);
-
-  --slate:#736e8f;
-  --slate-dim:rgba(115,110,143,.18);
-
-  --red:#f55951;
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+* {
+  box-sizing: border-box;
 }
 
 html,
-body{
-  background:var(--bg);
-  color:var(--text);
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
 }
 
-body{
-  font-family:'Inter',sans-serif;
-  min-height:100vh;
-  padding-bottom:80px;
-  -webkit-font-smoothing:antialiased;
+body {
+  background:
+    radial-gradient(circle at top, #151515 0%, #0f0f0f 45%, #0c0c0c 100%);
+  color: #f2f2f2;
+  font-family: Inter, Arial, sans-serif;
+  overflow-x: auto;
 }
 
-::selection{
-  background:var(--gold-dim);
-  color:var(--gold);
+button,
+input,
+textarea {
+  font: inherit;
 }
 
-::-webkit-scrollbar{
-  width:10px;
-  height:10px;
+button {
+  cursor: pointer;
 }
 
-::-webkit-scrollbar-track{
-  background:transparent;
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 42px 32px 70px;
 }
 
-::-webkit-scrollbar-thumb{
-  background:var(--line-strong);
-  border-radius:6px;
+.header {
+  text-align: center;
+  margin-bottom: 32px;
 }
 
-:focus-visible{
-  outline:2px solid var(--gold);
-  outline-offset:2px;
-  border-radius:3px;
+.header h1 {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  font-size: 35px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.8px;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
-
-header.top{
-  max-width:1400px;
-  margin:0 auto;
-  padding:56px 24px 32px;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-bottom:1px solid var(--line);
+.header p {
+  margin: 12px 0 0;
+  font-size: 18px;
+  color: #a7a7a7;
+  font-weight: 500;
+  letter-spacing: 0.1px;
 }
 
-.brand{
-  text-align:center;
+.top-actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
-.brand h1{
-  font-family:'Inter',sans-serif;
-  font-weight:700;
-  font-size:52px;
-  line-height:1.05;
-  letter-spacing:-.035em;
-  color:var(--text);
+.left-actions,
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.brand p{
-  font-family:'JetBrains Mono',monospace;
-  font-size:15px;
-  color:#a7a7a7;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  margin-top:10px;
+.action-button {
+  border: 1px solid #303030;
+  background: #181818;
+  color: #eeeeee;
+  border-radius: 8px;
+  padding: 9px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
 }
 
-.btn-add,
-.edit-top-btn{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-weight:600;
-  font-size:14px;
-  border:none;
-  padding:12px 20px;
-  border-radius:8px;
-  cursor:pointer;
+.action-button:hover {
+  background: #202020;
+  border-color: #444;
 }
 
-.btn-add{
-  right:24px;
-  color:#0f0f0f;
-  background:var(--gold);
+.action-button:active {
+  transform: translateY(1px);
 }
 
-.edit-top-btn{
-  left:24px;
-  color:#0f0f0f;
-  background:var(--gold);
+.action-button.primary {
+  background: #202020;
 }
 
-.btn-add:hover,
-.edit-top-btn:hover{
-  filter:brightness(1.08);
+.tiers {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  overflow: visible;
 }
 
-/* =========================================================
-   MAIN / TIERS
-========================================================= */
-
-main{
-  max-width:1600px;
-  margin:0 auto;
-  padding:34px 24px 40px;
-  display:flex;
-  gap:20px;
-  align-items:flex-start;
-  overflow-x:auto;
+.tier-column {
+  flex: 1 1 0;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  min-height: 350px;
 }
 
-.tier{
-  flex:0 0 max-content;
-  width:max-content;
-  min-width:250px;
+.tier-header {
+  text-align: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
 }
 
-.rows{
-  width:max-content;
-  min-width:100%;
+.tier-letter {
+  font-size: 43px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -1px;
 }
 
-.tier-head{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-  gap:0;
-  padding-bottom:16px;
-  border-bottom:2px solid var(--tier-color);
-  margin-bottom:4px;
+.tier-label {
+  margin-top: 11px;
+  color: #c5c5c5;
+  font-size: 19px;
+  line-height: 1.15;
+  font-weight: 600;
 }
 
-.tier-letter{
-  font-family:'Fraunces',serif;
-  font-style:italic;
-  font-weight:700;
-  font-size:42px;
-  color:var(--tier-color);
-  line-height:1.05;
-  margin-bottom:5px;
+.tier-sub {
+  margin-top: 7px;
+  color: #9b9b9b;
+  font-size: 17px;
+  line-height: 1.2;
+  font-weight: 500;
 }
 
-.tier-label{
-  font-size:16px;
-  line-height:1.25;
-  font-weight:600;
-  color:#e2e2e2;
+.tier-games {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 90px;
 }
 
-.tier-sub{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  line-height:1.2;
-  color:#9b9b9b;
-  text-transform:uppercase;
-  letter-spacing:.05em;
-  margin-top:8px;
-  min-height:16px;
+.game-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: 7px;
+  background: #151515;
+  border: 1px solid #1e1e1e;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
 }
 
-.tier-count{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--text-dim);
-  margin-top:8px;
+.game-row:hover {
+  background: #1a1a1a;
+  border-color: #2b2b2b;
 }
 
-.rows{
-  padding:6px 0 4px;
-  min-height:14px;
+.game-row.dragging {
+  opacity: 0.5;
 }
 
-.empty-row{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--text-faint);
-  padding:18px 4px;
-  border:1px dashed var(--line-strong);
-  border-radius:8px;
-  text-align:center;
-  margin:8px 0;
+.game-name {
+  min-width: 0;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  font-size: 14px;
+  line-height: 1.15;
+  font-weight: 500;
+  color: #ededed;
+  cursor: pointer;
 }
 
-.row{
-  display:flex;
-  flex-direction:column;
-  padding:10px 11px;
-  margin:6px 0;
-  background:var(--surface);
-  border-left:3px solid var(--tier-color);
-  border-radius:6px;
-  cursor:pointer;
-  transition:background .12s ease, transform .12s ease;
-  overflow:visible;
+.game-rating {
+  flex: 0 0 auto;
+  font-size: 14px;
+  line-height: 1;
+  color: #dedede;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.row:hover{
-  background:var(--surface-hover);
+.game-row.highlighted {
+  background: #171717;
 }
 
-.row.dragging{
-  opacity:.35;
-}
-
-.row.drag-over-top{
-  box-shadow:inset 0 2px 0 var(--tier-color);
-}
-
-.row.drag-over-bottom{
-  box-shadow:inset 0 -2px 0 var(--tier-color);
-}
-
-.row-top{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:8px;
-  min-width:0;
-}
-
-.row-name{
-  font-size:13px;
-  line-height:1.3;
-  font-weight:500;
-  flex:0 0 auto;
-  min-width:0;
-  white-space:nowrap;
-  overflow:visible;
-}
-
-.row-score{
-  font-family:'JetBrains Mono',monospace;
-  font-weight:700;
-  font-size:14px;
-  color:var(--tier-color);
-  flex-shrink:0;
-}
-
-/* =========================================================
-   9.5+ HIGHLIGHT
-========================================================= */
-
-.row.highlighted .row-name,
-.row.highlighted .row-score{
-  font-size:15.5px;
-  font-weight:700;
-
-  background:linear-gradient(
+.game-row.highlighted .game-name,
+.game-row.highlighted .game-rating {
+  font-size: 16.5px;
+  font-weight: 800;
+  background: linear-gradient(
     90deg,
     #f55951 0%,
-    #f55951 35%,
-    #ff9a4a 55%,
-    #f55951 75%,
-    #f55951 100%
+    #f56b45 45%,
+    #ff9a42 100%
   );
-
-  background-size:240% 100%;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-
-  animation:highlightGradient 5s ease-in-out infinite;
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: highlightedGradient 5s linear infinite;
 }
 
-@keyframes highlightGradient{
-  0%{
-    background-position:0% 50%;
+@keyframes highlightedGradient {
+  0% {
+    background-position: 0% 50%;
   }
-  50%{
-    background-position:100% 50%;
-  }
-  100%{
-    background-position:0% 50%;
+
+  100% {
+    background-position: 220% 50%;
   }
 }
 
-/* =========================================================
-   G TIER
-========================================================= */
+.tier-SS .tier-letter {
+  color: #f0c36a;
+}
 
-.tier[data-tier="G"] .tier-letter{
-  background:linear-gradient(
+.tier-S .tier-letter {
+  color: #d7d7d7;
+}
+
+.tier-A .tier-letter {
+  color: #e08b45;
+}
+
+.tier-B .tier-letter {
+  color: #7e9cc5;
+}
+
+.tier-C .tier-letter {
+  color: #b28cbb;
+}
+
+.tier-X .tier-letter {
+  color: #7b7b7b;
+}
+
+.tier-G .tier-letter {
+  background: linear-gradient(
     90deg,
-    #b8f58d,
-    #79e5bd,
-    #8dd9ff,
-    #b8f58d
+    #91e6a1,
+    #9bd8ff,
+    #8ee6b4,
+    #91e6a1
   );
-  background-size:250% 100%;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation:emerald 5s ease-in-out infinite;
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: emeraldGradient 5s linear infinite;
 }
 
-@keyframes emerald{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-
-/* =========================================================
-   MODALS
-========================================================= */
-
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.76);
-  backdrop-filter:blur(3px);
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding:40px 16px;
-  overflow-y:auto;
-  z-index:100;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .15s ease;
-}
-
-.overlay.open{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.modal{
-  background:#151515;
-  border:1px solid var(--line-strong);
-  border-radius:14px;
-  width:100%;
-  max-width:600px;
-  padding:28px 28px 32px;
-}
-
-.modal-top{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:18px;
-}
-
-.modal-name{
-  font-family:'Poppins',sans-serif;
-  font-weight:600;
-  font-size:26px;
-  color:var(--text);
-  background:transparent;
-  border:none;
-  border-bottom:1px solid transparent;
-  width:100%;
-  padding:2px 0;
-}
-
-.modal-name:focus{
-  border-bottom:1px solid var(--line-strong);
-}
-
-.modal-close{
-  background:transparent;
-  border:none;
-  color:var(--text-faint);
-  font-size:20px;
-  cursor:pointer;
-  padding:4px;
-}
-
-.tier-picker{
-  display:flex;
-  gap:8px;
-  margin-bottom:22px;
-  flex-wrap:wrap;
-}
-
-.tier-chip{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;
-  font-weight:700;
-  padding:6px 12px;
-  border-radius:20px;
-  border:1px solid var(--line-strong);
-  background:transparent;
-  cursor:pointer;
-}
-
-.overall-line{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-  margin-bottom:20px;
-  padding-bottom:18px;
-  border-bottom:1px solid var(--line);
-}
-
-.overall-num{
-  font-family:'JetBrains Mono',monospace;
-  font-weight:700;
-  font-size:34px;
-  color:var(--gold);
-}
-
-.overall-label{
-  font-size:11px;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.06em;
-}
-
-.cat-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:7px 0;
-}
-
-.cat-label{
-  font-size:13px;
-  color:var(--text-dim);
-  width:180px;
-  flex-shrink:0;
-}
-
-.stars{
-  display:flex;
-  gap:2px;
-}
-
-.star{
-  width:15px;
-  height:15px;
-  cursor:pointer;
-  flex-shrink:0;
-  color:var(--line-strong);
-}
-
-.star.filled{
-  color:var(--gold);
-}
-
-.star.readonly{
-  cursor:default;
-}
-
-.cat-num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:var(--text-faint);
-  width:42px;
-  text-align:right;
-}
-
-.custom-rating-wrap{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-top:18px;
-  padding-top:16px;
-  border-top:1px solid var(--line);
-}
-
-.custom-rating-wrap label{
-  font-size:12px;
-  color:var(--text-dim);
-}
-
-.custom-rating{
-  width:130px;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--line-strong);
-  border-radius:7px;
-  color:var(--text);
-  padding:8px 10px;
-  font-family:'JetBrains Mono',monospace;
-}
-
-.commentary-label{
-  font-size:11px;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  margin:22px 0 8px;
-}
-
-.commentary{
-  width:100%;
-  min-height:120px;
-  background:rgba(255,255,255,.02);
-  border:1px solid var(--line-strong);
-  border-radius:8px;
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  font-size:14px;
-  line-height:1.55;
-  padding:12px 14px;
-  resize:vertical;
-}
-
-.modal-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:24px;
-}
-
-.delete-btn{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;
-  color:var(--rust);
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  padding:6px 10px;
-  border-radius:6px;
-}
-
-.delete-btn:hover{
-  background:var(--rust-dim);
-}
-
-.done-btn{
-  font-weight:600;
-  font-size:13.5px;
-  background:var(--gold);
-  color:#0f0f0f;
-  border:none;
-  padding:9px 20px;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.add-modal{
-  max-width:400px;
-}
-
-.field-label{
-  font-size:11px;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  margin-bottom:6px;
-  display:block;
-}
-
-.name-input{
-  width:100%;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--line-strong);
-  border-radius:8px;
-  color:var(--text);
-  font-size:15px;
-  padding:11px 12px;
-  margin-bottom:18px;
-}
-
-.loading-msg,
-.error-msg{
-  width:100%;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  text-align:center;
-  padding:60px 20px;
-}
-
-.loading-msg{
-  color:var(--text-faint);
-}
-
-.error-msg{
-  color:var(--rust);
-}
-
-/* =========================================================
-   EDIT TIER SETTINGS
-========================================================= */
-
-.tier-edit-fields{
-  display:none;
-  width:100%;
-  margin-top:12px;
-  gap:6px;
-  flex-direction:column;
-}
-
-body.edit-mode .tier-edit-fields{
-  display:flex;
-}
-
-.tier-edit-input{
-  width:100%;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--line-strong);
-  border-radius:6px;
-  color:var(--text);
-  padding:6px 8px;
-  text-align:center;
-  font-size:12px;
-}
-
-.tier-edit-input.letter{
-  font-family:'Fraunces',serif;
-  font-weight:700;
-  font-size:18px;
-}
-
-.tier-edit-input:focus{
-  border-color:var(--tier-color);
-}
-
-/* =========================================================
-   EDIT BAR
-========================================================= */
-
-.edit-only{
-  display:none!important;
-}
-
-body.edit-mode .edit-only{
-  display:inline-flex!important;
-}
-
-#editBar{
-  display:none;
-}
-
-body.edit-mode #editBar{
-  display:none;
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:900px){
-  main{
-    min-width:1100px;
+@keyframes emeraldGradient {
+  0% {
+    background-position: 0% 50%;
   }
 
-  header.top{
-    padding-left:16px;
-    padding-right:16px;
-  }
-
-  .brand h1{
-    font-size:42px;
-  }
-
-  .btn-add,
-  .edit-top-btn{
-    padding:10px 14px;
-    font-size:12px;
-  }
-
-  .btn-add{
-    right:16px;
-  }
-
-  .edit-top-btn{
-    left:16px;
+  100% {
+    background-position: 250% 50%;
   }
 }
 
-@media(max-width:700px){
-  header.top{
-    padding-top:34px;
-    padding-bottom:26px;
+.add-game {
+  width: 100%;
+  min-height: 58px;
+  border: 1px dashed #333;
+  border-radius: 8px;
+  background: #111;
+  color: #777;
+  margin-top: 7px;
+}
+
+.add-game:hover {
+  color: #aaa;
+  border-color: #555;
+  background: #151515;
+}
+
+.edit-mode .game-row {
+  cursor: grab;
+}
+
+.edit-mode .game-row:active {
+  cursor: grabbing;
+}
+
+.empty-tier {
+  min-height: 58px;
+  border-radius: 8px;
+  border: 1px dashed #292929;
+  background: #111;
+}
+
+.edit-panel {
+  display: none;
+}
+
+body.edit-mode .edit-panel {
+  display: block;
+}
+
+body.edit-mode .normal-only {
+  display: none;
+}
+
+.edit-panel {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(8px);
+  padding: 35px;
+  overflow-y: auto;
+}
+
+.edit-panel-inner {
+  max-width: 850px;
+  margin: 0 auto;
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+.edit-panel h2 {
+  margin: 0 0 20px;
+  font-size: 23px;
+}
+
+.edit-field {
+  margin-bottom: 16px;
+}
+
+.edit-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #aaa;
+  font-size: 13px;
+}
+
+.edit-field input,
+.edit-field textarea {
+  width: 100%;
+  background: #0d0d0d;
+  border: 1px solid #303030;
+  color: #eee;
+  border-radius: 7px;
+  padding: 10px;
+  outline: none;
+}
+
+.edit-field input:focus,
+.edit-field textarea:focus {
+  border-color: #555;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0,0,0,0.76);
+  backdrop-filter: blur(7px);
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #111;
+  border: 1px solid #2b2b2b;
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.modal-card h2 {
+  margin: 0;
+  font-family: Poppins, Inter, Arial, sans-serif;
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.modal-card .overall {
+  margin-top: 5px;
+  color: #ddd;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.rating-list {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px 22px;
+}
+
+.rating-item {
+  display: grid;
+  grid-template-columns: 1fr 70px;
+  gap: 10px;
+  align-items: center;
+}
+
+.rating-item span {
+  color: #cfcfcf;
+  font-size: 14px;
+}
+
+.rating-item input {
+  width: 70px;
+  background: #0d0d0d;
+  border: 1px solid #303030;
+  border-radius: 6px;
+  color: #fff;
+  padding: 7px;
+  text-align: center;
+}
+
+.commentary {
+  margin-top: 22px;
+}
+
+.commentary textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  background: #0d0d0d;
+  border: 1px solid #303030;
+  border-radius: 8px;
+  color: #eee;
+  padding: 11px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.delete-button {
+  background: #291313;
+  border-color: #512323;
+  color: #ef7777;
+}
+
+.delete-button:hover {
+  background: #351717;
+}
+
+.login-card {
+  width: min(400px, 100%);
+  background: #111;
+  border: 1px solid #2b2b2b;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+.login-card h2 {
+  margin-top: 0;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px;
+  background: #0d0d0d;
+  color: #fff;
+  border: 1px solid #303030;
+  border-radius: 7px;
+}
+
+.error {
+  color: #f55951;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+@media (max-width: 1500px) {
+  .page {
+    padding-left: 22px;
+    padding-right: 22px;
   }
 
-  .brand h1{
-    font-size:32px;
+  .tiers {
+    gap: 9px;
   }
 
-  .brand p{
-    font-size:11px;
+  .tier-column {
+    min-width: 220px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .tiers {
+    width: max-content;
   }
 
-  .btn-add,
-  .edit-top-btn{
-    position:static;
-    transform:none;
-    font-size:11px;
-    padding:9px 11px;
+  .tier-column {
+    flex: 0 0 250px;
+  }
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 25px 14px 50px;
   }
 
-  header.top{
-    justify-content:space-between;
-    gap:10px;
+  .header h1 {
+    font-size: 28px;
   }
 
-  .brand{
-    order:2;
+  .header p {
+    font-size: 16px;
   }
 
-  .edit-top-btn{
-    order:1;
-  }
-
-  .btn-add{
-    order:3;
+  .rating-list {
+    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -762,649 +560,625 @@ body.edit-mode #editBar{
 
 <body>
 
-<header class="top">
+<div class="page">
 
-  <button
-    class="edit-top-btn"
-    id="editButton"
-  >
-    Edit
-  </button>
-
-  <div class="brand">
+  <header class="header">
     <h1>GAMES PLAYED BY BIEST1X</h1>
     <p>a personal tier list</p>
-  </div>
+  </header>
 
-  <button
-    class="btn-add edit-only"
-    id="openAdd"
-  >
-    + Add game
-  </button>
-
-</header>
-
-<main id="main">
-  <div class="loading-msg">
-    loading your list…
-  </div>
-</main>
-
-<!-- ADD GAME -->
-
-<div class="overlay" id="addOverlay">
-
-  <div class="modal add-modal">
-
-    <div class="modal-top">
-
-      <div
-        class="modal-name"
-        style="font-size:20px;"
+  <div class="top-actions">
+    <div class="left-actions">
+      <button
+        id="editButton"
+        class="action-button primary"
       >
-        Add a game
-      </div>
+        Edit
+      </button>
+    </div>
+
+    <div class="right-actions">
+      <button
+        id="addGameButton"
+        class="action-button"
+      >
+        Add Game
+      </button>
+    </div>
+  </div>
+
+  <main
+    id="tiers"
+    class="tiers"
+  ></main>
+
+</div>
+
+<!-- =========================================================
+     LOGIN MODAL
+========================================================= -->
+
+<div
+  id="loginModal"
+  class="modal"
+>
+  <div class="login-card">
+
+    <h2>Admin Login</h2>
+
+    <div class="edit-field">
+      <label for="loginPassword">
+        Password
+      </label>
+
+      <input
+        id="loginPassword"
+        type="password"
+        autocomplete="current-password"
+      >
+    </div>
+
+    <div
+      id="loginError"
+      class="error"
+    ></div>
+
+    <div class="edit-buttons">
 
       <button
-        class="modal-close"
-        id="closeAdd"
+        id="loginCancel"
+        class="action-button"
       >
-        ✕
+        Cancel
+      </button>
+
+      <button
+        id="loginSubmit"
+        class="action-button primary"
+      >
+        Login
       </button>
 
     </div>
 
-    <label class="field-label">
-      Name
-    </label>
+  </div>
+</div>
 
-    <input
-      class="name-input"
-      id="addName"
-      placeholder="e.g. Disco Elysium"
-      maxlength="120"
-    >
+<!-- =========================================================
+     GAME MODAL
+========================================================= -->
 
-    <label class="field-label">
-      Tier
-    </label>
+<div
+  id="gameModal"
+  class="modal"
+>
+  <div class="modal-card">
+
+    <h2 id="gameModalTitle"></h2>
 
     <div
-      class="tier-picker"
-      id="addTierPicker"
+      id="gameModalOverall"
+      class="overall"
     ></div>
 
     <div
-      class="modal-footer"
-      style="justify-content:flex-end"
-    >
+      id="ratingList"
+      class="rating-list"
+    ></div>
+
+    <div class="commentary">
+
+      <label
+        for="commentaryInput"
+        style="
+          display:block;
+          color:#aaa;
+          font-size:13px;
+          margin-bottom:6px;
+        "
+      >
+        Commentary
+      </label>
+
+      <textarea
+        id="commentaryInput"
+      ></textarea>
+
+    </div>
+
+    <div class="modal-actions">
 
       <button
-        class="done-btn"
-        id="confirmAdd"
+        id="deleteGameButton"
+        class="action-button delete-button"
       >
-        Add game
+        Delete Game
       </button>
+
+      <div
+        style="
+          display:flex;
+          gap:10px;
+        "
+      >
+
+        <button
+          id="gameCancel"
+          class="action-button"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="gameSave"
+          class="action-button primary"
+        >
+          Save
+        </button>
+
+      </div>
 
     </div>
 
   </div>
-
-</div>
-
-<!-- GAME -->
-
-<div class="overlay" id="gameOverlay">
-
-  <div
-    class="modal"
-    id="gameModal"
-  ></div>
-
 </div>
 
 <script>
-(function(){
+const TIER_ORDER = [
+  "SS",
+  "S",
+  "A",
+  "B",
+  "C",
+  "X",
+  "G"
+];
 
-"use strict";
-
-/* =========================================================
-   CONFIG
-========================================================= */
-
-const API = "/api";
-
-let games = [];
-let tiers = [];
-let editMode = false;
-let currentGameId = null;
-let addTier = "A";
-let dragId = null;
-
-/* =========================================================
-   COLORS
-========================================================= */
-
-const TIER_COLORS = {
-  SS: "var(--gold)",
-  S: "var(--teal)",
-  A: "var(--orange)",
-  B: "var(--sage)",
-  C: "var(--rust)",
-  X: "var(--slate)",
-  G: "var(--sage)"
-};
-
-const CATEGORIES = [
+const RATING_FIELDS = [
   {
-    key:"gameplay",
-    label:"Gameplay"
+    key: "gameplay",
+    label: "Gameplay"
   },
   {
-    key:"graphics",
-    label:"Graphics & Visuals"
+    key: "graphics",
+    label: "Graphics & Visuals"
   },
   {
-    key:"story_pacing",
-    label:"Story & Pacing"
+    key: "story_pacing",
+    label: "Story & Pacing"
   },
   {
-    key:"writing",
-    label:"Writing"
+    key: "writing",
+    label: "Writing"
   },
   {
-    key:"voice_acting",
-    label:"Voice Acting"
+    key: "voice_acting",
+    label: "Voice Acting"
   },
   {
-    key:"music_audio",
-    label:"Music & Audio Design"
+    key: "music_audio",
+    label: "Music & Audio Design"
   },
   {
-    key:"technical_performance",
-    label:"Technical Performance"
+    key: "technical_performance",
+    label: "Technical Performance"
   },
   {
-    key:"emotional_impact",
-    label:"Personal & Emotional Impact"
+    key: "emotional_impact",
+    label: "Personal & Emotional Impact"
   }
 ];
 
-/* =========================================================
-   AUTH
-========================================================= */
+const DEFAULT_TIERS = [
+  {
+    tier_key: "SS",
+    letter: "SS",
+    label: "Masterpiece",
+    sub: "the most impact"
+  },
+  {
+    tier_key: "S",
+    letter: "S",
+    label: "Excellent",
+    sub: "Great games"
+  },
+  {
+    tier_key: "A",
+    letter: "A",
+    label: "Great",
+    sub: "Solid games"
+  },
+  {
+    tier_key: "B",
+    letter: "B",
+    label: "Good / Okay",
+    sub: "Nothing special / meh"
+  },
+  {
+    tier_key: "C",
+    letter: "C",
+    label: "Mixed / Meh",
+    sub: "Mixed experiences"
+  },
+  {
+    tier_key: "X",
+    letter: "X",
+    label: "Not for me",
+    sub: "Dropped / Disliked"
+  },
+  {
+    tier_key: "G",
+    letter: "G",
+    label: "Childhood legend",
+    sub: "Games that stayed with me"
+  }
+];
 
-function getToken(){
-  return localStorage.getItem("played-admin-token") || "";
-}
+let games = [];
+let tiers = [...DEFAULT_TIERS];
+let editing = false;
+let selectedGame = null;
+let dragGameId = null;
 
-function authHeaders(){
-  const token = getToken();
+const $ = id => document.getElementById(id);
 
-  return token
-    ? { Authorization:"Bearer " + token }
-    : {};
-}
-
-async function apiFetch(path, options = {}){
-
-  const headers = {
-    ...(options.headers || {}),
-    ...authHeaders()
-  };
-
-  return fetch(
-    API + path,
-    {
-      ...options,
-      headers
-    }
+function getToken() {
+  return localStorage.getItem(
+    "played-admin-token"
   );
 }
 
-/* =========================================================
-   HELPERS
-========================================================= */
+function authHeaders() {
+  const token = getToken();
 
-function getTier(key){
-  return tiers.find(t => t.tier_key === key);
+  return token
+    ? {
+        Authorization:
+          "Bearer " + token,
+        "Content-Type":
+          "application/json"
+      }
+    : {
+        "Content-Type":
+          "application/json"
+      };
 }
 
-function gameById(id){
-  return games.find(g => g.id === id);
+async function api(
+  path,
+  options = {}
+) {
+  const response =
+    await fetch(
+      path,
+      {
+        ...options,
+        headers: {
+          ...authHeaders(),
+          ...(options.headers || {})
+        }
+      }
+    );
+
+  const text =
+    await response.text();
+
+  let data;
+
+  try {
+    data =
+      text
+        ? JSON.parse(text)
+        : {};
+  } catch {
+    throw new Error(
+      text ||
+      "Server returned invalid response"
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      data.error ||
+      "Request failed"
+    );
+  }
+
+  return data;
 }
 
-function formatNumber(value){
+function formatRating(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return "0";
+  }
 
   const n = Number(value);
 
-  if(!Number.isFinite(n))
+  if (!Number.isFinite(n)) {
     return "0";
+  }
 
-  return String(n);
+  return Number.isInteger(n)
+    ? String(n)
+    : String(n);
 }
 
-function score(game){
-
-  if(
+function calculateOverall(game) {
+  if (
     game.custom_overall !== null &&
     game.custom_overall !== undefined &&
     game.custom_overall !== ""
-  ){
-    return Number(game.custom_overall);
+  ) {
+    const custom =
+      Number(game.custom_overall);
+
+    if (
+      Number.isFinite(custom)
+    ) {
+      return custom;
+    }
   }
 
   const values =
-    CATEGORIES.map(c =>
-      Number(game[c.key] || 0)
+    RATING_FIELDS.map(
+      field =>
+        Number(
+          game[field.key] || 0
+        )
     );
+
+  if (!values.length) {
+    return 0;
+  }
 
   return Math.round(
     (
-      values.reduce((a,b) => a+b,0) /
+      values.reduce(
+        (sum, value) =>
+          sum + value,
+        0
+      ) /
       values.length
     ) * 10
   ) / 10;
 }
 
-function isHighlighted(game){
-  return score(game) > 9.5;
+function isHighlighted(game) {
+  return (
+    Number(
+      calculateOverall(game)
+    ) > 9.5
+  );
 }
 
-function escapeHtml(str){
-
-  const d =
-    document.createElement("div");
-
-  d.textContent = str ?? "";
-
-  return d.innerHTML;
+function tierByKey(key) {
+  return (
+    tiers.find(
+      tier =>
+        tier.tier_key === key
+    ) ||
+    DEFAULT_TIERS.find(
+      tier =>
+        tier.tier_key === key
+    )
+  );
 }
 
-function colorForTier(key){
-  return TIER_COLORS[key] || "var(--gold)";
-}
+function render() {
 
-/* =========================================================
-   LOAD
-========================================================= */
+  const container =
+    $("tiers");
 
-async function apiGetTiers(){
+  container.innerHTML = "";
 
-  const response =
-    await fetch(API + "/tiers", {
-      cache:"no-store"
-    });
+  for (
+    const tierKey of TIER_ORDER
+  ) {
 
-  const data =
-    await response.json();
+    const tier =
+      tierByKey(tierKey);
 
-  if(!response.ok || !data.success)
-    throw new Error(
-      data.error || "Failed to load tiers"
-    );
+    if (!tier) {
+      continue;
+    }
 
-  tiers = data.tiers || [];
-}
+    const column =
+      document.createElement(
+        "section"
+      );
 
-async function apiGetGames(){
+    column.className =
+      "tier-column tier-" +
+      tierKey;
 
-  const response =
-    await fetch(API + "/games", {
-      cache:"no-store"
-    });
+    column.dataset.tier =
+      tierKey;
 
-  const data =
-    await response.json();
+    const header =
+      document.createElement(
+        "div"
+      );
 
-  if(!response.ok || !data.success)
-    throw new Error(
-      data.error || "Failed to load games"
-    );
+    header.className =
+      "tier-header";
 
-  games = data.games || [];
-}
+    header.innerHTML = `
+      <div class="tier-letter">
+        ${escapeHtml(
+          tier.letter || tierKey
+        )}
+      </div>
 
-async function load(){
+      <div class="tier-label">
+        ${escapeHtml(
+          tier.label || ""
+        )}
+      </div>
 
-  editMode =
-    localStorage.getItem(
-      "played-edit-unlocked"
-    ) === "yes" &&
-    !!getToken();
-
-  try{
-
-    await Promise.all([
-      apiGetTiers(),
-      apiGetGames()
-    ]);
-
-    render();
-
-  }catch(error){
-
-    console.error(error);
-
-    document.getElementById(
-      "main"
-    ).innerHTML = `
-      <div class="error-msg">
-        Failed to load games.<br><br>
-        ${escapeHtml(error.message)}
+      <div class="tier-sub">
+        ${escapeHtml(
+          tier.sub || ""
+        )}
       </div>
     `;
+
+    const list =
+      document.createElement(
+        "div"
+      );
+
+    list.className =
+      "tier-games";
+
+    list.dataset.tier =
+      tierKey;
+
+    const tierGames =
+      games
+        .filter(
+          game =>
+            game.tier === tierKey
+        )
+        .sort(
+          (a, b) =>
+            Number(a.position || 0) -
+            Number(b.position || 0)
+        );
+
+    for (
+      const game of tierGames
+    ) {
+
+      list.appendChild(
+        createGameRow(game)
+      );
+    }
+
+    if (!tierGames.length) {
+      const empty =
+        document.createElement(
+          "div"
+        );
+
+      empty.className =
+        "empty-tier";
+
+      list.appendChild(empty);
+    }
+
+    const add =
+      document.createElement(
+        "button"
+      );
+
+    add.className =
+      "add-game";
+
+    add.textContent =
+      "+ Add game";
+
+    add.addEventListener(
+      "click",
+      () => addGame(tierKey)
+    );
+
+    column.appendChild(header);
+    column.appendChild(list);
+    column.appendChild(add);
+
+    setupDropTarget(list);
+
+    container.appendChild(column);
   }
-}
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function render(){
 
   document.body.classList.toggle(
     "edit-mode",
-    editMode
+    editing
   );
-
-  renderHeader();
-
-  const main =
-    document.getElementById("main");
-
-  main.innerHTML = "";
-
-  tiers.forEach(tier => {
-
-    const tierGames =
-      games.filter(
-        g => g.tier === tier.tier_key
-      );
-
-    tierGames.sort(
-      (a,b) =>
-        Number(a.position || 0) -
-        Number(b.position || 0)
-    );
-
-    main.appendChild(
-      renderTier(tier,tierGames)
-    );
-
-  });
-
-  renderAddTierPicker();
 }
 
-function renderHeader(){
-
-  const editButton =
-    document.getElementById(
-      "editButton"
-    );
-
-  if(editMode){
-
-    editButton.textContent = "Exit";
-
-  }else{
-
-    editButton.textContent = "Edit";
-
-  }
-}
-
-function renderTier(tier,tierGames){
-
-  const section =
-    document.createElement("section");
-
-  section.className = "tier";
-
-  section.dataset.tier =
-    tier.tier_key;
-
-  const color =
-    colorForTier(tier.tier_key);
-
-  section.style.setProperty(
-    "--tier-color",
-    color
-  );
-
-  const head =
-    document.createElement("div");
-
-  head.className = "tier-head";
-
-  head.innerHTML = `
-
-    <span class="tier-letter">
-      ${escapeHtml(tier.letter)}
-    </span>
-
-    <div class="tier-label">
-      ${escapeHtml(tier.label)}
-    </div>
-
-    <div class="tier-sub">
-      ${escapeHtml(tier.sub)}
-    </div>
-
-    <div class="tier-count">
-      ${tierGames.length}
-    </div>
-
-    <div class="tier-edit-fields">
-
-      <input
-        class="tier-edit-input letter"
-        data-field="letter"
-        value="${escapeHtml(tier.letter)}"
-        maxlength="8"
-      >
-
-      <input
-        class="tier-edit-input"
-        data-field="label"
-        value="${escapeHtml(tier.label)}"
-        maxlength="60"
-      >
-
-      <input
-        class="tier-edit-input"
-        data-field="sub"
-        value="${escapeHtml(tier.sub)}"
-        maxlength="60"
-      >
-
-    </div>
-  `;
-
-  section.appendChild(head);
-
-  const rows =
-    document.createElement("div");
-
-  rows.className = "rows";
-  rows.dataset.tier =
-    tier.tier_key;
-
-  if(tierGames.length === 0){
-
-    const empty =
-      document.createElement("div");
-
-    empty.className = "empty-row";
-
-    empty.textContent =
-      "No games here yet.";
-
-    rows.appendChild(empty);
-
-  }else{
-
-    tierGames.forEach(game => {
-
-      rows.appendChild(
-        renderRow(game,tier)
-      );
-
-    });
-
-  }
-
-  section.appendChild(rows);
-
-  if(editMode){
-
-    head
-      .querySelectorAll(
-        ".tier-edit-input"
-      )
-      .forEach(input => {
-
-        input.addEventListener(
-          "change",
-          async event => {
-
-            const field =
-              event.target.dataset.field;
-
-            try{
-
-              await apiFetch(
-                "/tiers",
-                {
-                  method:"PUT",
-                  headers:{
-                    "Content-Type":
-                      "application/json"
-                  },
-                  body:JSON.stringify({
-                    tier_key:tier.tier_key,
-                    letter:
-                      field === "letter"
-                        ? event.target.value
-                        : tier.letter,
-                    label:
-                      field === "label"
-                        ? event.target.value
-                        : tier.label,
-                    sub:
-                      field === "sub"
-                        ? event.target.value
-                        : tier.sub
-                  })
-                }
-              );
-
-              tier[field] = event.target.value;
-              render();
-
-            }catch(error){
-
-              alert(
-                "Could not save category: " +
-                error.message
-              );
-
-            }
-
-          }
-        );
-
-      });
-  }
-
-  setupDnD(rows);
-
-  return section;
-}
-
-/* =========================================================
-   GAME ROW
-========================================================= */
-
-function renderRow(game,tier){
+function createGameRow(game) {
 
   const row =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  row.className = "row";
+  row.className =
+    "game-row";
 
-  if(isHighlighted(game))
-    row.classList.add("highlighted");
+  if (
+    isHighlighted(game)
+  ) {
+    row.classList.add(
+      "highlighted"
+    );
+  }
 
-  row.dataset.id = game.id;
+  row.draggable =
+    editing;
 
-  row.draggable = editMode;
+  row.dataset.id =
+    game.id;
 
-  row.style.setProperty(
-    "--tier-color",
-    colorForTier(tier.tier_key)
-  );
+  const name =
+    document.createElement(
+      "div"
+    );
 
-  row.innerHTML = `
+  name.className =
+    "game-name";
 
-    <div class="row-top">
+  name.textContent =
+    game.name || "Unnamed Game";
 
-      <div
-        class="row-name"
-        title="${escapeHtml(game.name)}"
-      >
-        ${escapeHtml(game.name)}
-      </div>
+  const rating =
+    document.createElement(
+      "div"
+    );
 
-      <div class="row-score">
-        ${formatNumber(score(game))}
-      </div>
+  rating.className =
+    "game-rating";
 
-    </div>
-  `;
+  rating.textContent =
+    formatRating(
+      calculateOverall(game)
+    );
+
+  row.appendChild(name);
+  row.appendChild(rating);
 
   row.addEventListener(
     "click",
-    () => {
+    event => {
 
-      if(
-        row.classList.contains(
-          "dragging"
+      if (
+        event.target.closest(
+          "button,input,textarea"
         )
-      )
+      ) {
         return;
+      }
 
       openGame(game.id);
-
     }
   );
 
-  return row;
-}
-
-/* =========================================================
-   DRAG & DROP
-========================================================= */
-
-function setupDnD(container){
-
-  container.addEventListener(
+  row.addEventListener(
     "dragstart",
     event => {
 
-      if(!editMode)
+      if (!editing) {
+        event.preventDefault();
         return;
+      }
 
-      const row =
-        event.target.closest(".row");
-
-      if(!row)
-        return;
-
-      dragId =
-        row.dataset.id;
+      dragGameId =
+        game.id;
 
       row.classList.add(
         "dragging"
@@ -1412,154 +1186,180 @@ function setupDnD(container){
 
       event.dataTransfer.effectAllowed =
         "move";
+
+      event.dataTransfer.setData(
+        "text/plain",
+        game.id
+      );
     }
   );
 
-  container.addEventListener(
+  row.addEventListener(
     "dragend",
-    event => {
+    () => {
 
-      const row =
-        event.target.closest(".row");
+      row.classList.remove(
+        "dragging"
+      );
 
-      if(row)
-        row.classList.remove(
-          "dragging"
-        );
-
-      container
-        .querySelectorAll(".row")
-        .forEach(r =>
-          r.classList.remove(
-            "drag-over-top",
-            "drag-over-bottom"
-          )
-        );
-
+      dragGameId = null;
     }
   );
 
-  container.addEventListener(
+  return row;
+}
+
+function setupDropTarget(list) {
+
+  list.addEventListener(
     "dragover",
     event => {
 
-      if(!editMode)
+      if (!editing) {
         return;
+      }
 
       event.preventDefault();
+
+      const dragged =
+        document.querySelector(
+          ".game-row.dragging"
+        );
+
+      if (!dragged) {
+        return;
+      }
 
       const after =
         getDragAfterElement(
-          container,
+          list,
           event.clientY
         );
 
-      container
-        .querySelectorAll(".row")
-        .forEach(r =>
-          r.classList.remove(
-            "drag-over-top",
-            "drag-over-bottom"
-          )
+      if (!after) {
+        list.appendChild(
+          dragged
         );
-
-      if(after){
-
-        after.classList.add(
-          "drag-over-top"
+      } else {
+        list.insertBefore(
+          dragged,
+          after
         );
-
-      }else{
-
-        const rows =
-          [
-            ...container.querySelectorAll(
-              ".row:not(.dragging)"
-            )
-          ];
-
-        if(rows.length){
-
-          rows[
-            rows.length - 1
-          ].classList.add(
-            "drag-over-bottom"
-          );
-
-        }
-
       }
-
     }
   );
 
-  container.addEventListener(
+  list.addEventListener(
     "drop",
     async event => {
 
-      event.preventDefault();
-
-      if(!editMode || !dragId) return;
-
-      const targetTier = container.dataset.tier;
-      const movingId = dragId;
-      dragId = null;
-
-      const after = getDragAfterElement(container, event.clientY);
-
-      const targetGames = games
-        .filter(g => g.tier === targetTier && g.id !== movingId)
-        .sort((a,b) => Number(a.position || 0) - Number(b.position || 0));
-
-      let position = targetGames.length;
-
-      if(after){
-        const index = targetGames.findIndex(g => g.id === after.dataset.id);
-        if(index >= 0) position = index;
+      if (!editing) {
+        return;
       }
 
-      const moving = gameById(movingId);
-      if(!moving) return;
+      event.preventDefault();
 
-      const sourceTier = moving.tier;
+      const id =
+        dragGameId ||
+        event.dataTransfer.getData(
+          "text/plain"
+        );
 
-      try{
-        const response = await apiFetch(
-          "/games/move",
+      if (!id) {
+        return;
+      }
+
+      const rows =
+        [...list.querySelectorAll(
+          ".game-row"
+        )];
+
+      const index =
+        rows.findIndex(
+          row =>
+            row.dataset.id === id
+        );
+
+      if (index < 0) {
+        return;
+      }
+
+      const targetTier =
+        list.dataset.tier;
+
+      const game =
+        games.find(
+          item =>
+            item.id === id
+        );
+
+      if (!game) {
+        return;
+      }
+
+      const oldTier =
+        game.tier;
+
+      const oldPosition =
+        game.position;
+
+      // Optimistic local update.
+      game.tier =
+        targetTier;
+
+      const tierRows =
+        [...list.querySelectorAll(
+          ".game-row"
+        )];
+
+      tierRows.forEach(
+        (row, position) => {
+
+          const item =
+            games.find(
+              g =>
+                g.id ===
+                row.dataset.id
+            );
+
+          if (item) {
+            item.position =
+              position;
+          }
+        }
+      );
+
+      render();
+
+      try {
+
+        await api(
+          "/api/games/move",
           {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({
-              id:movingId,
-              tier:targetTier,
-              position
+            method: "POST",
+            body: JSON.stringify({
+              id,
+              tier: targetTier,
+              position: index
             })
           }
         );
 
-        const data = await response.json();
+      } catch (error) {
 
-        if(!response.ok || !data.success){
-          throw new Error(data.error || "Failed to move game");
-        }
+        // Revert local state.
+        game.tier =
+          oldTier;
 
-        // Optimistic local reorder: no second D1 request needed.
-        moving.tier = targetTier;
+        game.position =
+          oldPosition;
 
-        if(sourceTier !== targetTier){
-          const sourceGames = games
-            .filter(g => g.tier === sourceTier && g.id !== movingId)
-            .sort((a,b) => Number(a.position || 0) - Number(b.position || 0));
-          sourceGames.forEach((g,i) => { g.position = i; });
-        }
+        await loadGames();
 
-        targetGames.splice(position, 0, moving);
-        targetGames.forEach((g,i) => { g.position = i; });
-
-        render();
-
-      }catch(error){
-        alert("Could not move game: " + error.message);
+        alert(
+          "Could not move game: " +
+          error.message
+        );
       }
     }
   );
@@ -1568,1063 +1368,641 @@ function setupDnD(container){
 function getDragAfterElement(
   container,
   y
-){
+) {
 
-  const rows =
+  const elements =
     [
       ...container.querySelectorAll(
-        ".row:not(.dragging)"
+        ".game-row:not(.dragging)"
       )
     ];
 
-  return rows.reduce(
-    (closest,child) => {
+  let closest = {
+    offset:
+      Number.NEGATIVE_INFINITY,
+    element:
+      null
+  };
 
-      const box =
-        child.getBoundingClientRect();
+  for (
+    const element of elements
+  ) {
 
-      const offset =
-        y -
-        box.top -
-        box.height / 2;
+    const box =
+      element.getBoundingClientRect();
 
-      if(
-        offset < 0 &&
-        offset > closest.offset
-      ){
+    const offset =
+      y -
+      box.top -
+      box.height / 2;
 
-        return {
-          offset,
-          element:child
-        };
+    if (
+      offset < 0 &&
+      offset >
+        closest.offset
+    ) {
 
-      }
-
-      return closest;
-
-    },
-    {
-      offset:-Infinity,
-      element:null
+      closest = {
+        offset,
+        element
+      };
     }
-  ).element;
+  }
+
+  return closest.element;
 }
 
-/* =========================================================
-   ADD GAME
-========================================================= */
+async function loadGames() {
 
-function renderAddTierPicker(){
-
-  const wrap =
-    document.getElementById(
-      "addTierPicker"
+  const data =
+    await api(
+      "/api/games"
     );
 
-  if(!wrap)
-    return;
+  games =
+    data.games || [];
 
-  wrap.innerHTML = "";
-
-  tiers.forEach(tier => {
-
-    const chip =
-      document.createElement("button");
-
-    chip.className =
-      "tier-chip";
-
-    chip.textContent =
-      tier.letter;
-
-    chip.style.borderColor =
-      colorForTier(tier.tier_key);
-
-    chip.style.color =
-      addTier === tier.tier_key
-        ? "#0f0f0f"
-        : colorForTier(tier.tier_key);
-
-    chip.style.background =
-      addTier === tier.tier_key
-        ? colorForTier(tier.tier_key)
-        : "transparent";
-
-    chip.addEventListener(
-      "click",
-      () => {
-
-        addTier =
-          tier.tier_key;
-
-        renderAddTierPicker();
-
-      }
-    );
-
-    wrap.appendChild(chip);
-
-  });
+  render();
 }
 
-document
-  .getElementById("openAdd")
-  .addEventListener(
-    "click",
-    () => {
+async function loadTiers() {
 
-      if(!editMode)
-        return;
+  try {
 
-      document.getElementById(
-        "addName"
-      ).value = "";
-
-      addTier = "A";
-
-      renderAddTierPicker();
-
-      document
-        .getElementById("addOverlay")
-        .classList.add("open");
-
-      setTimeout(
-        () =>
-          document
-            .getElementById("addName")
-            .focus(),
-        50
+    const data =
+      await api(
+        "/api/tiers"
       );
 
+    if (
+      Array.isArray(
+        data.tiers
+      ) &&
+      data.tiers.length
+    ) {
+
+      tiers =
+        data.tiers;
+    }
+
+  } catch {
+
+    tiers =
+      [...DEFAULT_TIERS];
+  }
+
+  render();
+}
+
+async function loadEverything() {
+
+  try {
+
+    // Parallel requests instead of waiting
+    // for one database request to finish
+    // before starting the other.
+    await Promise.all([
+      loadGames(),
+      loadTiers()
+    ]);
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "Could not load list: " +
+      error.message
+    );
+  }
+}
+
+async function saveGame(game) {
+
+  const payload = {
+    id: game.id,
+    name: game.name,
+    tier: game.tier,
+    commentary:
+      game.commentary || ""
+  };
+
+  for (
+    const field of RATING_FIELDS
+  ) {
+
+    payload[field.key] =
+      Number(
+        game[field.key] || 0
+      );
+  }
+
+  payload.custom_overall =
+    game.custom_overall === "" ||
+    game.custom_overall ===
+      undefined
+      ? null
+      : game.custom_overall;
+
+  await api(
+    "/api/games",
+    {
+      method: "PUT",
+      body:
+        JSON.stringify(payload)
     }
   );
+}
 
-document
-  .getElementById("closeAdd")
-  .addEventListener(
-    "click",
-    () => {
+async function openGame(id) {
 
-      document
-        .getElementById("addOverlay")
-        .classList.remove("open");
-
-    }
-  );
-
-document
-  .getElementById("addOverlay")
-  .addEventListener(
-    "click",
-    event => {
-
-      if(
-        event.target.id ===
-        "addOverlay"
-      ){
-
-        event.currentTarget
-          .classList.remove("open");
-
-      }
-
-    }
-  );
-
-async function confirmAdd(){
-
-  const input =
-    document.getElementById(
-      "addName"
+  const game =
+    games.find(
+      item =>
+        item.id === id
     );
 
-  const name =
-    input.value.trim();
-
-  if(!name){
-    input.focus();
+  if (!game) {
     return;
   }
 
-  try{
+  selectedGame =
+    game;
 
-    const response =
-      await apiFetch(
-        "/games",
+  $("gameModalTitle")
+    .textContent =
+    game.name || "";
+
+  updateModalOverall();
+
+  const list =
+    $("ratingList");
+
+  list.innerHTML = "";
+
+  for (
+    const field of RATING_FIELDS
+  ) {
+
+    const item =
+      document.createElement(
+        "div"
+      );
+
+    item.className =
+      "rating-item";
+
+    item.innerHTML = `
+      <span>
+        ${escapeHtml(
+          field.label
+        )}
+      </span>
+
+      <input
+        type="number"
+        step="0.1"
+        data-rating="${field.key}"
+        value="${escapeAttr(
+          game[field.key] ?? 0
+        )}"
+      >
+    `;
+
+    const input =
+      item.querySelector(
+        "input"
+      );
+
+    input.addEventListener(
+      "input",
+      () => {
+
+        game[field.key] =
+          input.value === ""
+            ? 0
+            : Number(
+                input.value
+              );
+
+        updateModalOverall();
+      }
+    );
+
+    list.appendChild(item);
+  }
+
+  const custom =
+    document.createElement(
+      "div"
+    );
+
+  custom.className =
+    "rating-item";
+
+  custom.innerHTML = `
+    <span>
+      Custom Overall
+    </span>
+
+    <input
+      type="number"
+      step="0.1"
+      data-rating="custom_overall"
+      value="${
+        game.custom_overall ===
+        null ||
+        game.custom_overall ===
+        undefined
+          ? ""
+          : escapeAttr(
+              game.custom_overall
+            )
+      }"
+      placeholder="Auto"
+    >
+  `;
+
+  const customInput =
+    custom.querySelector(
+      "input"
+    );
+
+  customInput.addEventListener(
+    "input",
+    () => {
+
+      game.custom_overall =
+        customInput.value === ""
+          ? null
+          : Number(
+              customInput.value
+            );
+
+      updateModalOverall();
+    }
+  );
+
+  list.appendChild(custom);
+
+  $("commentaryInput")
+    .value =
+    game.commentary || "";
+
+  $("gameModal")
+    .classList.add(
+      "open"
+    );
+}
+
+function updateModalOverall() {
+
+  if (!selectedGame) {
+    return;
+  }
+
+  $("gameModalOverall")
+    .textContent =
+    "Overall: " +
+    formatRating(
+      calculateOverall(
+        selectedGame
+      )
+    ) +
+    " / 10";
+}
+
+$("gameSave")
+  .addEventListener(
+    "click",
+    async () => {
+
+      if (!selectedGame) {
+        return;
+      }
+
+      const button =
+        $("gameSave");
+
+      button.disabled =
+        true;
+
+      try {
+
+        selectedGame.commentary =
+          $("commentaryInput")
+            .value;
+
+        await saveGame(
+          selectedGame
+        );
+
+        $("gameModal")
+          .classList.remove(
+            "open"
+          );
+
+        render();
+
+      } catch (error) {
+
+        alert(
+          "Could not save game: " +
+          error.message
+        );
+
+      } finally {
+
+        button.disabled =
+          false;
+      }
+    }
+  );
+
+$("gameCancel")
+  .addEventListener(
+    "click",
+    () => {
+
+      $("gameModal")
+        .classList.remove(
+          "open"
+        );
+
+      selectedGame =
+        null;
+    }
+  );
+
+$("deleteGameButton")
+  .addEventListener(
+    "click",
+    async () => {
+
+      if (!selectedGame) {
+        return;
+      }
+
+      if (
+        !confirm(
+          "Delete " +
+          selectedGame.name +
+          "?"
+        )
+      ) {
+        return;
+      }
+
+      try {
+
+        await api(
+          "/api/games/" +
+          encodeURIComponent(
+            selectedGame.id
+          ),
+          {
+            method: "DELETE"
+          }
+        );
+
+        games =
+          games.filter(
+            game =>
+              game.id !==
+              selectedGame.id
+          );
+
+        $("gameModal")
+          .classList.remove(
+            "open"
+          );
+
+        selectedGame =
+          null;
+
+        render();
+
+      } catch (error) {
+
+        alert(
+          "Could not delete game: " +
+          error.message
+        );
+      }
+    }
+  );
+
+async function addGame(
+  tier = "A"
+) {
+
+  if (!editing) {
+    return;
+  }
+
+  const name =
+    prompt(
+      "Game name:"
+    );
+
+  if (!name) {
+    return;
+  }
+
+  try {
+
+    const data =
+      await api(
+        "/api/games",
         {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            name,
-            tier:addTier
-          })
+          method: "POST",
+          body:
+            JSON.stringify({
+              name,
+              tier
+            })
         }
       );
 
-    const data =
-      await response.json();
-
-    if(!response.ok || !data.success)
-      throw new Error(
-        data.error ||
-        "Failed to add game"
-      );
-
-    await apiGetGames();
+    games.push({
+      id: data.id,
+      name,
+      tier,
+      commentary: "",
+      position:
+        games.filter(
+          game =>
+            game.tier === tier
+        ).length,
+      gameplay: 0,
+      graphics: 0,
+      story_pacing: 0,
+      writing: 0,
+      voice_acting: 0,
+      music_audio: 0,
+      technical_performance: 0,
+      emotional_impact: 0,
+      custom_overall: null,
+      overall: 0
+    });
 
     render();
 
-    document
-      .getElementById("addOverlay")
-      .classList.remove("open");
-
-  }catch(error){
+  } catch (error) {
 
     alert(
       "Could not add game: " +
       error.message
     );
-
   }
 }
 
-document
-  .getElementById("confirmAdd")
+$("addGameButton")
   .addEventListener(
     "click",
-    confirmAdd
+    () => addGame("A")
   );
 
-document
-  .getElementById("addName")
-  .addEventListener(
-    "keydown",
-    event => {
-
-      if(event.key === "Enter")
-        confirmAdd();
-
-    }
-  );
-
-/* =========================================================
-   GAME MODAL
-========================================================= */
-
-function openGame(id){
-
-  currentGameId = id;
-
-  renderGameModal();
-
-  document
-    .getElementById("gameOverlay")
-    .classList.add("open");
-}
-
-function closeGame(){
-
-  document
-    .getElementById("gameOverlay")
-    .classList.remove("open");
-
-  currentGameId = null;
-
-  render();
-}
-
-document
-  .getElementById("gameOverlay")
+$("editButton")
   .addEventListener(
     "click",
-    event => {
+    async () => {
 
-      if(
-        event.target.id ===
-        "gameOverlay"
-      ){
+      if (!getToken()) {
 
-        closeGame();
+        $("loginPassword")
+          .value = "";
 
-      }
+        $("loginError")
+          .textContent = "";
 
-    }
-  );
-
-function renderGameModal(){
-
-  const game =
-    gameById(currentGameId);
-
-  if(!game)
-    return;
-
-  const modal =
-    document.getElementById(
-      "gameModal"
-    );
-
-  const catRows =
-    CATEGORIES.map(category => {
-
-      const value =
-        Number(
-          game[category.key] || 0
-        );
-
-      const stars =
-        Array.from({length:10})
-          .map((_,i) => {
-
-            const filled =
-              i < value;
-
-            return `
-              <span
-                class="star
-                ${filled ? "filled" : ""}
-                ${editMode ? "" : "readonly"}"
-                data-cat="${category.key}"
-                data-val="${i+1}"
-              >
-                ${starSvg()}
-              </span>
-            `;
-
-          })
-          .join("");
-
-      return `
-        <div class="cat-row">
-
-          <div class="cat-label">
-            ${escapeHtml(
-              category.label
-            )}
-          </div>
-
-          <div class="stars">
-            ${stars}
-          </div>
-
-          <div class="cat-num">
-            ${formatNumber(value)}/10
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-
-  modal.innerHTML = `
-
-    <div class="modal-top">
-
-      <input
-        class="modal-name"
-        id="editName"
-        value="${escapeHtml(game.name)}"
-        maxlength="120"
-        ${editMode ? "" : "readonly"}
-      >
-
-      <button
-        class="modal-close"
-        id="closeGame"
-      >
-        ✕
-      </button>
-
-    </div>
-
-    <div
-      class="tier-picker edit-only"
-      id="editTierPicker"
-    ></div>
-
-    <div class="overall-line">
-
-      <span class="overall-num">
-        ${formatNumber(score(game))}
-      </span>
-
-      <span class="overall-label">
-        / 10 overall
-      </span>
-
-    </div>
-
-    <div id="catRows">
-      ${catRows}
-    </div>
-
-    ${
-      editMode
-        ? `
-          <div class="custom-rating-wrap">
-
-            <label>
-              Custom overall
-            </label>
-
-            <input
-              id="customRating"
-              class="custom-rating"
-              type="number"
-              step="any"
-              value="${
-                game.custom_overall !== null &&
-                game.custom_overall !== undefined
-                  ? escapeHtml(
-                      game.custom_overall
-                    )
-                  : ""
-              }"
-              placeholder="automatic"
-            >
-
-            <button
-              class="lock-btn"
-              id="clearCustomRating"
-              style="
-                padding:7px 10px;
-                cursor:pointer;
-              "
-            >
-              Auto
-            </button>
-
-          </div>
-        `
-        : ""
-    }
-
-    <div class="commentary-label">
-      ${
-        editMode
-          ? "Your commentary"
-          : "Commentary"
-      }
-    </div>
-
-    <textarea
-      class="commentary"
-      id="commentary"
-      placeholder="${
-        editMode
-          ? "What did you think of it?"
-          : "No commentary yet."
-      }"
-      ${editMode ? "" : "readonly"}
-    >${escapeHtml(
-      game.commentary || ""
-    )}</textarea>
-
-    <div class="modal-footer">
-
-      <button
-        class="delete-btn edit-only"
-        id="deleteGame"
-      >
-        Delete game
-      </button>
-
-      <button
-        class="done-btn"
-        id="doneGame"
-        style="margin-left:auto"
-      >
-        Done
-      </button>
-
-    </div>
-  `;
-
-  /* =======================================================
-     TIER PICKER
-  ======================================================= */
-
-  if(editMode){
-
-    const tierWrap =
-      document.getElementById(
-        "editTierPicker"
-      );
-
-    tiers.forEach(tier => {
-
-      const chip =
-        document.createElement("button");
-
-      chip.className =
-        "tier-chip";
-
-      chip.textContent =
-        tier.letter +
-        " — " +
-        tier.label;
-
-      chip.style.borderColor =
-        colorForTier(tier.tier_key);
-
-      chip.style.color =
-        game.tier === tier.tier_key
-          ? "#0f0f0f"
-          : colorForTier(tier.tier_key);
-
-      chip.style.background =
-        game.tier === tier.tier_key
-          ? colorForTier(tier.tier_key)
-          : "transparent";
-
-      chip.addEventListener(
-        "click",
-        async () => {
-
-          if(
-            game.tier ===
-            tier.tier_key
-          )
-            return;
-
-          try{
-
-            const response =
-              await apiFetch(
-                "/games/move",
-                {
-                  method:"POST",
-                  headers:{
-                    "Content-Type":
-                      "application/json"
-                  },
-                  body:JSON.stringify({
-                    id:game.id,
-                    tier:tier.tier_key,
-                    position:0
-                  })
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if(
-              !response.ok ||
-              !data.success
-            ){
-
-              throw new Error(
-                data.error ||
-                "Failed to move game"
-              );
-
-            }
-
-            game.tier = tier.tier_key;
-            const tierGames = games.filter(g => g.tier === tier.tier_key);
-            tierGames.forEach((g,i) => { g.position = i; });
-            renderGameModal();
-            render();
-
-          }catch(error){
-
-            alert(
-              "Could not move game: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-      tierWrap.appendChild(chip);
-
-    });
-
-  }
-
-  /* =======================================================
-     CLOSE / DONE
-  ======================================================= */
-
-  document
-    .getElementById("closeGame")
-    .addEventListener(
-      "click",
-      closeGame
-    );
-
-  document
-    .getElementById("doneGame")
-    .addEventListener(
-      "click",
-      closeGame
-    );
-
-  /* =======================================================
-     NAME
-  ======================================================= */
-
-  if(editMode){
-
-    document
-      .getElementById("editName")
-      .addEventListener(
-        "change",
-        async event => {
-
-          try{
-
-            await updateGame({
-              id:game.id,
-              name:event.target.value
-            });
-
-          }catch(error){
-
-            alert(
-              "Could not save name: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-    /* =====================================================
-       COMMENTARY
-    ===================================================== */
-
-    document
-      .getElementById("commentary")
-      .addEventListener(
-        "change",
-        async event => {
-
-          try{
-
-            await updateGame({
-              id:game.id,
-              commentary:event.target.value
-            });
-
-          }catch(error){
-
-            alert(
-              "Could not save commentary: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-    /* =====================================================
-       CUSTOM RATING
-    ===================================================== */
-
-    const customInput =
-      document.getElementById(
-        "customRating"
-      );
-
-    customInput.addEventListener(
-      "change",
-      async () => {
-
-        const raw =
-          customInput.value.trim();
-
-        try{
-
-          await updateGame({
-            id:game.id,
-            custom_overall:
-              raw === ""
-                ? null
-                : Number(raw)
-          });
-
-          renderGameModal();
-
-        }catch(error){
-
-          alert(
-            "Could not save custom rating: " +
-            error.message
+        $("loginModal")
+          .classList.add(
+            "open"
           );
 
-        }
-
+        return;
       }
-    );
 
-    document
-      .getElementById(
-        "clearCustomRating"
-      )
-      .addEventListener(
-        "click",
-        async () => {
+      editing =
+        !editing;
 
-          try{
-
-            await updateGame({
-              id:game.id,
-              custom_overall:null
-            });
-
-            renderGameModal();
-
-          }catch(error){
-
-            alert(
-              "Could not clear custom rating: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-    /* =====================================================
-       RATINGS
-    ===================================================== */
-
-    modal
-      .querySelectorAll(".star")
-      .forEach(star => {
-
-        star.addEventListener(
-          "click",
-          async () => {
-
-            const category =
-              star.dataset.cat;
-
-            const value =
-              parseInt(
-                star.dataset.val,
-                10
-              );
-
-            const current =
-              Number(
-                game[category] || 0
-              );
-
-            const newValue =
-              current === value
-                ? value - 1
-                : value;
-
-            try{
-
-              await updateGame({
-                id:game.id,
-                [category]:newValue
-              });
-
-              renderGameModal();
-
-            }catch(error){
-
-              alert(
-                "Could not save rating: " +
-                error.message
-              );
-
-            }
-
-          }
-        );
-
-      });
-
-    /* =====================================================
-       DELETE
-    ===================================================== */
-
-    document
-      .getElementById("deleteGame")
-      .addEventListener(
-        "click",
-        async () => {
-
-          if(
-            !confirm(
-              `Delete "${game.name}"? This can't be undone.`
-            )
-          )
-            return;
-
-          try{
-
-            const response =
-              await apiFetch(
-                "/games/" +
-                encodeURIComponent(
-                  game.id
-                ),
-                {
-                  method:"DELETE"
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if(
-              !response.ok ||
-              !data.success
-            ){
-
-              throw new Error(
-                data.error ||
-                "Failed to delete game"
-              );
-
-            }
-
-            await apiGetGames();
-
-            closeGame();
-
-          }catch(error){
-
-            alert(
-              "Could not delete game: " +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-  }
-}
-
-/* =========================================================
-   UPDATE
-========================================================= */
-
-async function updateGame(changes){
-
-  const response =
-    await apiFetch(
-      "/games",
-      {
-        method:"PUT",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify(changes)
-      }
-    );
-
-  const data = await response.json();
-
-  if(!response.ok || !data.success){
-    throw new Error(data.error || "Failed to save");
-  }
-
-  // Update the in-memory copy immediately instead of doing another
-  // D1 read after every single edit. This removes the large delay
-  // caused by PUT -> SELECT -> render.
-  if(changes.id){
-    const localGame = gameById(changes.id);
-    if(localGame){
-      Object.keys(changes).forEach(key => {
-        if(key !== "id") localGame[key] = changes[key];
-      });
+      render();
     }
-  }
-
-  render();
-}
-
-/* =========================================================
-   STAR SVG
-========================================================= */
-
-function starSvg(){
-
-  return `
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      width="100%"
-      height="100%"
-    >
-      <path
-        d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"
-      />
-    </svg>
-  `;
-}
-
-/* =========================================================
-   EDIT LOGIN
-========================================================= */
-
-async function tryUnlock(){
-
-  const password =
-    prompt(
-      "Enter edit password:"
-    );
-
-  if(password === null)
-    return;
-
-  try{
-
-    const response =
-      await fetch(
-        API + "/login",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify({
-            password
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(
-      !response.ok ||
-      !data.success
-    ){
-
-      alert("Wrong password.");
-      return;
-
-    }
-
-    localStorage.setItem(
-      "played-admin-token",
-      data.token
-    );
-
-    localStorage.setItem(
-      "played-edit-unlocked",
-      "yes"
-    );
-
-    editMode = true;
-
-    render();
-
-  }catch(error){
-
-    alert(
-      "Could not enter edit mode: " +
-      error.message
-    );
-
-  }
-}
-
-function lockEdit(){
-
-  localStorage.removeItem(
-    "played-admin-token"
   );
 
-  localStorage.removeItem(
-    "played-edit-unlocked"
-  );
-
-  editMode = false;
-
-  closeGame();
-
-  render();
-
-}
-
-document
-  .getElementById("editButton")
+$("loginCancel")
   .addEventListener(
     "click",
     () => {
 
-      if(editMode)
-        lockEdit();
-      else
-        tryUnlock();
-
+      $("loginModal")
+        .classList.remove(
+          "open"
+        );
     }
   );
 
-/* =========================================================
-   KEYBOARD
-========================================================= */
+$("loginSubmit")
+  .addEventListener(
+    "click",
+    async () => {
+
+      const password =
+        $("loginPassword")
+          .value;
+
+      try {
+
+        const data =
+          await api(
+            "/api/login",
+            {
+              method: "POST",
+              body:
+                JSON.stringify({
+                  password
+                })
+            }
+          );
+
+        localStorage.setItem(
+          "played-admin-token",
+          data.token
+        );
+
+        $("loginModal")
+          .classList.remove(
+            "open"
+          );
+
+        editing =
+          true;
+
+        render();
+
+      } catch {
+
+        $("loginError")
+          .textContent =
+          "Invalid password";
+      }
+    }
+  );
 
 document.addEventListener(
   "keydown",
   event => {
 
-    if(event.key !== "Escape")
-      return;
+    if (
+      event.key === "Escape"
+    ) {
 
-    const gameOverlay =
-      document.getElementById(
-        "gameOverlay"
-      );
+      $("gameModal")
+        .classList.remove(
+          "open"
+        );
 
-    const addOverlay =
-      document.getElementById(
-        "addOverlay"
-      );
-
-    if(
-      gameOverlay.classList.contains(
-        "open"
-      )
-    ){
-
-      closeGame();
-
+      $("loginModal")
+        .classList.remove(
+          "open"
+        );
     }
-
-    if(
-      addOverlay.classList.contains(
-        "open"
-      )
-    ){
-
-      addOverlay.classList.remove(
-        "open"
-      );
-
-    }
-
   }
 );
 
-/* =========================================================
-   START
-========================================================= */
+function escapeHtml(value) {
 
-load();
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+}
 
-})();
+function escapeAttr(value) {
+  return escapeHtml(value);
+}
+
+loadEverything();
 </script>
 
 </body>
