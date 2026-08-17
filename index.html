@@ -2062,45 +2062,17 @@ async function exportBackup(){
 
   try{
 
-    const response =
-      await apiFetch(
-        "/backup/export",
-        {
-          method:"GET",
-          cache:"no-store"
-        }
-      );
-
-    if(!response.ok){
-
-      let message =
-        "Failed to export backup";
-
-      try{
-
-        const data =
-          await response.json();
-
-        if(data.error)
-          message = data.error;
-
-      }catch(_){}
-
-      throw new Error(message);
-
-    }
-
-    const data =
-      await response.json();
-
-    if(!data.success)
-      throw new Error(
-        data.error ||
-        "Failed to export backup"
-      );
-
-    const backup =
-      data.backup || data;
+    /*
+       Backups are created entirely from the data already loaded
+       into the page. The old version called /api/backup/export,
+       but that endpoint does not exist in the current worker.
+    */
+    const backup = {
+      version:1,
+      exported_at:new Date().toISOString(),
+      tiers:JSON.parse(JSON.stringify(tiers)),
+      games:JSON.parse(JSON.stringify(games))
+    };
 
     const blob =
       new Blob(
@@ -2112,7 +2084,7 @@ async function exportBackup(){
           )
         ],
         {
-          type:"application/json"
+          type:"application/json;charset=utf-8"
         }
       );
 
@@ -2128,21 +2100,23 @@ async function exportBackup(){
         .slice(0,10);
 
     link.href = url;
-
     link.download =
       "played-tier-list-backup-" +
       date +
       ".json";
 
     document.body.appendChild(link);
-
     link.click();
-
     link.remove();
 
-    URL.revokeObjectURL(url);
+    setTimeout(
+      () => URL.revokeObjectURL(url),
+      1000
+    );
 
   }catch(error){
+
+    console.error(error);
 
     alert(
       "Could not export backup: " +
@@ -2198,10 +2172,9 @@ async function importBackupFile(event){
 
     try{
 
-      backup =
-        JSON.parse(text);
+      backup = JSON.parse(text);
 
-    }catch(error){
+    }catch(_){
 
       throw new Error(
         "The selected file is not valid JSON."
@@ -2209,33 +2182,226 @@ async function importBackupFile(event){
 
     }
 
-    const response =
-      await apiFetch(
-        "/backup/import",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:JSON.stringify(
-            backup
-          )
-        }
-      );
-
-    const data =
-      await response.json();
-
     if(
-      !response.ok ||
-      !data.success
+      !backup ||
+      !Array.isArray(backup.games) ||
+      !Array.isArray(backup.tiers)
     ){
 
       throw new Error(
-        data.error ||
-        "Failed to import backup"
+        "This is not a valid tier-list backup."
       );
+
+    }
+
+    /* Restore tier labels/settings first. */
+    for(const tier of backup.tiers){
+
+      if(!tier || !tier.tier_key)
+        continue;
+
+      const response =
+        await apiFetch(
+          "/tiers",
+          {
+            method:"PUT",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+              tier_key:tier.tier_key,
+              letter:tier.letter || "",
+              label:tier.label || "",
+              sub:tier.sub || ""
+            })
+          }
+        );
+
+      const data = await response.json();
+
+      if(!response.ok || !data.success){
+        throw new Error(
+          data.error ||
+          "Failed to restore tier settings"
+        );
+      }
+
+    }
+
+    const backupIds =
+      new Set(
+        backup.games
+          .filter(g => g && g.id)
+          .map(g => String(g.id))
+      );
+
+    /* Remove games that are not present in the backup. */
+    for(const existing of games){
+
+      if(!backupIds.has(String(existing.id))){
+
+        const response =
+          await apiFetch(
+            "/games/" +
+            encodeURIComponent(existing.id),
+            {
+              method:"DELETE"
+            }
+          );
+
+        const data = await response.json();
+
+        if(!response.ok || !data.success){
+          throw new Error(
+            data.error ||
+            "Failed to remove an old game"
+          );
+        }
+
+      }
+
+    }
+
+    /* Add missing games and restore all saved fields. */
+    for(const saved of backup.games){
+
+      if(!saved || !saved.id)
+        continue;
+
+      const existing =
+        games.find(
+          g => String(g.id) === String(saved.id)
+        );
+
+      if(!existing){
+
+        const addResponse =
+          await apiFetch(
+            "/games",
+            {
+              method:"POST",
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify({
+                id:saved.id,
+                name:saved.name || "New Game",
+                tier:saved.tier || "A",
+                commentary:saved.commentary || ""
+              })
+            }
+          );
+
+        const addData = await addResponse.json();
+
+        if(!addResponse.ok || !addData.success){
+          throw new Error(
+            addData.error ||
+            "Failed to add a game from backup"
+          );
+        }
+
+      }
+
+      const updateResponse =
+        await apiFetch(
+          "/games",
+          {
+            method:"PUT",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+              id:saved.id,
+              name:saved.name || "",
+              tier:saved.tier || "A",
+              commentary:saved.commentary || "",
+              gameplay:Number(saved.gameplay || 0),
+              graphics:Number(saved.graphics || 0),
+              story_pacing:Number(saved.story_pacing || 0),
+              writing:Number(saved.writing || 0),
+              voice_acting:Number(saved.voice_acting || 0),
+              music_audio:Number(saved.music_audio || 0),
+              technical_performance:Number(saved.technical_performance || 0),
+              emotional_impact:Number(saved.emotional_impact || 0),
+              custom_overall:
+                saved.custom_overall === null ||
+                saved.custom_overall === undefined ||
+                saved.custom_overall === ""
+                  ? null
+                  : Number(saved.custom_overall)
+            })
+          }
+        );
+
+      const updateData = await updateResponse.json();
+
+      if(!updateResponse.ok || !updateData.success){
+        throw new Error(
+          updateData.error ||
+          "Failed to restore game data"
+        );
+      }
+
+    }
+
+    /*
+       Restore exact tier/order. Moving each saved game into its
+       saved position gives the backup its original visual order.
+    */
+    const tierKeys = [
+      ...new Set(
+        backup.games
+          .map(g => g && g.tier)
+          .filter(Boolean)
+      )
+    ];
+
+    for(const tierKey of tierKeys){
+
+      const tierGames =
+        backup.games
+          .filter(
+            g =>
+              g &&
+              g.tier === tierKey
+          )
+          .sort(
+            (a,b) =>
+              Number(a.position || 0) -
+              Number(b.position || 0)
+          );
+
+      for(let i = 0; i < tierGames.length; i++){
+
+        const saved = tierGames[i];
+
+        const moveResponse =
+          await apiFetch(
+            "/games/move",
+            {
+              method:"POST",
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify({
+                id:saved.id,
+                tier:tierKey,
+                position:i
+              })
+            }
+          );
+
+        const moveData = await moveResponse.json();
+
+        if(!moveResponse.ok || !moveData.success){
+          throw new Error(
+            moveData.error ||
+            "Failed to restore game order"
+          );
+        }
+
+      }
 
     }
 
@@ -2249,6 +2415,8 @@ async function importBackupFile(event){
     );
 
   }catch(error){
+
+    console.error(error);
 
     alert(
       "Could not import backup: " +
