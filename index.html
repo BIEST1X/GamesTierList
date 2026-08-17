@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GAMES PLAYED BY BIEST1X</title>
+<title>GAMES PLAYED BY BIEST1X — a personal tier list</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root{
   --bg:#0f0e17;
@@ -29,55 +29,23 @@
   --slate:#736e8f;
   --slate-dim:rgba(115,110,143,0.18);
 
-  --highlight:#e83f3f;
+  --highlight:#f55951;
 }
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
-html,body{
-  background:var(--bg);
-  color:var(--text);
-}
-
+html,body{background:var(--bg);color:var(--text)}
 body{
   font-family:'Inter',sans-serif;
   min-height:100vh;
   padding-bottom:80px;
   -webkit-font-smoothing:antialiased;
 }
-
-::selection{
-  background:var(--gold-dim);
-  color:var(--gold);
-}
-
-::-webkit-scrollbar{
-  width:10px;
-  height:10px;
-}
-
-::-webkit-scrollbar-track{
-  background:transparent;
-}
-
-::-webkit-scrollbar-thumb{
-  background:var(--line-strong);
-  border-radius:6px;
-}
-
-:focus-visible{
-  outline:2px solid var(--gold);
-  outline-offset:2px;
-  border-radius:3px;
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
+::selection{background:var(--gold-dim);color:var(--gold)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:6px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
 
 header.top{
   max-width:1400px;
@@ -89,64 +57,29 @@ header.top{
   gap:20px;
   border-bottom:1px solid var(--line);
 }
-
 .brand h1{
   font-family:'Inter',sans-serif;
-  font-weight:600;
-  font-style:normal;
-  font-size:30px;
-  letter-spacing:-.025em;
+  font-weight:700;
+  font-size:38px;
+  letter-spacing:-.035em;
   color:var(--text);
+  line-height:1.05;
 }
-
 .brand p{
   font-family:'JetBrains Mono',monospace;
   font-size:12px;
   color:var(--text-faint);
   letter-spacing:.06em;
   text-transform:uppercase;
-  margin-top:7px;
+  margin-top:8px;
+  padding-left:0;
 }
-
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.btn-add,
-.btn-edit{
-  font-weight:600;
-  font-size:14px;
-  border:none;
-  padding:12px 20px;
-  border-radius:8px;
-  cursor:pointer;
-}
-
+.header-actions{display:flex;align-items:center;gap:10px}
 .btn-add{
-  color:#0f0e17;
-  background:var(--gold);
+  font-weight:600;font-size:14px;color:#0f0e17;background:var(--gold);
+  border:none;padding:12px 20px;border-radius:8px;cursor:pointer;
 }
-
-.btn-add:hover{
-  filter:brightness(1.08);
-}
-
-.btn-edit{
-  color:var(--text-dim);
-  background:transparent;
-  border:1px solid var(--line-strong);
-}
-
-.btn-edit:hover{
-  color:var(--text);
-  background:var(--surface-hover);
-}
-
-/* =========================================================
-   MAIN / TIERS
-========================================================= */
+.btn-add:hover{filter:brightness(1.08)}
 
 main{
   max-width:1400px;
@@ -157,2359 +90,652 @@ main{
   align-items:flex-start;
   overflow-x:auto;
 }
-
-.tier{
-  flex:0 0 auto;
-  min-width:200px;
-}
-
+.tier{flex:0 0 auto;min-width:200px}
 .tier-head{
   display:flex;
   flex-direction:column;
-  align-items:flex-start;
+  align-items:center;
   gap:2px;
   padding-bottom:10px;
   border-bottom:2px solid var(--tier-color);
   margin-bottom:4px;
+  text-align:center;
 }
-
 .tier-letter{
   font-family:'Fraunces',serif;
   font-style:italic;
   font-weight:600;
-  font-size:34px;
+  font-size:30px; /* 15% larger than the previous 26px */
   color:var(--tier-color);
   line-height:1;
 }
-
-.tier-label{
-  font-size:13.5px;
-  font-weight:600;
-}
-
+.tier-label{font-size:13.5px;font-weight:600}
 .tier-sub{
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.05em;
+  font-size:10px;color:var(--text-faint);
+  text-transform:uppercase;letter-spacing:.05em;
 }
-
 .tier-meta{
-  width:100%;
-  margin-top:4px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;
 }
+.tier-count{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)}
 
-.tier-count{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--text-dim);
-}
-
-.resort-btn{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:var(--tier-color);
-  background:transparent;
-  border:1px solid var(--tier-color);
-  padding:4px 9px;
-  border-radius:20px;
-  cursor:pointer;
-}
-
-.rows{
-  padding:6px 0 4px;
-  min-height:14px;
-}
-
+.rows{padding:6px 0 4px;min-height:14px}
 .empty-row{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--text-faint);
-  padding:18px 4px;
-  border:1px dashed var(--line-strong);
-  border-radius:8px;
-  text-align:center;
-  margin:8px 0;
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-faint);
+  padding:18px 4px;border:1px dashed var(--line-strong);border-radius:8px;
+  text-align:center;margin:8px 0;
 }
-
 .row{
-  display:flex;
-  align-items:center;
-  padding:10px 10px;
-  margin:6px 0;
-  background:var(--surface);
-  border-left:3px solid var(--tier-color);
-  border-radius:6px;
-  cursor:pointer;
-  transition:
-    background .12s ease,
-    color .12s ease;
+  display:flex;flex-direction:column;gap:6px;padding:9px 10px;margin:6px 0;
+  background:var(--surface);border-left:3px solid var(--tier-color);
+  border-radius:6px;cursor:pointer;transition:background .12s ease;
 }
-
-.row:hover{
-  background:var(--surface-hover);
-}
-
-.row.dragging{
-  opacity:.35;
-}
-
-.row.drag-over-top{
-  box-shadow:inset 0 2px 0 var(--tier-color);
-}
-
-.row.drag-over-bottom{
-  box-shadow:inset 0 -2px 0 var(--tier-color);
-}
-
-.row-top{
-  width:100%;
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:8px;
-}
-
+.row:hover{background:var(--surface-hover)}
+.row.dragging{opacity:.35}
+.row.drag-over-top{box-shadow:inset 0 2px 0 var(--tier-color)}
+.row.drag-over-bottom{box-shadow:inset 0 -2px 0 var(--tier-color)}
+.row-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .row-name{
-  font-size:13px;
-  font-weight:500;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  flex:1;
+  font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;flex:1;
 }
-
 .row-score{
-  font-family:'JetBrains Mono',monospace;
-  font-weight:700;
-  font-size:14px;
-  color:var(--tier-color);
-  flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;
+  color:var(--tier-color);flex-shrink:0;
 }
-
-.row-score sub{
-  font-size:10px;
-  color:var(--text-faint);
-  font-weight:400;
-}
-
-/* > 9.5 highlight */
-
-.row.highlight{
-  border-left-color:var(--highlight);
-}
-
-.row.highlight .row-name{
+.row.high-score .row-name{
   color:var(--highlight);
-  font-size:14px;
+  font-size:14.5px;
   font-weight:600;
 }
-
-.row.highlight .row-score{
+.row.high-score .row-score{
   color:var(--highlight);
-  font-size:15px;
+  font-size:15.5px;
 }
-
-/* =========================================================
-   MODALS
-========================================================= */
 
 .overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(5,4,9,.7);
-  backdrop-filter:blur(3px);
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding:40px 16px;
-  overflow-y:auto;
-  z-index:100;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .15s ease;
+  position:fixed;inset:0;background:rgba(5,4,9,.7);backdrop-filter:blur(3px);
+  display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;
+  overflow-y:auto;z-index:100;opacity:0;pointer-events:none;transition:opacity .15s ease;
 }
-
-.overlay.open{
-  opacity:1;
-  pointer-events:auto;
-}
-
+.overlay.open{opacity:1;pointer-events:auto}
 .modal{
-  background:var(--surface);
-  border:1px solid var(--line-strong);
-  border-radius:14px;
-  width:100%;
-  max-width:560px;
-  padding:28px 28px 32px;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:14px;
+  width:100%;max-width:560px;padding:28px 28px 32px;
 }
-
-.modal-top{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:18px;
-}
-
+.modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
 .modal-name{
-  font-family:'Fraunces',serif;
-  font-weight:600;
-  font-size:26px;
-  color:var(--text);
-  background:transparent;
-  border:none;
-  border-bottom:1px solid transparent;
-  width:100%;
-  padding:2px 0;
+  font-family:'Fraunces',serif;font-weight:600;font-size:26px;color:var(--text);
+  background:transparent;border:none;border-bottom:1px solid transparent;width:100%;padding:2px 0;
 }
+.modal-name:focus{border-bottom:1px solid var(--line-strong)}
+.modal-close{background:transparent;border:none;color:var(--text-faint);font-size:20px;cursor:pointer;padding:4px}
 
-.modal-name:focus{
-  border-bottom:1px solid var(--line-strong);
-}
-
-.modal-close{
-  background:transparent;
-  border:none;
-  color:var(--text-faint);
-  font-size:20px;
-  cursor:pointer;
-  padding:4px;
-}
-
-.tier-picker{
-  display:flex;
-  gap:8px;
-  margin-bottom:22px;
-  flex-wrap:wrap;
-}
-
+.tier-picker{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
 .tier-chip{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;
-  font-weight:700;
-  padding:6px 12px;
-  border-radius:20px;
-  border:1px solid var(--line-strong);
-  background:transparent;
-  cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;
+  padding:6px 12px;border-radius:20px;border:1px solid var(--line-strong);
+  background:transparent;cursor:pointer;
 }
-
 .overall-line{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-  margin-bottom:20px;
-  padding-bottom:18px;
+  display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:18px;
   border-bottom:1px solid var(--line);
 }
-
 .overall-num{
-  font-family:'JetBrains Mono',monospace;
-  font-weight:700;
-  font-size:34px;
-  color:var(--gold);
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:34px;color:var(--gold);
 }
-
-.overall-label{
-  font-size:11px;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.06em;
+.overall-label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em}
+.manual-overall{
+  width:72px;background:rgba(255,255,255,.03);border:1px solid var(--line-strong);
+  border-radius:6px;color:var(--text);font-family:'JetBrains Mono',monospace;
+  font-size:14px;padding:6px 7px;display:none;
 }
-
-.cat-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:7px 0;
-}
-
-.cat-label{
-  font-size:13px;
-  color:var(--text-dim);
-  width:130px;
-  flex-shrink:0;
-}
-
-.stars{
-  display:flex;
-  gap:2px;
-}
-
-.star{
-  width:15px;
-  height:15px;
-  cursor:pointer;
-  flex-shrink:0;
-  color:var(--line-strong);
-}
-
-.star.filled{
-  color:var(--gold);
-}
-
-.star.readonly{
-  cursor:default;
-}
-
-.cat-num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:var(--text-faint);
-  width:34px;
-  text-align:right;
-}
-
+body.edit-mode .manual-overall{display:block}
+.manual-hint{font-size:10px;color:var(--text-faint);display:none}
+body.edit-mode .manual-hint{display:inline}
+.cat-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0}
+.cat-label{font-size:13px;color:var(--text-dim);width:130px;flex-shrink:0}
+.stars{display:flex;gap:2px}
+.star{width:15px;height:15px;cursor:pointer;flex-shrink:0;color:var(--line-strong)}
+.star.filled{color:var(--gold)}
+.star.readonly{cursor:default}
+.cat-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-faint);width:34px;text-align:right}
 .commentary-label{
-  font-size:11px;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  margin:22px 0 8px;
+  font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 8px;
 }
-
 .commentary{
-  width:100%;
-  min-height:120px;
-  background:rgba(255,255,255,.02);
-  border:1px solid var(--line-strong);
-  border-radius:8px;
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  font-size:14px;
-  line-height:1.55;
-  padding:12px 14px;
-  resize:vertical;
+  width:100%;min-height:120px;background:rgba(255,255,255,.02);
+  border:1px solid var(--line-strong);border-radius:8px;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;padding:12px 14px;resize:vertical;
 }
-
-.modal-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:24px;
-}
-
+.modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
 .delete-btn{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;
-  color:var(--rust);
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  padding:6px 10px;
-  border-radius:6px;
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--rust);
+  background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;
 }
-
-.delete-btn:hover{
-  background:var(--rust-dim);
-}
-
+.delete-btn:hover{background:var(--rust-dim)}
 .done-btn{
-  font-weight:600;
-  font-size:13.5px;
-  background:var(--gold);
-  color:#0f0e17;
-  border:none;
-  padding:9px 20px;
-  border-radius:8px;
-  cursor:pointer;
+  font-weight:600;font-size:13.5px;background:var(--gold);color:#0f0e17;
+  border:none;padding:9px 20px;border-radius:8px;cursor:pointer;
 }
-
-.add-modal{
-  max-width:400px;
-}
-
+.add-modal{max-width:400px}
 .field-label{
-  font-size:11px;
-  color:var(--text-faint);
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  margin-bottom:6px;
-  display:block;
+  font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;
+  margin-bottom:6px;display:block;
 }
-
 .name-input{
-  width:100%;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--line-strong);
-  border-radius:8px;
-  color:var(--text);
-  font-size:15px;
-  padding:11px 12px;
-  margin-bottom:18px;
+  width:100%;background:rgba(255,255,255,.03);border:1px solid var(--line-strong);
+  border-radius:8px;color:var(--text);font-size:15px;padding:11px 12px;margin-bottom:18px;
 }
-
-.loading-msg{
-  width:100%;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--text-faint);
-  text-align:center;
-  padding:60px 20px;
+.loading-msg,.error-msg{
+  width:100%;font-family:'JetBrains Mono',monospace;font-size:12px;text-align:center;padding:60px 20px;
 }
-
-.error-msg{
-  width:100%;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--rust);
-  text-align:center;
-  padding:60px 20px;
-}
-
-.edit-only{
-  display:none!important;
-}
-
-body.edit-mode .edit-only{
-  display:inline-flex!important;
-}
-
-body.edit-mode .btn-add.edit-only{
-  display:inline-block!important;
-}
+.loading-msg{color:var(--text-faint)}
+.error-msg{color:var(--rust)}
+.edit-only{display:none!important}
+body.edit-mode .edit-only{display:inline-flex!important}
+body.edit-mode .btn-add.edit-only{display:inline-block!important}
 
 #editBar{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  z-index:200;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  background:var(--surface);
-  border:1px solid var(--line-strong);
-  border-radius:30px;
-  padding:8px 8px 8px 16px;
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
-  font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;
+  position:fixed;right:20px;bottom:20px;z-index:200;display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:30px;
+  padding:8px 8px 8px 16px;box-shadow:0 8px 24px rgba(0,0,0,.35);
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
 }
-
-#editBar .status{
-  color:var(--text-faint);
-}
-
+#editBar .status{color:var(--text-faint)}
 #editBar button{
-  font-family:'Inter',sans-serif;
-  font-weight:600;
-  font-size:12.5px;
-  border:none;
-  border-radius:20px;
-  padding:8px 14px;
-  cursor:pointer;
+  font-family:'Inter',sans-serif;font-weight:600;font-size:12.5px;border:none;
+  border-radius:20px;padding:8px 14px;cursor:pointer;
 }
-
-.lock-btn{
-  background:transparent;
-  color:var(--text-dim);
-  border:1px solid var(--line-strong)!important;
-}
+.lock-btn{background:transparent;color:var(--text-dim);border:1px solid var(--line-strong)!important}
 
 @media(max-width:700px){
-
-  header.top{
-    padding:32px 16px 24px;
-    align-items:flex-start;
-  }
-
-  .brand h1{
-    font-size:24px;
-  }
-
-  .header-actions{
-    flex-shrink:0;
-  }
-
-  .btn-add,
-  .btn-edit{
-    padding:10px 12px;
-    font-size:12px;
-  }
-
-  main{
-    padding:24px 16px 40px;
-  }
-
-  .tier{
-    min-width:190px;
-  }
-
-  #editBar{
-    right:10px;
-    bottom:10px;
-  }
-
-  #editBar .status{
-    display:none;
-  }
+  header.top{padding:32px 16px 24px}
+  .brand h1{font-size:30px}
+  main{padding:24px 16px 40px}
+  .tier{min-width:190px}
+  #editBar{right:10px;bottom:10px}
+  #editBar .status{display:none}
 }
 </style>
 </head>
 
 <body>
-
 <header class="top">
-
   <div class="brand">
     <h1>GAMES PLAYED BY BIEST1X</h1>
     <p>a personal tier list</p>
   </div>
-
   <div class="header-actions">
-
-    <button
-      class="btn-edit"
-      id="headerEdit"
-    >
-      Edit
-    </button>
-
-    <button
-      class="btn-add edit-only"
-      id="openAdd"
-    >
-      + Add game
-    </button>
-
+    <button class="btn-add edit-only" id="openAdd">+ Add game</button>
+    <div id="topEdit"></div>
   </div>
-
 </header>
 
-<main id="main">
-  <div class="loading-msg">
-    loading your list…
-  </div>
-</main>
-
-<!-- ADD GAME -->
+<main id="main"><div class="loading-msg">loading your list…</div></main>
 
 <div class="overlay" id="addOverlay">
-
   <div class="modal add-modal">
-
     <div class="modal-top">
-
-      <div
-        class="modal-name"
-        style="font-size:20px;"
-      >
-        Add a game
-      </div>
-
-      <button
-        class="modal-close"
-        id="closeAdd"
-      >
-        ✕
-      </button>
-
+      <div class="modal-name" style="font-size:20px;">Add a game</div>
+      <button class="modal-close" id="closeAdd">✕</button>
     </div>
-
-    <label class="field-label">
-      Name
-    </label>
-
-    <input
-      class="name-input"
-      id="addName"
-      placeholder="e.g. Disco Elysium"
-      maxlength="80"
-    >
-
-    <label class="field-label">
-      Tier
-    </label>
-
-    <div
-      class="tier-picker"
-      id="addTierPicker"
-    ></div>
-
-    <div
-      class="modal-footer"
-      style="justify-content:flex-end"
-    >
-      <button
-        class="done-btn"
-        id="confirmAdd"
-      >
-        Add game
-      </button>
+    <label class="field-label">Name</label>
+    <input class="name-input" id="addName" placeholder="e.g. Disco Elysium" maxlength="80">
+    <label class="field-label">Tier</label>
+    <div class="tier-picker" id="addTierPicker"></div>
+    <div class="modal-footer" style="justify-content:flex-end">
+      <button class="done-btn" id="confirmAdd">Add game</button>
     </div>
-
   </div>
-
 </div>
 
-<!-- GAME -->
-
 <div class="overlay" id="gameOverlay">
-
-  <div
-    class="modal"
-    id="gameModal"
-  ></div>
-
+  <div class="modal" id="gameModal"></div>
 </div>
 
 <div id="editBar"></div>
 
 <script>
 (function(){
+const API='/api';
 
-/* =========================================================
-   CONFIG
-========================================================= */
-
-const API = '/api';
-
-const TOKEN_KEY = 'played-admin-token';
-const EDIT_KEY = 'played-edit-unlocked';
-
-/* =========================================================
-   CATEGORIES
-========================================================= */
-
-const CATEGORIES = [
-  {key:'gameplay', label:'Gameplay'},
-  {key:'visuals',  label:'Visuals & Graphics'},
-  {key:'story',    label:'Story'},
-  {key:'music',    label:'Music'},
-  {key:'voice',    label:'Voice Acting'},
-  {key:'sound',    label:'Sound Design'},
-  {key:'writing',  label:'Writing'}
+const CATEGORIES=[
+  {key:'gameplay',label:'Gameplay'},
+  {key:'visuals',label:'Visuals & Graphics'},
+  {key:'story',label:'Story'},
+  {key:'music',label:'Music'},
+  {key:'voice',label:'Voice Acting'},
+  {key:'sound',label:'Sound Design'},
+  {key:'writing',label:'Writing'}
 ];
 
-/* =========================================================
-   TIERS
-========================================================= */
-
-const TIERS = [
-
-  {
-    key:'S',
-    letter:'SS',
-    label:'Masterpiece',
-    sub:'Best games',
-    color:'var(--gold)',
-    dim:'var(--gold-dim)'
-  },
-
-  {
-    key:'A',
-    letter:'S',
-    label:'Amazing game',
-    sub:'Great games',
-    color:'var(--teal)',
-    dim:'var(--teal-dim)'
-  },
-
-  {
-    key:'B',
-    letter:'A',
-    label:'Good / Okay',
-    sub:'Solid games',
-    color:'var(--sage)',
-    dim:'var(--sage-dim)'
-  },
-
-  {
-    key:'F',
-    letter:'B',
-    label:'Nothing special / meh',
-    sub:'Forgettable',
-    color:'var(--rust)',
-    dim:'var(--rust-dim)'
-  },
-
-  {
-    key:'X',
-    letter:'—',
-    label:'Dislike / dropped',
-    sub:'Not for me',
-    color:'var(--slate)',
-    dim:'var(--slate-dim)'
-  }
-
+const TIERS=[
+  {key:'S',letter:'SS',label:'Masterpiece',sub:'Best games',color:'var(--gold)',dim:'var(--gold-dim)'},
+  {key:'A',letter:'S',label:'Amazing game',sub:'Great games',color:'var(--teal)',dim:'var(--teal-dim)'},
+  {key:'B',letter:'A',label:'Good / Okay',sub:'Solid games',color:'var(--sage)',dim:'var(--sage-dim)'},
+  {key:'F',letter:'B',label:'Nothing special / meh',sub:'Forgettable',color:'var(--rust)',dim:'var(--rust-dim)'},
+  {key:'X',letter:'—',label:'Dislike / dropped',sub:'Not for me',color:'var(--slate)',dim:'var(--slate-dim)'}
 ];
 
-/* =========================================================
-   STATE
-========================================================= */
+let games=[];
+let editMode=false;
+let currentGameId=null;
+let addTier='B';
+let dragId=null;
 
-let games = [];
-let editMode = false;
-let currentGameId = null;
-let addTier = 'B';
-let dragId = null;
+function getTier(key){return TIERS.find(t=>t.key===key)||TIERS[2]}
 
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function getTier(key){
-  return TIERS.find(t => t.key === key) || TIERS[2];
+function calculatedScore(game){
+  const values=CATEGORIES.map(c=>Number(game[c.key]||0));
+  return Math.round((values.reduce((a,b)=>a+b,0)/values.length)*10)/10;
 }
-
 function score(game){
-
-  const values =
-    CATEGORIES.map(c =>
-      Number(game[c.key] || 0)
-    );
-
-  const average =
-    values.reduce((a,b) => a + b, 0) /
-    values.length;
-
-  return Math.round(average * 10) / 10;
+  const manual=game.overall_override;
+  if(manual!==null && manual!==undefined && manual!==''){
+    const n=Number(manual);
+    if(Number.isFinite(n)) return Math.round(n*10)/10;
+  }
+  return calculatedScore(game);
 }
-
-function escapeHtml(str){
-
-  const d =
-    document.createElement('div');
-
-  d.textContent = str ?? '';
-
-  return d.innerHTML;
+function escapeHtml(str){const d=document.createElement('div');d.textContent=str??'';return d.innerHTML}
+function gameById(id){return games.find(g=>g.id===id)}
+function authHeaders(extra={}){
+  const token=localStorage.getItem('played-admin-token');
+  return token?{...extra,Authorization:'Bearer '+token}:extra;
 }
-
-function gameById(id){
-  return games.find(g => g.id === id);
-}
-
-function authHeaders(){
-
-  const token =
-    localStorage.getItem(TOKEN_KEY);
-
-  return token
-    ? {
-        'Authorization':'Bearer ' + token,
-        'Content-Type':'application/json'
-      }
-    : {
-        'Content-Type':'application/json'
-      };
-}
-
-function isAuthenticated(){
-
-  return !!localStorage.getItem(TOKEN_KEY);
-
-}
-
-/* =========================================================
-   API
-========================================================= */
 
 async function apiGetGames(){
-
-  const response =
-    await fetch(
-      API + '/games',
-      {
-        cache:'no-store'
-      }
-    );
-
-  if(!response.ok)
-    throw new Error('Failed to load games');
-
-  const data =
-    await response.json();
-
-  if(!data.success)
-    throw new Error(
-      data.error || 'Failed to load games'
-    );
-
-  games = data.games || [];
+  const response=await fetch(API+'/games',{cache:'no-store'});
+  if(!response.ok)throw new Error('Failed to load games');
+  const data=await response.json();
+  if(!data.success)throw new Error(data.error||'Failed to load games');
+  games=data.games||[];
 }
-
-async function apiLogin(password){
-
-  const response =
-    await fetch(
-      API + '/login',
-      {
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify({
-          password
-        })
-      }
-    );
-
-  const data =
-    await response.json();
-
-  if(!response.ok || !data.success){
-
-    throw new Error(
-      data.error || 'Login failed'
-    );
-
-  }
-
-  localStorage.setItem(
-    TOKEN_KEY,
-    data.token
-  );
-
-  localStorage.setItem(
-    EDIT_KEY,
-    'yes'
-  );
-
-}
-
-/* =========================================================
-   LOAD
-========================================================= */
 
 async function load(){
-
-  editMode =
-    localStorage.getItem(EDIT_KEY) === 'yes' &&
-    isAuthenticated();
-
+  editMode=localStorage.getItem('played-edit-unlocked')==='yes' &&
+           !!localStorage.getItem('played-admin-token');
   try{
-
     await apiGetGames();
-
     render();
     renderEditBar();
-
   }catch(error){
-
     console.error(error);
-
-    document.getElementById('main').innerHTML = `
-      <div class="error-msg">
-        Failed to load games.<br><br>
-        ${escapeHtml(error.message)}
-      </div>
-    `;
-
+    document.getElementById('main').innerHTML=
+      `<div class="error-msg">Failed to load games.<br><br>${escapeHtml(error.message)}</div>`;
   }
 }
-
-/* =========================================================
-   RENDER
-========================================================= */
 
 function render(){
-
-  document.body.classList.toggle(
-    'edit-mode',
-    editMode
-  );
-
-  const main =
-    document.getElementById('main');
-
-  main.innerHTML = '';
-
-  TIERS.forEach(tier => {
-
-    const tierGames =
-      games.filter(
-        g => g.tier === tier.key
-      );
-
-    main.appendChild(
-      renderTier(
-        tier,
-        tierGames
-      )
-    );
-
-  });
-
-  renderAddTierPicker();
-
-}
-
-/* =========================================================
-   TIER
-========================================================= */
-
-function renderTier(tier,tierGames){
-
-  const section =
-    document.createElement('section');
-
-  section.className = 'tier';
-
-  section.style.setProperty(
-    '--tier-color',
-    tier.color
-  );
-
-  section.style.setProperty(
-    '--tier-dim',
-    tier.dim
-  );
-
-  const head =
-    document.createElement('div');
-
-  head.className = 'tier-head';
-
-  head.innerHTML = `
-
-    <span class="tier-letter">
-      ${tier.letter}
-    </span>
-
-    <div>
-
-      <div class="tier-label">
-        ${tier.label}
-      </div>
-
-      <div class="tier-sub">
-        ${tier.sub}
-      </div>
-
-    </div>
-
-    <div class="tier-meta">
-
-      <button
-        class="resort-btn edit-only"
-        data-tier="${tier.key}"
-      >
-        sort by rating
-      </button>
-
-      <span class="tier-count">
-        ${tierGames.length}
-      </span>
-
-    </div>
-
-  `;
-
-  section.appendChild(head);
-
-  const rows =
-    document.createElement('div');
-
-  rows.className = 'rows';
-
-  rows.dataset.tier =
-    tier.key;
-
-  if(tierGames.length === 0){
-
-    const empty =
-      document.createElement('div');
-
-    empty.className =
-      'empty-row';
-
-    empty.textContent =
-      'No games here yet.';
-
-    rows.appendChild(empty);
-
+  document.body.classList.toggle('edit-mode',editMode);
+  document.getElementById('topEdit').innerHTML='';
+  if(editMode){
+    const b=document.createElement('button');
+    b.className='lock-btn';
+    b.textContent='Exit';
+    b.style.cssText='font-family:Inter,sans-serif;font-weight:600;font-size:12.5px;border-radius:20px;padding:10px 16px;cursor:pointer;background:transparent;color:var(--text-dim);border:1px solid var(--line-strong)';
+    b.addEventListener('click',lockEdit);
+    document.getElementById('topEdit').appendChild(b);
   }else{
-
-    tierGames.forEach(game => {
-
-      rows.appendChild(
-        renderRow(
-          game,
-          tier
-        )
-      );
-
-    });
-
+    const b=document.createElement('button');
+    b.className='lock-btn';
+    b.textContent='Edit';
+    b.style.cssText='font-family:Inter,sans-serif;font-weight:600;font-size:12.5px;border-radius:20px;padding:10px 16px;cursor:pointer;background:transparent;color:var(--text-dim);border:1px solid var(--line-strong)';
+    b.addEventListener('click',tryUnlock);
+    document.getElementById('topEdit').appendChild(b);
   }
 
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  TIERS.forEach(tier=>{
+    const tierGames=games.filter(g=>g.tier===tier.key);
+    main.appendChild(renderTier(tier,tierGames));
+  });
+  renderAddTierPicker();
+}
+
+function renderTier(tier,tierGames){
+  const section=document.createElement('section');
+  section.className='tier';
+  section.style.setProperty('--tier-color',tier.color);
+  section.style.setProperty('--tier-dim',tier.dim);
+
+  const head=document.createElement('div');
+  head.className='tier-head';
+  head.innerHTML=`
+    <span class="tier-letter">${tier.letter}</span>
+    <div>
+      <div class="tier-label">${tier.label}</div>
+      <div class="tier-sub">${tier.sub}</div>
+    </div>
+    <div class="tier-meta"><span class="tier-count">${tierGames.length}</span></div>
+  `;
+  section.appendChild(head);
+
+  const rows=document.createElement('div');
+  rows.className='rows';
+  rows.dataset.tier=tier.key;
+
+  if(!tierGames.length){
+    const empty=document.createElement('div');
+    empty.className='empty-row';
+    empty.textContent='No games here yet.';
+    rows.appendChild(empty);
+  }else{
+    tierGames.forEach(game=>rows.appendChild(renderRow(game,tier)));
+  }
   section.appendChild(rows);
-
-  head.querySelector('.resort-btn')
-    ?.addEventListener(
-      'click',
-      async () => {
-
-        const sorted =
-          [...games.filter(
-            g => g.tier === tier.key
-          )]
-          .sort(
-            (a,b) =>
-              score(b) - score(a)
-          );
-
-        const positions = {};
-
-        sorted.forEach(
-          (game,index) => {
-            positions[game.id] =
-              index;
-          }
-        );
-
-        try{
-
-          const response =
-            await fetch(
-              API + '/games/reorder',
-              {
-                method:'POST',
-                headers:authHeaders(),
-                body:JSON.stringify({
-                  tier:tier.key,
-                  positions
-                })
-              }
-            );
-
-          const data =
-            await response.json();
-
-          if(
-            !response.ok ||
-            !data.success
-          ){
-
-            throw new Error(
-              data.error ||
-              'Could not reorder games'
-            );
-
-          }
-
-          await apiGetGames();
-          render();
-
-        }catch(error){
-
-          alert(
-            'Could not reorder games: ' +
-            error.message
-          );
-
-        }
-
-      }
-    );
-
   setupDnD(rows);
-
   return section;
 }
 
-/* =========================================================
-   ROW
-========================================================= */
-
 function renderRow(game,tier){
-
-  const row =
-    document.createElement('div');
-
-  row.className = 'row';
-
-  row.dataset.id =
-    game.id;
-
-  row.draggable =
-    editMode;
-
-  const gameScore =
-    score(game);
-
-  if(gameScore > 9.5){
-
-    row.classList.add(
-      'highlight'
-    );
-
-  }
-
-  row.innerHTML = `
-
+  const row=document.createElement('div');
+  row.className='row'+(score(game)>9.5?' high-score':'');
+  row.dataset.id=game.id;
+  row.draggable=editMode;
+  row.innerHTML=`
     <div class="row-top">
-
-      <div
-        class="row-name"
-        title="${escapeHtml(game.name)}"
-      >
-        ${escapeHtml(game.name)}
-      </div>
-
-      <div class="row-score">
-
-        ${gameScore.toFixed(1)}
-
-        <sub>/10</sub>
-
-      </div>
-
+      <div class="row-name" title="${escapeHtml(game.name)}">${escapeHtml(game.name)}</div>
+      <div class="row-score">${score(game).toFixed(1)}</div>
     </div>
-
   `;
-
-  row.addEventListener(
-    'click',
-    () => {
-
-      if(
-        row.classList.contains(
-          'dragging'
-        )
-      )
-        return;
-
-      openGame(game.id);
-
-    }
-  );
-
+  row.addEventListener('click',()=>{if(!row.classList.contains('dragging'))openGame(game.id)});
   return row;
 }
 
-/* =========================================================
-   DRAG / DROP
-========================================================= */
-
 function setupDnD(container){
-
-  container.addEventListener(
-    'dragstart',
-    event => {
-
-      if(!editMode)
-        return;
-
-      const row =
-        event.target.closest('.row');
-
-      if(!row)
-        return;
-
-      dragId =
-        row.dataset.id;
-
-      row.classList.add(
-        'dragging'
-      );
-
-      event.dataTransfer.effectAllowed =
-        'move';
-
+  container.addEventListener('dragstart',event=>{
+    if(!editMode)return;
+    const row=event.target.closest('.row'); if(!row)return;
+    dragId=row.dataset.id;
+    row.classList.add('dragging');
+    event.dataTransfer.effectAllowed='move';
+  });
+  container.addEventListener('dragend',event=>{
+    const row=event.target.closest('.row');
+    if(row)row.classList.remove('dragging');
+    container.querySelectorAll('.row').forEach(r=>r.classList.remove('drag-over-top','drag-over-bottom'));
+  });
+  container.addEventListener('dragover',event=>{
+    if(!editMode)return;
+    event.preventDefault();
+    const after=getDragAfterElement(container,event.clientY);
+    container.querySelectorAll('.row').forEach(r=>r.classList.remove('drag-over-top','drag-over-bottom'));
+    if(after)after.classList.add('drag-over-top');
+    else{
+      const rows=[...container.querySelectorAll('.row:not(.dragging)')];
+      if(rows.length)rows[rows.length-1].classList.add('drag-over-bottom');
     }
-  );
-
-  container.addEventListener(
-    'dragend',
-    event => {
-
-      const row =
-        event.target.closest('.row');
-
-      if(row)
-        row.classList.remove(
-          'dragging'
-        );
-
-      container
-        .querySelectorAll('.row')
-        .forEach(r => {
-
-          r.classList.remove(
-            'drag-over-top',
-            'drag-over-bottom'
-          );
-
-        });
-
+  });
+  container.addEventListener('drop',async event=>{
+    event.preventDefault();
+    if(!editMode||!dragId)return;
+    const targetTier=container.dataset.tier;
+    const after=getDragAfterElement(container,event.clientY);
+    const tierGames=games.filter(g=>g.tier===targetTier&&g.id!==dragId);
+    let targetPosition=after?Math.max(0,tierGames.findIndex(g=>g.id===after.dataset.id)):tierGames.length;
+    if(targetPosition<0)targetPosition=tierGames.length;
+    try{
+      const response=await fetch(API+'/games/move',{
+        method:'POST',
+        headers:authHeaders({'Content-Type':'application/json'}),
+        body:JSON.stringify({id:dragId,tier:targetTier,position:targetPosition})
+      });
+      const data=await response.json();
+      if(!response.ok||!data.success)throw new Error(data.error||'Failed to move game');
+      dragId=null;
+      await apiGetGames();
+      render();
+      renderEditBar();
+    }catch(error){
+      console.error(error);
+      alert('Could not move game: '+error.message);
     }
-  );
-
-  container.addEventListener(
-    'dragover',
-    event => {
-
-      if(!editMode)
-        return;
-
-      event.preventDefault();
-
-      const after =
-        getDragAfterElement(
-          container,
-          event.clientY
-        );
-
-      container
-        .querySelectorAll('.row')
-        .forEach(r => {
-
-          r.classList.remove(
-            'drag-over-top',
-            'drag-over-bottom'
-          );
-
-        });
-
-      if(after){
-
-        after.classList.add(
-          'drag-over-top'
-        );
-
-      }else{
-
-        const rows =
-          [
-            ...container.querySelectorAll(
-              '.row:not(.dragging)'
-            )
-          ];
-
-        if(rows.length){
-
-          rows[
-            rows.length - 1
-          ].classList.add(
-            'drag-over-bottom'
-          );
-
-        }
-
-      }
-
-    }
-  );
-
-  container.addEventListener(
-    'drop',
-    async event => {
-
-      event.preventDefault();
-
-      if(
-        !editMode ||
-        !dragId
-      )
-        return;
-
-      const targetTier =
-        container.dataset.tier;
-
-      const after =
-        getDragAfterElement(
-          container,
-          event.clientY
-        );
-
-      const tierGames =
-        games.filter(
-          g =>
-            g.tier === targetTier &&
-            g.id !== dragId
-        );
-
-      let targetPosition;
-
-      if(after){
-
-        const index =
-          tierGames.findIndex(
-            g =>
-              g.id ===
-              after.dataset.id
-          );
-
-        targetPosition =
-          index < 0
-            ? tierGames.length
-            : index;
-
-      }else{
-
-        targetPosition =
-          tierGames.length;
-
-      }
-
-      try{
-
-        const response =
-          await fetch(
-            API + '/games/move',
-            {
-              method:'POST',
-              headers:authHeaders(),
-              body:JSON.stringify({
-                id:dragId,
-                tier:targetTier,
-                position:targetPosition
-              })
-            }
-          );
-
-        const data =
-          await response.json();
-
-        if(
-          !response.ok ||
-          !data.success
-        ){
-
-          throw new Error(
-            data.error ||
-            'Could not move game'
-          );
-
-        }
-
-        dragId = null;
-
-        await apiGetGames();
-
-        render();
-
-      }catch(error){
-
-        console.error(error);
-
-        alert(
-          'Could not move game: ' +
-          error.message
-        );
-
-      }
-
-    }
-  );
+  });
 }
-
-function getDragAfterElement(
-  container,
-  y
-){
-
-  const rows =
-    [
-      ...container.querySelectorAll(
-        '.row:not(.dragging)'
-      )
-    ];
-
-  return rows.reduce(
-    (closest,child) => {
-
-      const box =
-        child.getBoundingClientRect();
-
-      const offset =
-        y -
-        box.top -
-        box.height / 2;
-
-      if(
-        offset < 0 &&
-        offset > closest.offset
-      ){
-
-        return {
-          offset,
-          element:child
-        };
-
-      }
-
-      return closest;
-
-    },
-    {
-      offset:-Infinity,
-      element:null
-    }
-  ).element;
+function getDragAfterElement(container,y){
+  const rows=[...container.querySelectorAll('.row:not(.dragging)')];
+  return rows.reduce((closest,child)=>{
+    const box=child.getBoundingClientRect();
+    const offset=y-box.top-box.height/2;
+    if(offset<0&&offset>closest.offset)return{offset,element:child};
+    return closest;
+  },{offset:-Infinity,element:null}).element;
 }
-
-/* =========================================================
-   ADD GAME
-========================================================= */
 
 function renderAddTierPicker(){
-
-  const wrap =
-    document.getElementById(
-      'addTierPicker'
-    );
-
-  if(!wrap)
-    return;
-
-  wrap.innerHTML = '';
-
-  TIERS.forEach(tier => {
-
-    const chip =
-      document.createElement('button');
-
-    chip.className =
-      'tier-chip' +
-      (
-        addTier === tier.key
-          ? ' active'
-          : ''
-      );
-
-    chip.textContent =
-      tier.letter;
-
-    chip.style.borderColor =
-      tier.color;
-
-    chip.style.color =
-      addTier === tier.key
-        ? '#0f0e17'
-        : tier.color;
-
-    chip.style.background =
-      addTier === tier.key
-        ? tier.color
-        : 'transparent';
-
-    chip.addEventListener(
-      'click',
-      () => {
-
-        addTier =
-          tier.key;
-
-        renderAddTierPicker();
-
-      }
-    );
-
+  const wrap=document.getElementById('addTierPicker'); if(!wrap)return;
+  wrap.innerHTML='';
+  TIERS.forEach(tier=>{
+    const chip=document.createElement('button');
+    chip.className='tier-chip';
+    chip.textContent=tier.letter;
+    chip.style.borderColor=tier.color;
+    chip.style.color=addTier===tier.key?'#0f0e17':tier.color;
+    chip.style.background=addTier===tier.key?tier.color:'transparent';
+    chip.addEventListener('click',()=>{addTier=tier.key;renderAddTierPicker()});
     wrap.appendChild(chip);
-
   });
-
 }
 
-document
-  .getElementById('openAdd')
-  .addEventListener(
-    'click',
-    () => {
-
-      if(!editMode)
-        return;
-
-      document.getElementById(
-        'addName'
-      ).value = '';
-
-      addTier = 'B';
-
-      renderAddTierPicker();
-
-      document
-        .getElementById(
-          'addOverlay'
-        )
-        .classList.add('open');
-
-      setTimeout(
-        () =>
-          document
-            .getElementById(
-              'addName'
-            )
-            .focus(),
-        50
-      );
-
-    }
-  );
-
-document
-  .getElementById('closeAdd')
-  .addEventListener(
-    'click',
-    () => {
-
-      document
-        .getElementById(
-          'addOverlay'
-        )
-        .classList.remove(
-          'open'
-        );
-
-    }
-  );
-
-document
-  .getElementById('addOverlay')
-  .addEventListener(
-    'click',
-    event => {
-
-      if(
-        event.target.id ===
-        'addOverlay'
-      ){
-
-        event.currentTarget
-          .classList.remove(
-            'open'
-          );
-
-      }
-
-    }
-  );
+document.getElementById('openAdd').addEventListener('click',()=>{
+  if(!editMode)return;
+  document.getElementById('addName').value='';
+  addTier='B';
+  renderAddTierPicker();
+  document.getElementById('addOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('addName').focus(),50);
+});
+document.getElementById('closeAdd').addEventListener('click',()=>document.getElementById('addOverlay').classList.remove('open'));
+document.getElementById('addOverlay').addEventListener('click',e=>{
+  if(e.target.id==='addOverlay')e.currentTarget.classList.remove('open');
+});
 
 async function confirmAdd(){
-
-  const input =
-    document.getElementById(
-      'addName'
-    );
-
-  const name =
-    input.value.trim();
-
-  if(!name){
-
-    input.focus();
-
-    return;
-
-  }
-
+  const input=document.getElementById('addName');
+  const name=input.value.trim();
+  if(!name){input.focus();return}
   try{
-
-    const response =
-      await fetch(
-        API + '/games',
-        {
-          method:'POST',
-          headers:authHeaders(),
-          body:JSON.stringify({
-            name,
-            tier:addTier
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(
-      !response.ok ||
-      !data.success
-    ){
-
-      throw new Error(
-        data.error ||
-        'Failed to add game'
-      );
-
-    }
-
-    await apiGetGames();
-
-    render();
-
-    document
-      .getElementById(
-        'addOverlay'
-      )
-      .classList.remove(
-        'open'
-      );
-
-  }catch(error){
-
-    alert(
-      'Could not add game: ' +
-      error.message
-    );
-
-  }
-
+    const response=await fetch(API+'/games',{
+      method:'POST',
+      headers:authHeaders({'Content-Type':'application/json'}),
+      body:JSON.stringify({name,tier:addTier})
+    });
+    const data=await response.json();
+    if(!response.ok||!data.success)throw new Error(data.error||'Failed to add game');
+    await apiGetGames(); render(); renderEditBar();
+    document.getElementById('addOverlay').classList.remove('open');
+  }catch(error){alert('Could not add game: '+error.message)}
 }
+document.getElementById('confirmAdd').addEventListener('click',confirmAdd);
+document.getElementById('addName').addEventListener('keydown',e=>{if(e.key==='Enter')confirmAdd()});
 
-document
-  .getElementById('confirmAdd')
-  .addEventListener(
-    'click',
-    confirmAdd
-  );
-
-document
-  .getElementById('addName')
-  .addEventListener(
-    'keydown',
-    event => {
-
-      if(event.key === 'Enter')
-        confirmAdd();
-
-    }
-  );
-
-/* =========================================================
-   GAME MODAL
-========================================================= */
-
-function openGame(id){
-
-  currentGameId = id;
-
-  renderGameModal();
-
-  document
-    .getElementById(
-      'gameOverlay'
-    )
-    .classList.add(
-      'open'
-    );
-
-}
-
-function closeGame(){
-
-  document
-    .getElementById(
-      'gameOverlay'
-    )
-    .classList.remove(
-      'open'
-    );
-
-  currentGameId = null;
-
-  render();
-
-}
-
-document
-  .getElementById(
-    'gameOverlay'
-  )
-  .addEventListener(
-    'click',
-    event => {
-
-      if(
-        event.target.id ===
-        'gameOverlay'
-      ){
-
-        closeGame();
-
-      }
-
-    }
-  );
+function openGame(id){currentGameId=id;renderGameModal();document.getElementById('gameOverlay').classList.add('open')}
+function closeGame(){document.getElementById('gameOverlay').classList.remove('open');currentGameId=null;render();renderEditBar()}
+document.getElementById('gameOverlay').addEventListener('click',e=>{if(e.target.id==='gameOverlay')closeGame()});
 
 function renderGameModal(){
+  const game=gameById(currentGameId); if(!game)return;
+  const modal=document.getElementById('gameModal');
 
-  const game =
-    gameById(
-      currentGameId
-    );
+  const catRows=CATEGORIES.map(category=>{
+    const value=Number(game[category.key]||0);
+    const stars=Array.from({length:10}).map((_,i)=>{
+      const filled=i<value;
+      return `<span class="star ${filled?'filled':''} ${editMode?'':'readonly'}" data-cat="${category.key}" data-val="${i+1}">${starSvg()}</span>`;
+    }).join('');
+    return `<div class="cat-row"><div class="cat-label">${category.label}</div><div class="stars">${stars}</div><div class="cat-num">${value}/10</div></div>`;
+  }).join('');
 
-  if(!game)
-    return;
-
-  const modal =
-    document.getElementById(
-      'gameModal'
-    );
-
-  const catRows =
-    CATEGORIES.map(
-      category => {
-
-        const value =
-          Number(
-            game[
-              category.key
-            ] || 0
-          );
-
-        const stars =
-          Array.from({
-            length:10
-          })
-          .map(
-            (_,i) => {
-
-              const filled =
-                i < value;
-
-              return `
-
-                <span
-                  class="star
-                  ${filled ? 'filled' : ''}
-                  ${editMode ? '' : 'readonly'}"
-                  data-cat="${category.key}"
-                  data-val="${i+1}"
-                >
-
-                  ${starSvg()}
-
-                </span>
-
-              `;
-
-            }
-          )
-          .join('');
-
-        return `
-
-          <div class="cat-row">
-
-            <div class="cat-label">
-              ${category.label}
-            </div>
-
-            <div class="stars">
-              ${stars}
-            </div>
-
-            <div class="cat-num">
-              ${value}/10
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join('');
-
-  modal.innerHTML = `
-
+  const manual=game.overall_override;
+  modal.innerHTML=`
     <div class="modal-top">
-
-      <input
-        class="modal-name"
-        id="editName"
-        value="${escapeHtml(game.name)}"
-        maxlength="80"
-        ${editMode ? '' : 'readonly'}
-      >
-
-      <button
-        class="modal-close"
-        id="closeGame"
-      >
-        ✕
-      </button>
-
+      <input class="modal-name" id="editName" value="${escapeHtml(game.name)}" maxlength="80" ${editMode?'':'readonly'}>
+      <button class="modal-close" id="closeGame">✕</button>
     </div>
 
-    <div
-      class="tier-picker edit-only"
-      id="editTierPicker"
-    ></div>
+    <div class="tier-picker edit-only" id="editTierPicker"></div>
 
     <div class="overall-line">
-
-      <span class="overall-num">
-        ${score(game).toFixed(1)}
-      </span>
-
-      <span class="overall-label">
-        / 10 overall
-      </span>
-
+      <span class="overall-num">${score(game).toFixed(1)}</span>
+      <span class="overall-label">/ 10 overall</span>
+      <input class="manual-overall" id="manualOverall" type="number" min="0" max="10" step="0.1"
+        value="${manual!==null&&manual!==undefined&&manual!==''?escapeHtml(String(manual)):''}"
+        placeholder="${calculatedScore(game).toFixed(1)}">
+      <span class="manual-hint">manual</span>
     </div>
 
-    <div id="catRows">
-      ${catRows}
-    </div>
+    <div id="catRows">${catRows}</div>
 
-    <div class="commentary-label">
-      ${editMode ? 'Your commentary' : 'Commentary'}
-    </div>
-
-    <textarea
-      class="commentary"
-      id="commentary"
-      placeholder="${editMode ? 'What did you think of it?' : 'No commentary yet.'}"
-      ${editMode ? '' : 'readonly'}
-    >${escapeHtml(
-      game.commentary || ''
-    )}</textarea>
+    <div class="commentary-label">${editMode?'Your commentary':'Commentary'}</div>
+    <textarea class="commentary" id="commentary" placeholder="${editMode?'What did you think of it?':'No commentary yet.'}" ${editMode?'':'readonly'}>${escapeHtml(game.commentary||'')}</textarea>
 
     <div class="modal-footer">
-
-      <button
-        class="delete-btn edit-only"
-        id="deleteGame"
-      >
-        Delete game
-      </button>
-
-      <button
-        class="done-btn"
-        id="doneGame"
-        style="margin-left:auto"
-      >
-        Done
-      </button>
-
+      <button class="delete-btn edit-only" id="deleteGame">Delete game</button>
+      <button class="done-btn" id="doneGame" style="margin-left:auto">Done</button>
     </div>
-
   `;
 
-  /* TIER PICKER */
+  if(editMode){
+    const tierWrap=document.getElementById('editTierPicker');
+    TIERS.forEach(tier=>{
+      const chip=document.createElement('button');
+      chip.className='tier-chip';
+      chip.textContent=tier.letter+' — '+tier.label;
+      chip.style.borderColor=tier.color;
+      chip.style.color=game.tier===tier.key?'#0f0e17':tier.color;
+      chip.style.background=game.tier===tier.key?tier.color:'transparent';
+      chip.addEventListener('click',async()=>{
+        if(game.tier===tier.key)return;
+        try{
+          const response=await fetch(API+'/games/move',{
+            method:'POST',
+            headers:authHeaders({'Content-Type':'application/json'}),
+            body:JSON.stringify({id:game.id,tier:tier.key,position:0})
+          });
+          const data=await response.json();
+          if(!response.ok||!data.success)throw new Error(data.error||'Failed to move game');
+          await apiGetGames(); renderGameModal();
+        }catch(error){alert('Could not move game: '+error.message)}
+      });
+      tierWrap.appendChild(chip);
+    });
+  }
+
+  document.getElementById('closeGame').addEventListener('click',closeGame);
+  document.getElementById('doneGame').addEventListener('click',closeGame);
 
   if(editMode){
+    document.getElementById('editName').addEventListener('change',async e=>{
+      try{await updateGame({id:game.id,name:e.target.value})}catch(error){alert('Could not save name: '+error.message)}
+    });
 
-    const tierWrap =
-      document.getElementById(
-        'editTierPicker'
-      );
+    document.getElementById('commentary').addEventListener('change',async e=>{
+      try{await updateGame({id:game.id,commentary:e.target.value})}catch(error){alert('Could not save commentary: '+error.message)}
+    });
 
-    TIERS.forEach(
-      tier => {
-
-        const chip =
-          document.createElement(
-            'button'
-          );
-
-        chip.className =
-          'tier-chip' +
-          (
-            game.tier === tier.key
-              ? ' active'
-              : ''
-          );
-
-        chip.textContent =
-          tier.letter +
-          ' — ' +
-          tier.label;
-
-        chip.style.borderColor =
-          tier.color;
-
-        chip.style.color =
-          game.tier === tier.key
-            ? '#0f0e17'
-            : tier.color;
-
-        chip.style.background =
-          game.tier === tier.key
-            ? tier.color
-            : 'transparent';
-
-        chip.addEventListener(
-          'click',
-          async () => {
-
-            if(
-              game.tier ===
-              tier.key
-            )
-              return;
-
-            try{
-
-              await updateGame({
-                id:game.id,
-                tier:tier.key,
-                position:0
-              });
-
-              renderGameModal();
-
-            }catch(error){
-
-              alert(
-                'Could not move game: ' +
-                error.message
-              );
-
-            }
-
-          }
-        );
-
-        tierWrap.appendChild(
-          chip
-        );
-
+    document.getElementById('manualOverall').addEventListener('change',async e=>{
+      const raw=e.target.value.trim();
+      let value=null;
+      if(raw!==''){
+        const n=Number(raw);
+        if(!Number.isFinite(n)||n<0||n>10){alert('Manual rating must be between 0 and 10.');e.target.value='';return}
+        value=Math.round(n*10)/10;
       }
-    );
+      try{
+        await updateGame({id:game.id,overall_override:value});
+        renderGameModal();
+      }catch(error){alert('Could not save manual rating: '+error.message)}
+    });
 
+    modal.querySelectorAll('.star').forEach(star=>{
+      star.addEventListener('click',async()=>{
+        const category=star.dataset.cat;
+        const value=parseInt(star.dataset.val,10);
+        const current=Number(game[category]||0);
+        const newValue=current===value?value-1:value;
+        try{
+          await updateGame({id:game.id,[category]:newValue});
+          await apiGetGames();
+          renderGameModal();
+        }catch(error){alert('Could not save rating: '+error.message)}
+      });
+    });
+
+    document.getElementById('deleteGame').addEventListener('click',async()=>{
+      if(!confirm(`Delete "${game.name}"? This can't be undone.`))return;
+      try{
+        const response=await fetch(API+'/games/'+encodeURIComponent(game.id),{method:'DELETE',headers:authHeaders()});
+        const data=await response.json();
+        if(!response.ok||!data.success)throw new Error(data.error||'Failed to delete game');
+        await apiGetGames(); closeGame();
+      }catch(error){alert('Could not delete game: '+error.message)}
+    });
   }
-
-  /* BUTTONS */
-
-  document
-    .getElementById(
-      'closeGame'
-    )
-    .addEventListener(
-      'click',
-      closeGame
-    );
-
-  document
-    .getElementById(
-      'doneGame'
-    )
-    .addEventListener(
-      'click',
-      closeGame
-    );
-
-  /* NAME */
-
-  if(editMode){
-
-    document
-      .getElementById(
-        'editName'
-      )
-      .addEventListener(
-        'change',
-        async event => {
-
-          try{
-
-            await updateGame({
-              id:game.id,
-              name:event.target.value
-            });
-
-          }catch(error){
-
-            alert(
-              'Could not save name: ' +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-    /* COMMENTARY */
-
-    document
-      .getElementById(
-        'commentary'
-      )
-      .addEventListener(
-        'change',
-        async event => {
-
-          try{
-
-            await updateGame({
-              id:game.id,
-              commentary:event.target.value
-            });
-
-          }catch(error){
-
-            alert(
-              'Could not save commentary: ' +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-    /* RATINGS */
-
-    modal
-      .querySelectorAll('.star')
-      .forEach(
-        star => {
-
-          star.addEventListener(
-            'click',
-            async () => {
-
-              const category =
-                star.dataset.cat;
-
-              const value =
-                parseInt(
-                  star.dataset.val,
-                  10
-                );
-
-              const current =
-                Number(
-                  game[
-                    category
-                  ] || 0
-                );
-
-              const newValue =
-                current === value
-                  ? value - 1
-                  : value;
-
-              try{
-
-                await updateGame({
-                  id:game.id,
-                  [category]:newValue
-                });
-
-                renderGameModal();
-
-              }catch(error){
-
-                alert(
-                  'Could not save rating: ' +
-                  error.message
-                );
-
-              }
-
-            }
-          );
-
-        }
-      );
-
-    /* DELETE */
-
-    document
-      .getElementById(
-        'deleteGame'
-      )
-      .addEventListener(
-        'click',
-        async () => {
-
-          if(
-            !confirm(
-              `Delete "${game.name}"? This can't be undone.`
-            )
-          )
-            return;
-
-          try{
-
-            const response =
-              await fetch(
-                API +
-                '/games/' +
-                encodeURIComponent(
-                  game.id
-                ),
-                {
-                  method:'DELETE',
-                  headers:authHeaders()
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if(
-              !response.ok ||
-              !data.success
-            ){
-
-              throw new Error(
-                data.error ||
-                'Failed to delete game'
-              );
-
-            }
-
-            await apiGetGames();
-
-            closeGame();
-
-          }catch(error){
-
-            alert(
-              'Could not delete game: ' +
-              error.message
-            );
-
-          }
-
-        }
-      );
-
-  }
-
 }
-
-/* =========================================================
-   UPDATE
-========================================================= */
 
 async function updateGame(changes){
-
-  const response =
-    await fetch(
-      API + '/games',
-      {
-        method:'PUT',
-        headers:authHeaders(),
-        body:JSON.stringify(
-          changes
-        )
-      }
-    );
-
-  const data =
-    await response.json();
-
-  if(
-    !response.ok ||
-    !data.success
-  ){
-
-    throw new Error(
-      data.error ||
-      'Failed to save'
-    );
-
-  }
-
+  const response=await fetch(API+'/games',{
+    method:'PUT',
+    headers:authHeaders({'Content-Type':'application/json'}),
+    body:JSON.stringify(changes)
+  });
+  const data=await response.json();
+  if(!response.ok||!data.success)throw new Error(data.error||'Failed to save');
   await apiGetGames();
-
   render();
-
+  renderEditBar();
 }
-
-/* =========================================================
-   STAR SVG
-========================================================= */
 
 function starSvg(){
-
-  return `
-
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      width="100%"
-      height="100%"
-    >
-
-      <path
-        d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"
-      />
-
-    </svg>
-
-  `;
-
+  return `<svg viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%"><path d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"/></svg>`;
 }
-
-/* =========================================================
-   EDIT MODE
-========================================================= */
 
 function renderEditBar(){
-
-  const bar =
-    document.getElementById(
-      'editBar'
-    );
-
-  if(editMode){
-
-    bar.innerHTML = `
-
-      <span class="status">
-        editing
-      </span>
-
-      <button
-        class="lock-btn"
-        id="lockBtn"
-      >
-        Exit
-      </button>
-
-    `;
-
-    document
-      .getElementById(
-        'lockBtn'
-      )
-      .addEventListener(
-        'click',
-        lockEdit
-      );
-
-  }else{
-
-    bar.innerHTML = '';
-
-  }
-
+  const bar=document.getElementById('editBar');
+  bar.innerHTML='';
+  /* Kept as a small mobile/fallback status area; the actual Edit/Exit button is now in the header. */
+  if(editMode)bar.innerHTML='<span class="status">editing</span>';
 }
 
-document
-  .getElementById(
-    'headerEdit'
-  )
-  .addEventListener(
-    'click',
-    tryUnlock
-  );
-
 async function tryUnlock(){
-
-  if(isAuthenticated()){
-
-    editMode = true;
-
-    localStorage.setItem(
-      EDIT_KEY,
-      'yes'
-    );
-
-    render();
-    renderEditBar();
-
-    return;
-
-  }
-
-  const password =
-    prompt(
-      'Enter edit password:'
-    );
-
-  if(password === null)
-    return;
-
+  const password=prompt('Enter edit password:');
+  if(password===null)return;
   try{
-
-    await apiLogin(
-      password
-    );
-
-    editMode = true;
-
-    render();
-    renderEditBar();
-
-  }catch(error){
-
-    alert(
-      'Wrong password.'
-    );
-
-  }
-
+    const response=await fetch(API+'/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password})
+    });
+    const data=await response.json();
+    if(!response.ok||!data.success)throw new Error('Wrong password.');
+    localStorage.setItem('played-admin-token',data.token);
+    localStorage.setItem('played-edit-unlocked','yes');
+    editMode=true;
+    render(); renderEditBar();
+  }catch(error){alert(error.message||'Wrong password.')}
 }
 
 function lockEdit(){
-
-  localStorage.removeItem(
-    TOKEN_KEY
-  );
-
-  localStorage.removeItem(
-    EDIT_KEY
-  );
-
-  editMode = false;
-
-  render();
-  renderEditBar();
-
+  localStorage.removeItem('played-admin-token');
+  localStorage.removeItem('played-edit-unlocked');
+  editMode=false;
+  render(); renderEditBar();
 }
 
-/* =========================================================
-   KEYBOARD
-========================================================= */
-
-document.addEventListener(
-  'keydown',
-  event => {
-
-    if(
-      event.key !== 'Escape'
-    )
-      return;
-
-    const gameOverlay =
-      document.getElementById(
-        'gameOverlay'
-      );
-
-    const addOverlay =
-      document.getElementById(
-        'addOverlay'
-      );
-
-    if(
-      gameOverlay.classList.contains(
-        'open'
-      )
-    ){
-
-      closeGame();
-
-    }
-
-    if(
-      addOverlay.classList.contains(
-        'open'
-      )
-    ){
-
-      addOverlay.classList.remove(
-        'open'
-      );
-
-    }
-
-  }
-);
-
-/* =========================================================
-   START
-========================================================= */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  const gameOverlay=document.getElementById('gameOverlay');
+  const addOverlay=document.getElementById('addOverlay');
+  if(gameOverlay.classList.contains('open'))closeGame();
+  if(addOverlay.classList.contains('open'))addOverlay.classList.remove('open');
+});
 
 load();
-
 })();
 </script>
-
 </body>
 </html>
