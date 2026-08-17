@@ -156,26 +156,18 @@ header.top{
 ========================================================= */
 
 main{
-  width:100%;
-  max-width:none;
+  max-width:1600px;
   margin:0 auto;
   padding:34px 24px 40px;
   display:flex;
   gap:20px;
   align-items:flex-start;
-  justify-content:center;
   overflow-x:auto;
 }
 
 .tier{
-  flex:0 0 max-content;
-  width:max-content;
-  min-width:250px;
-}
-
-.rows{
-  width:max-content;
-  min-width:100%;
+  flex:1 1 0;
+  min-width:210px;
 }
 
 .tier-head{
@@ -217,9 +209,12 @@ main{
   min-height:16px;
 }
 
-/* =========================================================
-   ROWS
-========================================================= */
+.tier-count{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--text-dim);
+  margin-top:8px;
+}
 
 .rows{
   padding:6px 0 4px;
@@ -278,7 +273,7 @@ main{
   font-size:13px;
   line-height:1.3;
   font-weight:500;
-  flex:0 0 auto;
+  flex:1;
   min-width:0;
   white-space:nowrap;
   overflow:visible;
@@ -298,8 +293,7 @@ main{
 
 .row.highlighted .row-name,
 .row.highlighted .row-score{
-  font-family:'Inter',sans-serif;
-  font-size:16.5px;
+  font-size:15.5px;
   font-weight:700;
 
   background:linear-gradient(
@@ -897,7 +891,7 @@ const TIER_COLORS = {
   S: "var(--teal)",
   A: "var(--orange)",
   B: "var(--sage)",
-  C: "#8f433b",
+  C: "var(--rust)",
   X: "var(--slate)",
   G: "var(--sage)"
 };
@@ -942,21 +936,15 @@ const CATEGORIES = [
 ========================================================= */
 
 function getToken(){
-
-  return localStorage.getItem(
-    "played-admin-token"
-  ) || "";
-
+  return localStorage.getItem("played-admin-token") || "";
 }
 
 function authHeaders(){
-
   const token = getToken();
 
   return token
     ? { Authorization:"Bearer " + token }
     : {};
-
 }
 
 async function apiFetch(path, options = {}){
@@ -981,19 +969,11 @@ async function apiFetch(path, options = {}){
 ========================================================= */
 
 function getTier(key){
-
-  return tiers.find(
-    t => t.tier_key === key
-  );
-
+  return tiers.find(t => t.tier_key === key);
 }
 
 function gameById(id){
-
-  return games.find(
-    g => g.id === id
-  );
-
+  return games.find(g => g.id === id);
 }
 
 function formatNumber(value){
@@ -1014,11 +994,7 @@ function score(game){
     game.custom_overall !== undefined &&
     game.custom_overall !== ""
   ){
-
-    return Number(
-      game.custom_overall
-    );
-
+    return Number(game.custom_overall);
   }
 
   const values =
@@ -1028,10 +1004,7 @@ function score(game){
 
   return Math.round(
     (
-      values.reduce(
-        (a,b) => a+b,
-        0
-      ) /
+      values.reduce((a,b) => a+b,0) /
       values.length
     ) * 10
   ) / 10;
@@ -1040,7 +1013,7 @@ function score(game){
 
 function isHighlighted(game){
 
-  return score(game) > 9.5;
+  return score(game) >= 9.5;
 
 }
 
@@ -1057,8 +1030,7 @@ function escapeHtml(str){
 
 function colorForTier(key){
 
-  return TIER_COLORS[key]
-    || "var(--gold)";
+  return TIER_COLORS[key] || "var(--gold)";
 
 }
 
@@ -1069,27 +1041,17 @@ function colorForTier(key){
 async function apiGetTiers(){
 
   const response =
-    await fetch(
-      API + "/tiers",
-      {
-        cache:"no-store"
-      }
-    );
+    await fetch(API + "/tiers", {
+      cache:"no-store"
+    });
 
   const data =
     await response.json();
 
-  if(
-    !response.ok ||
-    !data.success
-  ){
-
+  if(!response.ok || !data.success)
     throw new Error(
-      data.error ||
-      "Failed to load tiers"
+      data.error || "Failed to load tiers"
     );
-
-  }
 
   tiers = data.tiers || [];
 
@@ -1098,27 +1060,17 @@ async function apiGetTiers(){
 async function apiGetGames(){
 
   const response =
-    await fetch(
-      API + "/games",
-      {
-        cache:"no-store"
-      }
-    );
+    await fetch(API + "/games", {
+      cache:"no-store"
+    });
 
   const data =
     await response.json();
 
-  if(
-    !response.ok ||
-    !data.success
-  ){
-
+  if(!response.ok || !data.success)
     throw new Error(
-      data.error ||
-      "Failed to load games"
+      data.error || "Failed to load games"
     );
-
-  }
 
   games = data.games || [];
 
@@ -1134,10 +1086,8 @@ async function load(){
 
   try{
 
-    await Promise.all([
-      apiGetTiers(),
-      apiGetGames()
-    ]);
+    await apiGetTiers();
+    await apiGetGames();
 
     render();
 
@@ -1172,9 +1122,7 @@ function render(){
   renderHeader();
 
   const main =
-    document.getElementById(
-      "main"
-    );
+    document.getElementById("main");
 
   main.innerHTML = "";
 
@@ -1185,6 +1133,13 @@ function render(){
         g => g.tier === tier.tier_key
       );
 
+    /*
+      IMPORTANT:
+      Manual ordering only.
+      Games are displayed according to their
+      saved position value. There is NO rating
+      sorting here.
+    */
     tierGames.sort(
       (a,b) =>
         Number(a.position || 0) -
@@ -1192,10 +1147,7 @@ function render(){
     );
 
     main.appendChild(
-      renderTier(
-        tier,
-        tierGames
-      )
+      renderTier(tier,tierGames)
     );
 
   });
@@ -1213,13 +1165,11 @@ function renderHeader(){
 
   if(editMode){
 
-    editButton.textContent =
-      "Exit";
+    editButton.textContent = "Exit";
 
   }else{
 
-    editButton.textContent =
-      "Edit";
+    editButton.textContent = "Edit";
 
   }
 
@@ -1236,9 +1186,7 @@ function renderTier(tier,tierGames){
     tier.tier_key;
 
   const color =
-    colorForTier(
-      tier.tier_key
-    );
+    colorForTier(tier.tier_key);
 
   section.style.setProperty(
     "--tier-color",
@@ -1248,8 +1196,7 @@ function renderTier(tier,tierGames){
   const head =
     document.createElement("div");
 
-  head.className =
-    "tier-head";
+  head.className = "tier-head";
 
   head.innerHTML = `
 
@@ -1263,6 +1210,10 @@ function renderTier(tier,tierGames){
 
     <div class="tier-sub">
       ${escapeHtml(tier.sub)}
+    </div>
+
+    <div class="tier-count">
+      ${tierGames.length}
     </div>
 
     <div class="tier-edit-fields">
@@ -1305,12 +1256,9 @@ function renderTier(tier,tierGames){
   if(tierGames.length === 0){
 
     const empty =
-      document.createElement(
-        "div"
-      );
+      document.createElement("div");
 
-    empty.className =
-      "empty-row";
+    empty.className = "empty-row";
 
     empty.textContent =
       "No games here yet.";
@@ -1322,10 +1270,7 @@ function renderTier(tier,tierGames){
     tierGames.forEach(game => {
 
       rows.appendChild(
-        renderRow(
-          game,
-          tier
-        )
+        renderRow(game,tier)
       );
 
     });
@@ -1347,8 +1292,7 @@ function renderTier(tier,tierGames){
           async event => {
 
             const field =
-              event.target.dataset
-                .field;
+              event.target.dataset.field;
 
             try{
 
@@ -1356,37 +1300,29 @@ function renderTier(tier,tierGames){
                 "/tiers",
                 {
                   method:"PUT",
-
                   headers:{
                     "Content-Type":
                       "application/json"
                   },
-
-                  body:
-                    JSON.stringify({
-                      tier_key:
-                        tier.tier_key,
-
-                      letter:
-                        field === "letter"
-                          ? event.target.value
-                          : tier.letter,
-
-                      label:
-                        field === "label"
-                          ? event.target.value
-                          : tier.label,
-
-                      sub:
-                        field === "sub"
-                          ? event.target.value
-                          : tier.sub
-                    })
+                  body:JSON.stringify({
+                    tier_key:tier.tier_key,
+                    letter:
+                      field === "letter"
+                        ? event.target.value
+                        : tier.letter,
+                    label:
+                      field === "label"
+                        ? event.target.value
+                        : tier.label,
+                    sub:
+                      field === "sub"
+                        ? event.target.value
+                        : tier.sub
+                  })
                 }
               );
 
-              tier[field] =
-                event.target.value;
+              await apiGetTiers();
 
               render();
 
@@ -1424,21 +1360,15 @@ function renderRow(game,tier){
   row.className = "row";
 
   if(isHighlighted(game))
-    row.classList.add(
-      "highlighted"
-    );
+    row.classList.add("highlighted");
 
-  row.dataset.id =
-    game.id;
+  row.dataset.id = game.id;
 
-  row.draggable =
-    editMode;
+  row.draggable = editMode;
 
   row.style.setProperty(
     "--tier-color",
-    colorForTier(
-      tier.tier_key
-    )
+    colorForTier(tier.tier_key)
   );
 
   row.innerHTML = `
@@ -1471,9 +1401,7 @@ function renderRow(game,tier){
       )
         return;
 
-      openGame(
-        game.id
-      );
+      openGame(game.id);
 
     }
   );
@@ -1496,9 +1424,7 @@ function setupDnD(container){
         return;
 
       const row =
-        event.target.closest(
-          ".row"
-        );
+        event.target.closest(".row");
 
       if(!row)
         return;
@@ -1510,8 +1436,7 @@ function setupDnD(container){
         "dragging"
       );
 
-      event.dataTransfer
-        .effectAllowed =
+      event.dataTransfer.effectAllowed =
         "move";
 
     }
@@ -1522,9 +1447,7 @@ function setupDnD(container){
     event => {
 
       const row =
-        event.target.closest(
-          ".row"
-        );
+        event.target.closest(".row");
 
       if(row)
         row.classList.remove(
@@ -1532,9 +1455,7 @@ function setupDnD(container){
         );
 
       container
-        .querySelectorAll(
-          ".row"
-        )
+        .querySelectorAll(".row")
         .forEach(r =>
           r.classList.remove(
             "drag-over-top",
@@ -1561,9 +1482,7 @@ function setupDnD(container){
         );
 
       container
-        .querySelectorAll(
-          ".row"
-        )
+        .querySelectorAll(".row")
         .forEach(r =>
           r.classList.remove(
             "drag-over-top",
@@ -1581,10 +1500,9 @@ function setupDnD(container){
 
         const rows =
           [
-            ...container
-              .querySelectorAll(
-                ".row:not(.dragging)"
-              )
+            ...container.querySelectorAll(
+              ".row:not(.dragging)"
+            )
           ];
 
         if(rows.length){
@@ -1608,19 +1526,11 @@ function setupDnD(container){
 
       event.preventDefault();
 
-      if(
-        !editMode ||
-        !dragId
-      )
+      if(!editMode || !dragId)
         return;
 
       const targetTier =
         container.dataset.tier;
-
-      const movingId =
-        dragId;
-
-      dragId = null;
 
       const after =
         getDragAfterElement(
@@ -1628,50 +1538,45 @@ function setupDnD(container){
           event.clientY
         );
 
-      const targetGames =
+      const tierGames =
         games
           .filter(
             g =>
               g.tier === targetTier &&
-              g.id !== movingId
+              g.id !== dragId
           )
           .sort(
             (a,b) =>
-              Number(
-                a.position || 0
-              ) -
-              Number(
-                b.position || 0
-              )
+              Number(a.position || 0) -
+              Number(b.position || 0)
           );
 
-      let position =
-        targetGames.length;
+      let position;
 
       if(after){
 
         const index =
-          targetGames.findIndex(
+          tierGames.findIndex(
             g =>
-              g.id ===
-              after.dataset.id
+              g.id === after.dataset.id
           );
 
-        if(index >= 0)
-          position = index;
+        position =
+          index < 0
+            ? tierGames.length
+            : index;
+
+      }else{
+
+        position =
+          tierGames.length;
 
       }
 
-      const moving =
-        gameById(
-          movingId
-        );
+      const movingId =
+        dragId;
 
-      if(!moving)
-        return;
-
-      const sourceTier =
-        moving.tier;
+      dragId = null;
 
       try{
 
@@ -1680,82 +1585,28 @@ function setupDnD(container){
             "/games/move",
             {
               method:"POST",
-
               headers:{
                 "Content-Type":
                   "application/json"
               },
-
-              body:
-                JSON.stringify({
-                  id:movingId,
-                  tier:targetTier,
-                  position
-                })
+              body:JSON.stringify({
+                id:movingId,
+                tier:targetTier,
+                position
+              })
             }
           );
 
         const data =
           await response.json();
 
-        if(
-          !response.ok ||
-          !data.success
-        ){
-
+        if(!response.ok || !data.success)
           throw new Error(
             data.error ||
             "Failed to move game"
           );
 
-        }
-
-        moving.tier =
-          targetTier;
-
-        if(
-          sourceTier !==
-          targetTier
-        ){
-
-          const sourceGames =
-            games
-              .filter(
-                g =>
-                  g.tier ===
-                    sourceTier &&
-                  g.id !==
-                    movingId
-              )
-              .sort(
-                (a,b) =>
-                  Number(
-                    a.position || 0
-                  ) -
-                  Number(
-                    b.position || 0
-                  )
-              );
-
-          sourceGames.forEach(
-            (g,i) => {
-              g.position = i;
-            }
-          );
-
-        }
-
-        targetGames.splice(
-          position,
-          0,
-          moving
-        );
-
-        targetGames.forEach(
-          (g,i) => {
-            g.position = i;
-          }
-        );
+        await apiGetGames();
 
         render();
 
@@ -1780,10 +1631,9 @@ function getDragAfterElement(
 
   const rows =
     [
-      ...container
-        .querySelectorAll(
-          ".row:not(.dragging)"
-        )
+      ...container.querySelectorAll(
+        ".row:not(.dragging)"
+      )
     ];
 
   return rows.reduce(
@@ -1799,8 +1649,7 @@ function getDragAfterElement(
 
       if(
         offset < 0 &&
-        offset >
-          closest.offset
+        offset > closest.offset
       ){
 
         return {
@@ -1840,9 +1689,7 @@ function renderAddTierPicker(){
   tiers.forEach(tier => {
 
     const chip =
-      document.createElement(
-        "button"
-      );
+      document.createElement("button");
 
     chip.className =
       "tier-chip";
@@ -1888,9 +1735,7 @@ function renderAddTierPicker(){
 }
 
 document
-  .getElementById(
-    "openAdd"
-  )
+  .getElementById("openAdd")
   .addEventListener(
     "click",
     () => {
@@ -1907,19 +1752,13 @@ document
       renderAddTierPicker();
 
       document
-        .getElementById(
-          "addOverlay"
-        )
-        .classList.add(
-          "open"
-        );
+        .getElementById("addOverlay")
+        .classList.add("open");
 
       setTimeout(
         () =>
           document
-            .getElementById(
-              "addName"
-            )
+            .getElementById("addName")
             .focus(),
         50
       );
@@ -1928,28 +1767,20 @@ document
   );
 
 document
-  .getElementById(
-    "closeAdd"
-  )
+  .getElementById("closeAdd")
   .addEventListener(
     "click",
     () => {
 
       document
-        .getElementById(
-          "addOverlay"
-        )
-        .classList.remove(
-          "open"
-        );
+        .getElementById("addOverlay")
+        .classList.remove("open");
 
     }
   );
 
 document
-  .getElementById(
-    "addOverlay"
-  )
+  .getElementById("addOverlay")
   .addEventListener(
     "click",
     event => {
@@ -1960,9 +1791,7 @@ document
       ){
 
         event.currentTarget
-          .classList.remove(
-            "open"
-          );
+          .classList.remove("open");
 
       }
 
@@ -1994,46 +1823,33 @@ async function confirmAdd(){
         "/games",
         {
           method:"POST",
-
           headers:{
             "Content-Type":
               "application/json"
           },
-
-          body:
-            JSON.stringify({
-              name,
-              tier:addTier
-            })
+          body:JSON.stringify({
+            name,
+            tier:addTier
+          })
         }
       );
 
     const data =
       await response.json();
 
-    if(
-      !response.ok ||
-      !data.success
-    ){
-
+    if(!response.ok || !data.success)
       throw new Error(
         data.error ||
         "Failed to add game"
       );
-
-    }
 
     await apiGetGames();
 
     render();
 
     document
-      .getElementById(
-        "addOverlay"
-      )
-      .classList.remove(
-        "open"
-      );
+      .getElementById("addOverlay")
+      .classList.remove("open");
 
   }catch(error){
 
@@ -2047,26 +1863,19 @@ async function confirmAdd(){
 }
 
 document
-  .getElementById(
-    "confirmAdd"
-  )
+  .getElementById("confirmAdd")
   .addEventListener(
     "click",
     confirmAdd
   );
 
 document
-  .getElementById(
-    "addName"
-  )
+  .getElementById("addName")
   .addEventListener(
     "keydown",
     event => {
 
-      if(
-        event.key ===
-        "Enter"
-      )
+      if(event.key === "Enter")
         confirmAdd();
 
     }
@@ -2078,42 +1887,30 @@ document
 
 function openGame(id){
 
-  currentGameId =
-    id;
+  currentGameId = id;
 
   renderGameModal();
 
   document
-    .getElementById(
-      "gameOverlay"
-    )
-    .classList.add(
-      "open"
-    );
+    .getElementById("gameOverlay")
+    .classList.add("open");
 
 }
 
 function closeGame(){
 
   document
-    .getElementById(
-      "gameOverlay"
-    )
-    .classList.remove(
-      "open"
-    );
+    .getElementById("gameOverlay")
+    .classList.remove("open");
 
-  currentGameId =
-    null;
+  currentGameId = null;
 
   render();
 
 }
 
 document
-  .getElementById(
-    "gameOverlay"
-  )
+  .getElementById("gameOverlay")
   .addEventListener(
     "click",
     event => {
@@ -2133,9 +1930,7 @@ document
 function renderGameModal(){
 
   const game =
-    gameById(
-      currentGameId
-    );
+    gameById(currentGameId);
 
   if(!game)
     return;
@@ -2146,78 +1941,56 @@ function renderGameModal(){
     );
 
   const catRows =
-    CATEGORIES.map(
-      category => {
+    CATEGORIES.map(category => {
 
-        const value =
-          Number(
-            game[
-              category.key
-            ] || 0
-          );
+      const value =
+        Number(
+          game[category.key] || 0
+        );
 
-        const stars =
-          Array.from({
-            length:10
+      const stars =
+        Array.from({length:10})
+          .map((_,i) => {
+
+            const filled =
+              i < value;
+
+            return `
+              <span
+                class="star
+                ${filled ? "filled" : ""}
+                ${editMode ? "" : "readonly"}"
+                data-cat="${category.key}"
+                data-val="${i+1}"
+              >
+                ${starSvg()}
+              </span>
+            `;
+
           })
-          .map(
-            (_,i) => {
-
-              const filled =
-                i < value;
-
-              return `
-                <span
-                  class="star
-                  ${
-                    filled
-                      ? "filled"
-                      : ""
-                  }
-                  ${
-                    editMode
-                      ? ""
-                      : "readonly"
-                  }"
-                  data-cat="${
-                    category.key
-                  }"
-                  data-val="${
-                    i+1
-                  }"
-                >
-                  ${starSvg()}
-                </span>
-              `;
-
-            }
-          )
           .join("");
 
-        return `
+      return `
+        <div class="cat-row">
 
-          <div class="cat-row">
-
-            <div class="cat-label">
-              ${escapeHtml(
-                category.label
-              )}
-            </div>
-
-            <div class="stars">
-              ${stars}
-            </div>
-
-            <div class="cat-num">
-              ${formatNumber(value)}/10
-            </div>
-
+          <div class="cat-label">
+            ${escapeHtml(
+              category.label
+            )}
           </div>
 
-        `;
+          <div class="stars">
+            ${stars}
+          </div>
 
-      }
-    ).join("");
+          <div class="cat-num">
+            ${formatNumber(value)}/10
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
 
   modal.innerHTML = `
 
@@ -2226,15 +1999,9 @@ function renderGameModal(){
       <input
         class="modal-name"
         id="editName"
-        value="${escapeHtml(
-          game.name
-        )}"
+        value="${escapeHtml(game.name)}"
         maxlength="120"
-        ${
-          editMode
-            ? ""
-            : "readonly"
-        }
+        ${editMode ? "" : "readonly"}
       >
 
       <button
@@ -2254,9 +2021,7 @@ function renderGameModal(){
     <div class="overall-line">
 
       <span class="overall-num">
-        ${formatNumber(
-          score(game)
-        )}
+        ${formatNumber(score(game))}
       </span>
 
       <span class="overall-label">
@@ -2328,11 +2093,7 @@ function renderGameModal(){
           ? "What did you think of it?"
           : "No commentary yet."
       }"
-      ${
-        editMode
-          ? ""
-          : "readonly"
-      }
+      ${editMode ? "" : "readonly"}
     >${escapeHtml(
       game.commentary || ""
     )}</textarea>
@@ -2372,9 +2133,7 @@ function renderGameModal(){
     tiers.forEach(tier => {
 
       const chip =
-        document.createElement(
-          "button"
-        );
+        document.createElement("button");
 
       chip.className =
         "tier-chip";
@@ -2385,24 +2144,16 @@ function renderGameModal(){
         tier.label;
 
       chip.style.borderColor =
-        colorForTier(
-          tier.tier_key
-        );
+        colorForTier(tier.tier_key);
 
       chip.style.color =
-        game.tier ===
-        tier.tier_key
+        game.tier === tier.tier_key
           ? "#0f0f0f"
-          : colorForTier(
-              tier.tier_key
-            );
+          : colorForTier(tier.tier_key);
 
       chip.style.background =
-        game.tier ===
-        tier.tier_key
-          ? colorForTier(
-              tier.tier_key
-            )
+        game.tier === tier.tier_key
+          ? colorForTier(tier.tier_key)
           : "transparent";
 
       chip.addEventListener(
@@ -2422,18 +2173,15 @@ function renderGameModal(){
                 "/games/move",
                 {
                   method:"POST",
-
                   headers:{
                     "Content-Type":
                       "application/json"
                   },
-
-                  body:
-                    JSON.stringify({
-                      id:game.id,
-                      tier:tier.tier_key,
-                      position:0
-                    })
+                  body:JSON.stringify({
+                    id:game.id,
+                    tier:tier.tier_key,
+                    position:0
+                  })
                 }
               );
 
@@ -2452,23 +2200,10 @@ function renderGameModal(){
 
             }
 
-            game.tier =
-              tier.tier_key;
-
-            const tierGames =
-              games.filter(
-                g =>
-                  g.tier ===
-                  tier.tier_key
-              );
-
-            tierGames.forEach(
-              (g,i) => {
-                g.position = i;
-              }
-            );
+            await apiGetGames();
 
             renderGameModal();
+
             render();
 
           }catch(error){
@@ -2483,9 +2218,7 @@ function renderGameModal(){
         }
       );
 
-      tierWrap.appendChild(
-        chip
-      );
+      tierWrap.appendChild(chip);
 
     });
 
@@ -2496,18 +2229,14 @@ function renderGameModal(){
   ======================================================= */
 
   document
-    .getElementById(
-      "closeGame"
-    )
+    .getElementById("closeGame")
     .addEventListener(
       "click",
       closeGame
     );
 
   document
-    .getElementById(
-      "doneGame"
-    )
+    .getElementById("doneGame")
     .addEventListener(
       "click",
       closeGame
@@ -2520,9 +2249,7 @@ function renderGameModal(){
   if(editMode){
 
     document
-      .getElementById(
-        "editName"
-      )
+      .getElementById("editName")
       .addEventListener(
         "change",
         async event => {
@@ -2551,9 +2278,7 @@ function renderGameModal(){
     ===================================================== */
 
     document
-      .getElementById(
-        "commentary"
-      )
+      .getElementById("commentary")
       .addEventListener(
         "change",
         async event => {
@@ -2562,8 +2287,7 @@ function renderGameModal(){
 
             await updateGame({
               id:game.id,
-              commentary:
-                event.target.value
+              commentary:event.target.value
             });
 
           }catch(error){
@@ -2598,7 +2322,6 @@ function renderGameModal(){
 
           await updateGame({
             id:game.id,
-
             custom_overall:
               raw === ""
                 ? null
@@ -2653,9 +2376,7 @@ function renderGameModal(){
     ===================================================== */
 
     modal
-      .querySelectorAll(
-        ".star"
-      )
+      .querySelectorAll(".star")
       .forEach(star => {
 
         star.addEventListener(
@@ -2673,9 +2394,7 @@ function renderGameModal(){
 
             const current =
               Number(
-                game[
-                  category
-                ] || 0
+                game[category] || 0
               );
 
             const newValue =
@@ -2687,9 +2406,10 @@ function renderGameModal(){
 
               await updateGame({
                 id:game.id,
-                [category]:
-                  newValue
+                [category]:newValue
               });
+
+              await apiGetGames();
 
               renderGameModal();
 
@@ -2712,9 +2432,7 @@ function renderGameModal(){
     ===================================================== */
 
     document
-      .getElementById(
-        "deleteGame"
-      )
+      .getElementById("deleteGame")
       .addEventListener(
         "click",
         async () => {
@@ -2785,16 +2503,11 @@ async function updateGame(changes){
       "/games",
       {
         method:"PUT",
-
         headers:{
           "Content-Type":
             "application/json"
         },
-
-        body:
-          JSON.stringify(
-            changes
-          )
+        body:JSON.stringify(changes)
       }
     );
 
@@ -2813,32 +2526,7 @@ async function updateGame(changes){
 
   }
 
-  if(changes.id){
-
-    const localGame =
-      gameById(
-        changes.id
-      );
-
-    if(localGame){
-
-      Object.keys(
-        changes
-      ).forEach(
-        key => {
-
-          if(
-            key !== "id"
-          )
-            localGame[key] =
-              changes[key];
-
-        }
-      );
-
-    }
-
-  }
+  await apiGetGames();
 
   render();
 
@@ -2851,20 +2539,16 @@ async function updateGame(changes){
 function starSvg(){
 
   return `
-
     <svg
       viewBox="0 0 24 24"
       fill="currentColor"
       width="100%"
       height="100%"
     >
-
       <path
         d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"
       />
-
     </svg>
-
   `;
 
 }
@@ -2890,16 +2574,13 @@ async function tryUnlock(){
         API + "/login",
         {
           method:"POST",
-
           headers:{
             "Content-Type":
               "application/json"
           },
-
-          body:
-            JSON.stringify({
-              password
-            })
+          body:JSON.stringify({
+            password
+          })
         }
       );
 
@@ -2911,9 +2592,7 @@ async function tryUnlock(){
       !data.success
     ){
 
-      alert(
-        "Wrong password."
-      );
+      alert("Wrong password.");
 
       return;
 
@@ -2963,9 +2642,7 @@ function lockEdit(){
 }
 
 document
-  .getElementById(
-    "editButton"
-  )
+  .getElementById("editButton")
   .addEventListener(
     "click",
     () => {
@@ -2986,10 +2663,7 @@ document.addEventListener(
   "keydown",
   event => {
 
-    if(
-      event.key !==
-      "Escape"
-    )
+    if(event.key !== "Escape")
       return;
 
     const gameOverlay =
