@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -159,7 +160,9 @@ header.top{
 ========================================================= */
 
 main{
-  max-width:1600px;
+  width:max-content;
+  min-width:100%;
+  max-width:none;
   margin:0 auto;
   padding:34px 24px 40px;
   display:flex;
@@ -288,17 +291,37 @@ main{
    9.5+ HIGHLIGHT
 ========================================================= */
 
- .row.highlighted .row-name,
-.row.highlighted .row-score{
+.row.highlighted .row-name{
   font-family:'Inter',sans-serif;
   font-size:15.5px;
   font-weight:700;
 
   background:linear-gradient(
     90deg,
-    #8dd9ff 0%,
-    #2EC0FF 50%,
-    #E3FAFF 100%
+    #8CD4FF 0%,
+    #8CFFEA 100%
+  );
+
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+
+  animation:highlightGradient 5s ease-in-out infinite;
+}
+
+/* Highlighted rating keeps normal rating font while matching
+   the highlighted game name's size, weight and animated color. */
+
+.row.highlighted .row-score{
+  font-family:'JetBrains Mono',monospace;
+  font-size:15.5px;
+  font-weight:700;
+
+  background:linear-gradient(
+    90deg,
+    #8CD4FF 0%,
+    #8CFFEA 100%
   );
 
   background-size:300% 100%;
@@ -313,9 +336,11 @@ main{
   0%{
     background-position:0% 50%;
   }
+
   50%{
     background-position:100% 50%;
   }
+
   100%{
     background-position:0% 50%;
   }
@@ -332,6 +357,7 @@ main{
     0 0 12px rgba(141,217,255,.45),
     0 0 24px rgba(141,217,255,.32),
     0 0 42px rgba(141,217,255,.20);
+
   animation:ssNeon 2.8s ease-in-out infinite;
 }
 
@@ -343,6 +369,7 @@ main{
       0 0 24px rgba(141,217,255,.32),
       0 0 42px rgba(141,217,255,.20);
   }
+
   50%{
     text-shadow:
       0 0 7px rgba(141,217,255,.75),
@@ -364,17 +391,27 @@ main{
     #8dd9ff,
     #b8f58d
   );
+
   background-size:250% 100%;
   -webkit-background-clip:text;
   background-clip:text;
   color:transparent;
+
   animation:emerald 5s ease-in-out infinite;
 }
 
 @keyframes emerald{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
+  0%{
+    background-position:0% 50%;
+  }
+
+  50%{
+    background-position:100% 50%;
+  }
+
+  100%{
+    background-position:0% 50%;
+  }
 }
 
 /* =========================================================
@@ -711,6 +748,7 @@ body.edit-mode #editBar{
 ========================================================= */
 
 @media(max-width:900px){
+
   main{
     min-width:1100px;
   }
@@ -740,6 +778,7 @@ body.edit-mode #editBar{
 }
 
 @media(max-width:700px){
+
   header.top{
     padding-top:34px;
     padding-bottom:26px;
@@ -778,6 +817,7 @@ body.edit-mode #editBar{
     order:3;
   }
 }
+
 </style>
 </head>
 
@@ -807,9 +847,11 @@ body.edit-mode #editBar{
 </header>
 
 <main id="main">
+
   <div class="loading-msg">
     loading your list…
   </div>
+
 </main>
 
 <!-- ADD GAME -->
@@ -912,7 +954,7 @@ const TIER_COLORS = {
   S: "var(--gold)",
   A: "var(--orange)",
   B: "var(--sage)",
-  C: "var(--rust)",
+  C: "#A35656",
   X: "var(--slate)",
   G: "var(--sage)"
 };
@@ -957,15 +999,21 @@ const CATEGORIES = [
 ========================================================= */
 
 function getToken(){
-  return localStorage.getItem("played-admin-token") || "";
+
+  return localStorage.getItem(
+    "played-admin-token"
+  ) || "";
+
 }
 
 function authHeaders(){
+
   const token = getToken();
 
   return token
     ? { Authorization:"Bearer " + token }
     : {};
+
 }
 
 async function apiFetch(path, options = {}){
@@ -982,6 +1030,7 @@ async function apiFetch(path, options = {}){
       headers
     }
   );
+
 }
 
 /* =========================================================
@@ -989,11 +1038,19 @@ async function apiFetch(path, options = {}){
 ========================================================= */
 
 function getTier(key){
-  return tiers.find(t => t.tier_key === key);
+
+  return tiers.find(
+    t => t.tier_key === key
+  );
+
 }
 
 function gameById(id){
-  return games.find(g => g.id === id);
+
+  return games.find(
+    g => g.id === id
+  );
+
 }
 
 function formatNumber(value){
@@ -1004,6 +1061,7 @@ function formatNumber(value){
     return "0";
 
   return String(n);
+
 }
 
 function score(game){
@@ -1013,7 +1071,9 @@ function score(game){
     game.custom_overall !== undefined &&
     game.custom_overall !== ""
   ){
+
     return Number(game.custom_overall);
+
   }
 
   const values =
@@ -1027,10 +1087,13 @@ function score(game){
       values.length
     ) * 10
   ) / 10;
+
 }
 
 function isHighlighted(game){
+
   return score(game) >= 9.5;
+
 }
 
 function escapeHtml(str){
@@ -1041,10 +1104,13 @@ function escapeHtml(str){
   d.textContent = str ?? "";
 
   return d.innerHTML;
+
 }
 
 function colorForTier(key){
+
   return TIER_COLORS[key] || "var(--gold)";
+
 }
 
 /* =========================================================
@@ -1067,6 +1133,7 @@ async function apiGetTiers(){
     );
 
   tiers = data.tiers || [];
+
 }
 
 async function apiGetGames(){
@@ -1085,6 +1152,7 @@ async function apiGetGames(){
     );
 
   games = data.games || [];
+
 }
 
 async function load(){
@@ -1114,7 +1182,9 @@ async function load(){
         ${escapeHtml(error.message)}
       </div>
     `;
+
   }
+
 }
 
 /* =========================================================
@@ -1155,6 +1225,7 @@ function render(){
   });
 
   renderAddTierPicker();
+
 }
 
 function renderHeader(){
@@ -1173,6 +1244,7 @@ function renderHeader(){
     editButton.textContent = "Edit";
 
   }
+
 }
 
 function renderTier(tier,tierGames){
@@ -1244,6 +1316,7 @@ function renderTier(tier,tierGames){
     document.createElement("div");
 
   rows.className = "rows";
+
   rows.dataset.tier =
     tier.tier_key;
 
@@ -1317,6 +1390,7 @@ function renderTier(tier,tierGames){
               );
 
               await apiGetTiers();
+
               render();
 
             }catch(error){
@@ -1332,11 +1406,13 @@ function renderTier(tier,tierGames){
         );
 
       });
+
   }
 
   setupDnD(rows);
 
   return section;
+
 }
 
 /* =========================================================
@@ -1397,6 +1473,7 @@ function renderRow(game,tier){
   );
 
   return row;
+
 }
 
 /* =========================================================
@@ -1427,6 +1504,7 @@ function setupDnD(container){
 
       event.dataTransfer.effectAllowed =
         "move";
+
     }
   );
 
@@ -1609,6 +1687,7 @@ function setupDnD(container){
 
     }
   );
+
 }
 
 function getDragAfterElement(
@@ -1654,6 +1733,7 @@ function getDragAfterElement(
       element:null
     }
   ).element;
+
 }
 
 /* =========================================================
@@ -1711,6 +1791,7 @@ function renderAddTierPicker(){
     wrap.appendChild(chip);
 
   });
+
 }
 
 document
@@ -1788,8 +1869,11 @@ async function confirmAdd(){
     input.value.trim();
 
   if(!name){
+
     input.focus();
+
     return;
+
   }
 
   try{
@@ -1835,6 +1919,7 @@ async function confirmAdd(){
     );
 
   }
+
 }
 
 document
@@ -1869,6 +1954,7 @@ function openGame(id){
   document
     .getElementById("gameOverlay")
     .classList.add("open");
+
 }
 
 function closeGame(){
@@ -1880,6 +1966,7 @@ function closeGame(){
   currentGameId = null;
 
   render();
+
 }
 
 document
@@ -2459,6 +2546,7 @@ function renderGameModal(){
       );
 
   }
+
 }
 
 /* =========================================================
@@ -2498,6 +2586,7 @@ async function updateGame(changes){
   await apiGetGames();
 
   render();
+
 }
 
 /* =========================================================
@@ -2518,6 +2607,7 @@ function starSvg(){
       />
     </svg>
   `;
+
 }
 
 /* =========================================================
@@ -2560,6 +2650,7 @@ async function tryUnlock(){
     ){
 
       alert("Wrong password.");
+
       return;
 
     }
@@ -2586,6 +2677,7 @@ async function tryUnlock(){
     );
 
   }
+
 }
 
 function lockEdit(){
@@ -2677,3 +2769,4 @@ load();
 
 </body>
 </html>
+```
