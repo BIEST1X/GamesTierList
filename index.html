@@ -7,7 +7,6 @@
 <title>GAMES PLAYED BY BIEST1X</title>
 
 <style>
-
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 :root{
@@ -22,6 +21,9 @@
 
   --gold:#e8b563;
   --gold-dim:rgba(232,181,99,.18);
+
+  --diamond:#8dd9ff;
+  --diamond-dim:rgba(141,217,255,.18);
 
   --teal:#6fc7c0;
   --teal-dim:rgba(111,199,192,.18);
@@ -211,7 +213,10 @@ main{
 }
 
 .tier-count{
-  display:none;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--text-dim);
+  margin-top:8px;
 }
 
 .rows{
@@ -289,26 +294,70 @@ main{
    9.5+ HIGHLIGHT
 ========================================================= */
 
-.row.highlighted .row-name,
+ .row.highlighted .row-name,
 .row.highlighted .row-score{
+  font-family:'Inter',sans-serif;
   font-size:15.5px;
   font-weight:700;
 
   background:linear-gradient(
     90deg,
-    #b8f58d 0%,
-    #79e5bd 35%,
-    #8dd9ff 55%,
-    #b8f58d 75%,
-    #79e5bd 100%
+    #8dd9ff 0%,
+    #d8f7ff 28%,
+    #a8eaff 50%,
+    #78d7ff 72%,
+    #8dd9ff 100%
   );
 
-  background-size:250% 100%;
+  background-size:240% 100%;
   -webkit-background-clip:text;
   background-clip:text;
   color:transparent;
 
-  animation:emerald 5s ease-in-out infinite;
+  animation:highlightGradient 5s ease-in-out infinite;
+}
+
+@keyframes highlightGradient{
+  0%{
+    background-position:0% 50%;
+  }
+  50%{
+    background-position:100% 50%;
+  }
+  100%{
+    background-position:0% 50%;
+  }
+}
+
+/* =========================================================
+   SS TIER — NEON DIAMOND GLOW
+========================================================= */
+
+.tier[data-tier="SS"] .tier-letter{
+  color:var(--diamond);
+  text-shadow:
+    0 0 5px rgba(141,217,255,.55),
+    0 0 12px rgba(141,217,255,.45),
+    0 0 24px rgba(141,217,255,.32),
+    0 0 42px rgba(141,217,255,.20);
+  animation:ssNeon 2.8s ease-in-out infinite;
+}
+
+@keyframes ssNeon{
+  0%,100%{
+    text-shadow:
+      0 0 5px rgba(141,217,255,.55),
+      0 0 12px rgba(141,217,255,.45),
+      0 0 24px rgba(141,217,255,.32),
+      0 0 42px rgba(141,217,255,.20);
+  }
+  50%{
+    text-shadow:
+      0 0 7px rgba(141,217,255,.75),
+      0 0 16px rgba(141,217,255,.62),
+      0 0 30px rgba(141,217,255,.48),
+      0 0 52px rgba(141,217,255,.28);
+  }
 }
 
 /* =========================================================
@@ -323,7 +372,6 @@ main{
     #8dd9ff,
     #b8f58d
   );
-
   background-size:250% 100%;
   -webkit-background-clip:text;
   background-clip:text;
@@ -335,85 +383,6 @@ main{
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
-}
-
-/* =========================================================
-   SS FIRE EFFECT
-========================================================= */
-
-.tier[data-tier="SS"] .tier-letter{
-  position:relative;
-
-  text-shadow:
-    0 0 4px rgba(255,196,83,.55),
-    0 0 10px rgba(255,128,35,.30);
-
-  animation:ssFire 1.35s ease-in-out infinite;
-}
-
-.tier[data-tier="SS"] .tier-letter::before,
-.tier[data-tier="SS"] .tier-letter::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  bottom:-7px;
-  height:13px;
-  pointer-events:none;
-  filter:blur(5px);
-  opacity:.65;
-
-  background:radial-gradient(
-    ellipse at 50% 100%,
-    rgba(255,205,93,.75) 0%,
-    rgba(255,116,35,.42) 35%,
-    rgba(255,70,20,0) 72%
-  );
-
-  animation:ssFlame 1.1s ease-in-out infinite alternate;
-}
-
-.tier[data-tier="SS"] .tier-letter::after{
-  left:28%;
-  right:28%;
-  bottom:-3px;
-  height:10px;
-  opacity:.45;
-  filter:blur(4px);
-  animation-delay:-.45s;
-}
-
-@keyframes ssFire{
-  0%,100%{
-    transform:translateY(0) scaleY(1);
-    text-shadow:
-      0 0 4px rgba(255,196,83,.55),
-      0 0 10px rgba(255,128,35,.30);
-  }
-
-  35%{
-    transform:translateY(-1px) scaleY(1.015);
-    text-shadow:
-      0 0 6px rgba(255,210,100,.72),
-      0 0 14px rgba(255,110,25,.40);
-  }
-
-  70%{
-    transform:translateY(1px) scaleY(.99);
-    text-shadow:
-      0 0 3px rgba(255,190,70,.48),
-      0 0 12px rgba(255,90,20,.34);
-  }
-}
-
-@keyframes ssFlame{
-  0%{
-    transform:translateY(1px) scaleX(.92) scaleY(.8);
-  }
-
-  100%{
-    transform:translateY(-4px) scaleX(1.08) scaleY(1.18);
-  }
 }
 
 /* =========================================================
@@ -746,44 +715,10 @@ body.edit-mode #editBar{
 }
 
 /* =========================================================
-   BACKUP TOOLS
-========================================================= */
-
-.backup-tools{
-  position:absolute;
-  left:24px;
-  top:calc(50% + 27px);
-  display:none;
-  gap:6px;
-}
-
-body.edit-mode .backup-tools{
-  display:flex;
-}
-
-.backup-btn{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  font-weight:700;
-  color:var(--text-dim);
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line-strong);
-  border-radius:6px;
-  padding:6px 9px;
-  cursor:pointer;
-}
-
-.backup-btn:hover{
-  color:var(--text);
-  background:rgba(255,255,255,.07);
-}
-
-/* =========================================================
    RESPONSIVE
 ========================================================= */
 
 @media(max-width:900px){
-
   main{
     min-width:1100px;
   }
@@ -810,15 +745,9 @@ body.edit-mode .backup-tools{
   .edit-top-btn{
     left:16px;
   }
-
-  .backup-tools{
-    left:16px;
-    top:calc(50% + 25px);
-  }
 }
 
 @media(max-width:700px){
-
   header.top{
     padding-top:34px;
     padding-bottom:26px;
@@ -857,7 +786,6 @@ body.edit-mode .backup-tools{
     order:3;
   }
 }
-
 </style>
 </head>
 
@@ -884,31 +812,12 @@ body.edit-mode .backup-tools{
     + Add game
   </button>
 
-  <div class="backup-tools edit-only">
-    <button class="backup-btn" id="exportBackup">
-      Export backup
-    </button>
-
-    <button class="backup-btn" id="importBackup">
-      Import backup
-    </button>
-
-    <input
-      id="backupFile"
-      type="file"
-      accept="application/json,.json"
-      hidden
-    >
-  </div>
-
 </header>
 
 <main id="main">
-
   <div class="loading-msg">
     loading your list…
   </div>
-
 </main>
 
 <!-- ADD GAME -->
@@ -985,7 +894,6 @@ body.edit-mode .backup-tools{
 </div>
 
 <script>
-
 (function(){
 
 "use strict";
@@ -1008,8 +916,8 @@ let dragId = null;
 ========================================================= */
 
 const TIER_COLORS = {
-  SS: "var(--gold)",
-  S: "var(--teal)",
+  SS: "var(--diamond)",
+  S: "var(--gold)",
   A: "var(--orange)",
   B: "var(--sage)",
   C: "var(--rust)",
@@ -1061,7 +969,6 @@ function getToken(){
 }
 
 function authHeaders(){
-
   const token = getToken();
 
   return token
@@ -1114,34 +1021,24 @@ function score(game){
     game.custom_overall !== undefined &&
     game.custom_overall !== ""
   ){
-
     return Number(game.custom_overall);
-
   }
 
   const values =
-    CATEGORIES.map(
-      c =>
-        Number(
-          game[c.key] || 0
-        )
+    CATEGORIES.map(c =>
+      Number(game[c.key] || 0)
     );
 
   return Math.round(
     (
-      values.reduce(
-        (a,b) => a+b,
-        0
-      ) /
+      values.reduce((a,b) => a+b,0) /
       values.length
     ) * 10
   ) / 10;
 }
 
 function isHighlighted(game){
-
   return score(game) >= 9.5;
-
 }
 
 function escapeHtml(str){
@@ -1149,19 +1046,13 @@ function escapeHtml(str){
   const d =
     document.createElement("div");
 
-  d.textContent =
-    str ?? "";
+  d.textContent = str ?? "";
 
   return d.innerHTML;
 }
 
 function colorForTier(key){
-
-  return (
-    TIER_COLORS[key] ||
-    "var(--gold)"
-  );
-
+  return TIER_COLORS[key] || "var(--gold)";
 }
 
 /* =========================================================
@@ -1171,61 +1062,37 @@ function colorForTier(key){
 async function apiGetTiers(){
 
   const response =
-    await fetch(
-      API + "/tiers",
-      {
-        cache:"no-store"
-      }
-    );
+    await fetch(API + "/tiers", {
+      cache:"no-store"
+    });
 
   const data =
     await response.json();
 
-  if(
-    !response.ok ||
-    !data.success
-  ){
-
+  if(!response.ok || !data.success)
     throw new Error(
-      data.error ||
-      "Failed to load tiers"
+      data.error || "Failed to load tiers"
     );
 
-  }
-
-  tiers =
-    data.tiers || [];
-
+  tiers = data.tiers || [];
 }
 
 async function apiGetGames(){
 
   const response =
-    await fetch(
-      API + "/games",
-      {
-        cache:"no-store"
-      }
-    );
+    await fetch(API + "/games", {
+      cache:"no-store"
+    });
 
   const data =
     await response.json();
 
-  if(
-    !response.ok ||
-    !data.success
-  ){
-
+  if(!response.ok || !data.success)
     throw new Error(
-      data.error ||
-      "Failed to load games"
+      data.error || "Failed to load games"
     );
 
-  }
-
-  games =
-    data.games || [];
-
+  games = data.games || [];
 }
 
 async function load(){
@@ -1255,9 +1122,7 @@ async function load(){
         ${escapeHtml(error.message)}
       </div>
     `;
-
   }
-
 }
 
 /* =========================================================
@@ -1274,9 +1139,7 @@ function render(){
   renderHeader();
 
   const main =
-    document.getElementById(
-      "main"
-    );
+    document.getElementById("main");
 
   main.innerHTML = "";
 
@@ -1284,9 +1147,7 @@ function render(){
 
     const tierGames =
       games.filter(
-        g =>
-          g.tier ===
-          tier.tier_key
+        g => g.tier === tier.tier_key
       );
 
     tierGames.sort(
@@ -1296,16 +1157,12 @@ function render(){
     );
 
     main.appendChild(
-      renderTier(
-        tier,
-        tierGames
-      )
+      renderTier(tier,tierGames)
     );
 
   });
 
   renderAddTierPicker();
-
 }
 
 function renderHeader(){
@@ -1317,38 +1174,27 @@ function renderHeader(){
 
   if(editMode){
 
-    editButton.textContent =
-      "Exit";
+    editButton.textContent = "Exit";
 
   }else{
 
-    editButton.textContent =
-      "Edit";
+    editButton.textContent = "Edit";
 
   }
-
 }
 
-function renderTier(
-  tier,
-  tierGames
-){
+function renderTier(tier,tierGames){
 
   const section =
-    document.createElement(
-      "section"
-    );
+    document.createElement("section");
 
-  section.className =
-    "tier";
+  section.className = "tier";
 
   section.dataset.tier =
     tier.tier_key;
 
   const color =
-    colorForTier(
-      tier.tier_key
-    );
+    colorForTier(tier.tier_key);
 
   section.style.setProperty(
     "--tier-color",
@@ -1356,12 +1202,9 @@ function renderTier(
   );
 
   const head =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
-  head.className =
-    "tier-head";
+  head.className = "tier-head";
 
   head.innerHTML = `
 
@@ -1407,60 +1250,40 @@ function renderTier(
     </div>
   `;
 
-  section.appendChild(
-    head
-  );
+  section.appendChild(head);
 
   const rows =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
-  rows.className =
-    "rows";
-
+  rows.className = "rows";
   rows.dataset.tier =
     tier.tier_key;
 
-  if(
-    tierGames.length === 0
-  ){
+  if(tierGames.length === 0){
 
     const empty =
-      document.createElement(
-        "div"
-      );
+      document.createElement("div");
 
-    empty.className =
-      "empty-row";
+    empty.className = "empty-row";
 
     empty.textContent =
       "No games here yet.";
 
-    rows.appendChild(
-      empty
-    );
+    rows.appendChild(empty);
 
   }else{
 
-    tierGames.forEach(
-      game => {
+    tierGames.forEach(game => {
 
-        rows.appendChild(
-          renderRow(
-            game,
-            tier
-          )
-        );
+      rows.appendChild(
+        renderRow(game,tier)
+      );
 
-      }
-    );
+    });
 
   }
 
-  section.appendChild(
-    rows
-  );
+  section.appendChild(rows);
 
   if(editMode){
 
@@ -1468,121 +1291,97 @@ function renderTier(
       .querySelectorAll(
         ".tier-edit-input"
       )
-      .forEach(
-        input => {
+      .forEach(input => {
 
-          input.addEventListener(
-            "change",
-            async event => {
+        input.addEventListener(
+          "change",
+          async event => {
 
-              const field =
-                event.target.dataset.field;
+            const field =
+              event.target.dataset.field;
 
-              try{
+            try{
 
-                await apiFetch(
-                  "/tiers",
-                  {
-                    method:"PUT",
-                    headers:{
-                      "Content-Type":
-                        "application/json"
-                    },
-                    body:
-                      JSON.stringify({
-                        tier_key:
-                          tier.tier_key,
-                        letter:
-                          head.querySelector(
-                            '[data-field="letter"]'
-                          ).value,
-                        label:
-                          head.querySelector(
-                            '[data-field="label"]'
-                          ).value,
-                        sub:
-                          head.querySelector(
-                            '[data-field="sub"]'
-                          ).value
-                      })
-                  }
-                );
+              await apiFetch(
+                "/tiers",
+                {
+                  method:"PUT",
+                  headers:{
+                    "Content-Type":
+                      "application/json"
+                  },
+                  body:JSON.stringify({
+                    tier_key:tier.tier_key,
+                    letter:
+                      field === "letter"
+                        ? event.target.value
+                        : tier.letter,
+                    label:
+                      field === "label"
+                        ? event.target.value
+                        : tier.label,
+                    sub:
+                      field === "sub"
+                        ? event.target.value
+                        : tier.sub
+                  })
+                }
+              );
 
-                await apiGetTiers();
+              await apiGetTiers();
+              render();
 
-                render();
+            }catch(error){
 
-              }catch(error){
-
-                alert(
-                  "Could not save category: " +
-                  error.message
-                );
-
-              }
+              alert(
+                "Could not save category: " +
+                error.message
+              );
 
             }
-          );
 
-        }
-      );
+          }
+        );
 
+      });
   }
 
-  enableDropZone(
-    rows,
-    tier.tier_key
-  );
+  setupDnD(rows);
 
   return section;
-
 }
 
 /* =========================================================
-   ROW
+   GAME ROW
 ========================================================= */
 
-function renderRow(
-  game,
-  tier
-){
+function renderRow(game,tier){
 
   const row =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
-  row.className =
-    "row";
+  row.className = "row";
 
-  if(
-    isHighlighted(game)
-  ){
+  if(isHighlighted(game))
+    row.classList.add("highlighted");
 
-    row.classList.add(
-      "highlighted"
-    );
+  row.dataset.id = game.id;
 
-  }
-
-  row.dataset.id =
-    game.id;
-
-  row.draggable =
-    editMode;
+  row.draggable = editMode;
 
   row.style.setProperty(
     "--tier-color",
-    colorForTier(
-      tier.tier_key
-    )
+    colorForTier(tier.tier_key)
   );
 
   row.innerHTML = `
 
     <div class="row-top">
 
-      <div class="row-name">
+      <div
+        class="row-name"
+        title="${escapeHtml(game.name)}"
+      >
         ${escapeHtml(game.name)}
       </div>
 
@@ -1604,489 +1403,207 @@ function renderRow(
       )
         return;
 
-      openGame(
-        game.id
-      );
+      openGame(game.id);
 
     }
   );
 
-  if(editMode){
-
-    row.addEventListener(
-      "dragstart",
-      event => {
-
-        dragId =
-          game.id;
-
-        row.classList.add(
-          "dragging"
-        );
-
-        event.dataTransfer.effectAllowed =
-          "move";
-
-        event.dataTransfer.setData(
-          "text/plain",
-          game.id
-        );
-
-      }
-    );
-
-    row.addEventListener(
-      "dragend",
-      () => {
-
-        row.classList.remove(
-          "dragging"
-        );
-
-        dragId = null;
-
-        document
-          .querySelectorAll(
-            ".drag-over-top,.drag-over-bottom"
-          )
-          .forEach(
-            el => {
-
-              el.classList.remove(
-                "drag-over-top",
-                "drag-over-bottom"
-              );
-
-            }
-          );
-
-      }
-    );
-
-    row.addEventListener(
-      "dragover",
-      event => {
-
-        event.preventDefault();
-
-        if(
-          !dragId ||
-          dragId === game.id
-        )
-          return;
-
-        const rect =
-          row.getBoundingClientRect();
-
-        const before =
-          event.clientY <
-          rect.top +
-          rect.height / 2;
-
-        row.classList.toggle(
-          "drag-over-top",
-          before
-        );
-
-        row.classList.toggle(
-          "drag-over-bottom",
-          !before
-        );
-
-      }
-    );
-
-    row.addEventListener(
-      "dragleave",
-      () => {
-
-        row.classList.remove(
-          "drag-over-top",
-          "drag-over-bottom"
-        );
-
-      }
-    );
-
-    row.addEventListener(
-      "drop",
-      async event => {
-
-        event.preventDefault();
-
-        if(
-          !dragId ||
-          dragId === game.id
-        )
-          return;
-
-        const rect =
-          row.getBoundingClientRect();
-
-        const before =
-          event.clientY <
-          rect.top +
-          rect.height / 2;
-
-        row.classList.remove(
-          "drag-over-top",
-          "drag-over-bottom"
-        );
-
-        await moveGame(
-          dragId,
-          tier.tier_key,
-          game.id,
-          before
-        );
-
-      }
-    );
-
-  }
-
   return row;
-
 }
 
 /* =========================================================
-   DROP ZONE
+   DRAG & DROP
 ========================================================= */
 
-function enableDropZone(
-  rows,
-  tierKey
-){
+function setupDnD(container){
 
-  if(!editMode)
-    return;
-
-  rows.addEventListener(
-    "dragover",
+  container.addEventListener(
+    "dragstart",
     event => {
 
-      event.preventDefault();
+      if(!editMode)
+        return;
+
+      const row =
+        event.target.closest(".row");
+
+      if(!row)
+        return;
+
+      dragId =
+        row.dataset.id;
+
+      row.classList.add(
+        "dragging"
+      );
+
+      event.dataTransfer.effectAllowed =
+        "move";
+    }
+  );
+
+  container.addEventListener(
+    "dragend",
+    event => {
+
+      const row =
+        event.target.closest(".row");
+
+      if(row)
+        row.classList.remove(
+          "dragging"
+        );
+
+      container
+        .querySelectorAll(".row")
+        .forEach(r =>
+          r.classList.remove(
+            "drag-over-top",
+            "drag-over-bottom"
+          )
+        );
 
     }
   );
 
-  rows.addEventListener(
+  container.addEventListener(
+    "dragover",
+    event => {
+
+      if(!editMode)
+        return;
+
+      event.preventDefault();
+
+      const after =
+        getDragAfterElement(
+          container,
+          event.clientY
+        );
+
+      container
+        .querySelectorAll(".row")
+        .forEach(r =>
+          r.classList.remove(
+            "drag-over-top",
+            "drag-over-bottom"
+          )
+        );
+
+      if(after){
+
+        after.classList.add(
+          "drag-over-top"
+        );
+
+      }else{
+
+        const rows =
+          [
+            ...container.querySelectorAll(
+              ".row:not(.dragging)"
+            )
+          ];
+
+        if(rows.length){
+
+          rows[
+            rows.length - 1
+          ].classList.add(
+            "drag-over-bottom"
+          );
+
+        }
+
+      }
+
+    }
+  );
+
+  container.addEventListener(
     "drop",
     async event => {
 
       event.preventDefault();
 
-      if(
-        !dragId
-      )
+      if(!editMode || !dragId)
         return;
 
-      if(
-        event.target.closest(
-          ".row"
-        )
-      )
-        return;
+      const targetTier =
+        container.dataset.tier;
 
-      await moveGame(
-        dragId,
-        tierKey,
-        null,
-        false
-      );
-
-    }
-  );
-
-}
-
-/* =========================================================
-   MOVE
-========================================================= */
-
-async function moveGame(
-  id,
-  targetTier,
-  targetId,
-  before
-){
-
-  const targetGames =
-    games
-      .filter(
-        g =>
-          g.tier ===
-          targetTier &&
-          g.id !== id
-      )
-      .sort(
-        (a,b) =>
-          Number(a.position || 0) -
-          Number(b.position || 0)
-      );
-
-  let position =
-    targetGames.length;
-
-  if(targetId){
-
-    const index =
-      targetGames.findIndex(
-        g =>
-          g.id === targetId
-      );
-
-    if(index >= 0){
-
-      position =
-        before
-          ? index
-          : index + 1;
-
-    }
-
-  }
-
-  try{
-
-    const response =
-      await apiFetch(
-        "/games/move",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-          body:
-            JSON.stringify({
-              id,
-              tier:targetTier,
-              position
-            })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(
-      !response.ok ||
-      !data.success
-    ){
-
-      throw new Error(
-        data.error ||
-        "Failed to move game"
-      );
-
-    }
-
-    await apiGetGames();
-
-    render();
-
-  }catch(error){
-
-    alert(
-      "Could not move game: " +
-      error.message
-    );
-
-  }
-
-}
-
-/* =========================================================
-   ADD GAME
-========================================================= */
-
-function renderAddTierPicker(){
-
-  const picker =
-    document.getElementById(
-      "addTierPicker"
-    );
-
-  if(!picker)
-    return;
-
-  picker.innerHTML = "";
-
-  tiers.forEach(
-    tier => {
-
-      const button =
-        document.createElement(
-          "button"
+      const after =
+        getDragAfterElement(
+          container,
+          event.clientY
         );
 
-      button.type =
-        "button";
-
-      button.className =
-        "tier-chip";
-
-      button.textContent =
-        tier.letter;
-
-      button.style.color =
-        colorForTier(
-          tier.tier_key
-        );
-
-      if(
-        addTier ===
-        tier.tier_key
-      ){
-
-        button.style.borderColor =
-          colorForTier(
-            tier.tier_key
+      const tierGames =
+        games
+          .filter(
+            g =>
+              g.tier === targetTier &&
+              g.id !== dragId
+          )
+          .sort(
+            (a,b) =>
+              Number(a.position || 0) -
+              Number(b.position || 0)
           );
 
-      }
+      let position;
 
-      button.addEventListener(
-        "click",
-        () => {
+      if(after){
 
-          addTier =
-            tier.tier_key;
+        const index =
+          tierGames.findIndex(
+            g =>
+              g.id === after.dataset.id
+          );
 
-          renderAddTierPicker();
+        position =
+          index < 0
+            ? tierGames.length
+            : index;
 
-        }
-      );
+      }else{
 
-      picker.appendChild(
-        button
-      );
-
-    }
-  );
-
-}
-
-document
-  .getElementById(
-    "openAdd"
-  )
-  .addEventListener(
-    "click",
-    () => {
-
-      if(!editMode)
-        return;
-
-      document
-        .getElementById(
-          "addOverlay"
-        )
-        .classList.add(
-          "open"
-        );
-
-      document
-        .getElementById(
-          "addName"
-        )
-        .focus();
-
-    }
-  );
-
-document
-  .getElementById(
-    "closeAdd"
-  )
-  .addEventListener(
-    "click",
-    () => {
-
-      document
-        .getElementById(
-          "addOverlay"
-        )
-        .classList.remove(
-          "open"
-        );
-
-    }
-  );
-
-document
-  .getElementById(
-    "confirmAdd"
-  )
-  .addEventListener(
-    "click",
-    async () => {
-
-      const name =
-        document
-          .getElementById(
-            "addName"
-          )
-          .value
-          .trim();
-
-      if(!name){
-
-        alert(
-          "Enter a game name."
-        );
-
-        return;
+        position =
+          tierGames.length;
 
       }
+
+      const movingId =
+        dragId;
+
+      dragId = null;
 
       try{
 
         const response =
           await apiFetch(
-            "/games",
+            "/games/move",
             {
               method:"POST",
               headers:{
                 "Content-Type":
                   "application/json"
               },
-              body:
-                JSON.stringify({
-                  name,
-                  tier:addTier
-                })
+              body:JSON.stringify({
+                id:movingId,
+                tier:targetTier,
+                position
+              })
             }
           );
 
         const data =
           await response.json();
 
-        if(
-          !response.ok ||
-          !data.success
-        ){
-
+        if(!response.ok || !data.success)
           throw new Error(
             data.error ||
-            "Failed to add game"
-          );
-
-        }
-
-        document
-          .getElementById(
-            "addName"
-          )
-          .value = "";
-
-        document
-          .getElementById(
-            "addOverlay"
-          )
-          .classList.remove(
-            "open"
+            "Failed to move game"
           );
 
         await apiGetGames();
@@ -2096,11 +1613,257 @@ document
       }catch(error){
 
         alert(
-          "Could not add game: " +
+          "Could not move game: " +
           error.message
         );
 
       }
+
+    }
+  );
+}
+
+function getDragAfterElement(
+  container,
+  y
+){
+
+  const rows =
+    [
+      ...container.querySelectorAll(
+        ".row:not(.dragging)"
+      )
+    ];
+
+  return rows.reduce(
+    (closest,child) => {
+
+      const box =
+        child.getBoundingClientRect();
+
+      const offset =
+        y -
+        box.top -
+        box.height / 2;
+
+      if(
+        offset < 0 &&
+        offset > closest.offset
+      ){
+
+        return {
+          offset,
+          element:child
+        };
+
+      }
+
+      return closest;
+
+    },
+    {
+      offset:-Infinity,
+      element:null
+    }
+  ).element;
+}
+
+/* =========================================================
+   ADD GAME
+========================================================= */
+
+function renderAddTierPicker(){
+
+  const wrap =
+    document.getElementById(
+      "addTierPicker"
+    );
+
+  if(!wrap)
+    return;
+
+  wrap.innerHTML = "";
+
+  tiers.forEach(tier => {
+
+    const chip =
+      document.createElement("button");
+
+    chip.className =
+      "tier-chip";
+
+    chip.textContent =
+      tier.letter;
+
+    chip.style.borderColor =
+      colorForTier(tier.tier_key);
+
+    chip.style.color =
+      addTier === tier.tier_key
+        ? "#0f0f0f"
+        : colorForTier(tier.tier_key);
+
+    chip.style.background =
+      addTier === tier.tier_key
+        ? colorForTier(tier.tier_key)
+        : "transparent";
+
+    chip.addEventListener(
+      "click",
+      () => {
+
+        addTier =
+          tier.tier_key;
+
+        renderAddTierPicker();
+
+      }
+    );
+
+    wrap.appendChild(chip);
+
+  });
+}
+
+document
+  .getElementById("openAdd")
+  .addEventListener(
+    "click",
+    () => {
+
+      if(!editMode)
+        return;
+
+      document.getElementById(
+        "addName"
+      ).value = "";
+
+      addTier = "A";
+
+      renderAddTierPicker();
+
+      document
+        .getElementById("addOverlay")
+        .classList.add("open");
+
+      setTimeout(
+        () =>
+          document
+            .getElementById("addName")
+            .focus(),
+        50
+      );
+
+    }
+  );
+
+document
+  .getElementById("closeAdd")
+  .addEventListener(
+    "click",
+    () => {
+
+      document
+        .getElementById("addOverlay")
+        .classList.remove("open");
+
+    }
+  );
+
+document
+  .getElementById("addOverlay")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target.id ===
+        "addOverlay"
+      ){
+
+        event.currentTarget
+          .classList.remove("open");
+
+      }
+
+    }
+  );
+
+async function confirmAdd(){
+
+  const input =
+    document.getElementById(
+      "addName"
+    );
+
+  const name =
+    input.value.trim();
+
+  if(!name){
+    input.focus();
+    return;
+  }
+
+  try{
+
+    const response =
+      await apiFetch(
+        "/games",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            name,
+            tier:addTier
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok || !data.success)
+      throw new Error(
+        data.error ||
+        "Failed to add game"
+      );
+
+    await apiGetGames();
+
+    render();
+
+    document
+      .getElementById("addOverlay")
+      .classList.remove("open");
+
+  }catch(error){
+
+    alert(
+      "Could not add game: " +
+      error.message
+    );
+
+  }
+}
+
+document
+  .getElementById("confirmAdd")
+  .addEventListener(
+    "click",
+    confirmAdd
+  );
+
+document
+  .getElementById("addName")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(event.key === "Enter")
+        confirmAdd();
 
     }
   );
@@ -2111,42 +1874,48 @@ document
 
 function openGame(id){
 
-  currentGameId =
-    id;
+  currentGameId = id;
 
   renderGameModal();
 
   document
-    .getElementById(
-      "gameOverlay"
-    )
-    .classList.add(
-      "open"
-    );
-
+    .getElementById("gameOverlay")
+    .classList.add("open");
 }
 
 function closeGame(){
 
-  currentGameId =
-    null;
-
   document
-    .getElementById(
-      "gameOverlay"
-    )
-    .classList.remove(
-      "open"
-    );
+    .getElementById("gameOverlay")
+    .classList.remove("open");
 
+  currentGameId = null;
+
+  render();
 }
+
+document
+  .getElementById("gameOverlay")
+  .addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target.id ===
+        "gameOverlay"
+      ){
+
+        closeGame();
+
+      }
+
+    }
+  );
 
 function renderGameModal(){
 
   const game =
-    gameById(
-      currentGameId
-    );
+    gameById(currentGameId);
 
   if(!game)
     return;
@@ -2156,33 +1925,69 @@ function renderGameModal(){
       "gameModal"
     );
 
-  const tier =
-    getTier(
-      game.tier
-    );
+  const catRows =
+    CATEGORIES.map(category => {
 
-  const overall =
-    score(game);
+      const value =
+        Number(
+          game[category.key] || 0
+        );
+
+      const stars =
+        Array.from({length:10})
+          .map((_,i) => {
+
+            const filled =
+              i < value;
+
+            return `
+              <span
+                class="star
+                ${filled ? "filled" : ""}
+                ${editMode ? "" : "readonly"}"
+                data-cat="${category.key}"
+                data-val="${i+1}"
+              >
+                ${starSvg()}
+              </span>
+            `;
+
+          })
+          .join("");
+
+      return `
+        <div class="cat-row">
+
+          <div class="cat-label">
+            ${escapeHtml(
+              category.label
+            )}
+          </div>
+
+          <div class="stars">
+            ${stars}
+          </div>
+
+          <div class="cat-num">
+            ${formatNumber(value)}/10
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
 
   modal.innerHTML = `
 
     <div class="modal-top">
 
-      ${
-        editMode
-          ? `
-            <input
-              class="modal-name"
-              id="gameNameInput"
-              value="${escapeHtml(game.name)}"
-            >
-          `
-          : `
-            <div class="modal-name">
-              ${escapeHtml(game.name)}
-            </div>
-          `
-      }
+      <input
+        class="modal-name"
+        id="editName"
+        value="${escapeHtml(game.name)}"
+        maxlength="120"
+        ${editMode ? "" : "readonly"}
+      >
 
       <button
         class="modal-close"
@@ -2194,23 +1999,25 @@ function renderGameModal(){
     </div>
 
     <div
-      class="tier-picker"
-      id="gameTierPicker"
+      class="tier-picker edit-only"
+      id="editTierPicker"
     ></div>
 
     <div class="overall-line">
 
-      <div class="overall-num">
-        ${formatNumber(overall)}
-      </div>
+      <span class="overall-num">
+        ${formatNumber(score(game))}
+      </span>
 
-      <div class="overall-label">
-        Overall rating
-      </div>
+      <span class="overall-label">
+        / 10 overall
+      </span>
 
     </div>
 
-    <div id="categoryList"></div>
+    <div id="catRows">
+      ${catRows}
+    </div>
 
     ${
       editMode
@@ -2222,20 +2029,31 @@ function renderGameModal(){
             </label>
 
             <input
+              id="customRating"
               class="custom-rating"
-              id="customOverall"
               type="number"
               step="any"
               value="${
-                game.custom_overall === null ||
-                game.custom_overall === undefined
-                  ? ""
-                  : formatNumber(
+                game.custom_overall !== null &&
+                game.custom_overall !== undefined
+                  ? escapeHtml(
                       game.custom_overall
                     )
+                  : ""
               }"
-              placeholder="Auto"
+              placeholder="automatic"
             >
+
+            <button
+              class="lock-btn"
+              id="clearCustomRating"
+              style="
+                padding:7px 10px;
+                cursor:pointer;
+              "
+            >
+              Auto
+            </button>
 
           </div>
         `
@@ -2243,130 +2061,137 @@ function renderGameModal(){
     }
 
     <div class="commentary-label">
-      Commentary
+      ${
+        editMode
+          ? "Your commentary"
+          : "Commentary"
+      }
     </div>
 
-    ${
-      editMode
-        ? `
-          <textarea
-            class="commentary"
-            id="commentaryInput"
-          >${escapeHtml(
-            game.commentary || ""
-          )}</textarea>
-        `
-        : `
-          <div class="commentary">
-            ${escapeHtml(
-              game.commentary || ""
-            )}
-          </div>
-        `
-    }
+    <textarea
+      class="commentary"
+      id="commentary"
+      placeholder="${
+        editMode
+          ? "What did you think of it?"
+          : "No commentary yet."
+      }"
+      ${editMode ? "" : "readonly"}
+    >${escapeHtml(
+      game.commentary || ""
+    )}</textarea>
 
     <div class="modal-footer">
 
-      ${
-        editMode
-          ? `
-            <button
-              class="delete-btn"
-              id="deleteGame"
-            >
-              Delete game
-            </button>
-          `
-          : `<div></div>`
-      }
+      <button
+        class="delete-btn edit-only"
+        id="deleteGame"
+      >
+        Delete game
+      </button>
 
-      ${
-        editMode
-          ? `
-            <button
-              class="done-btn"
-              id="saveGame"
-            >
-              Save
-            </button>
-          `
-          : ""
-      }
+      <button
+        class="done-btn"
+        id="doneGame"
+        style="margin-left:auto"
+      >
+        Done
+      </button>
 
     </div>
   `;
 
-  document
-    .getElementById(
-      "closeGame"
-    )
-    .addEventListener(
-      "click",
-      closeGame
-    );
-
-  renderGameTierPicker(
-    game,
-    tier
-  );
-
-  renderCategories(
-    game
-  );
+  /* =======================================================
+     TIER PICKER
+  ======================================================= */
 
   if(editMode){
 
-    document
-      .getElementById(
-        "saveGame"
-      )
-      .addEventListener(
+    const tierWrap =
+      document.getElementById(
+        "editTierPicker"
+      );
+
+    tiers.forEach(tier => {
+
+      const chip =
+        document.createElement("button");
+
+      chip.className =
+        "tier-chip";
+
+      chip.textContent =
+        tier.letter +
+        " — " +
+        tier.label;
+
+      chip.style.borderColor =
+        colorForTier(tier.tier_key);
+
+      chip.style.color =
+        game.tier === tier.tier_key
+          ? "#0f0f0f"
+          : colorForTier(tier.tier_key);
+
+      chip.style.background =
+        game.tier === tier.tier_key
+          ? colorForTier(tier.tier_key)
+          : "transparent";
+
+      chip.addEventListener(
         "click",
         async () => {
 
+          if(
+            game.tier ===
+            tier.tier_key
+          )
+            return;
+
           try{
 
-            const changes = {
-              id:game.id,
-              name:
-                document
-                  .getElementById(
-                    "gameNameInput"
-                  )
-                  .value
-                  .trim(),
+            const response =
+              await apiFetch(
+                "/games/move",
+                {
+                  method:"POST",
+                  headers:{
+                    "Content-Type":
+                      "application/json"
+                  },
+                  body:JSON.stringify({
+                    id:game.id,
+                    tier:tier.tier_key,
+                    position:0
+                  })
+                }
+              );
 
-              commentary:
-                document
-                  .getElementById(
-                    "commentaryInput"
-                  )
-                  .value
-            };
+            const data =
+              await response.json();
 
-            const custom =
-              document
-                .getElementById(
-                  "customOverall"
-                )
-                .value
-                .trim();
+            if(
+              !response.ok ||
+              !data.success
+            ){
 
-            changes.custom_overall =
-              custom === ""
-                ? null
-                : Number(custom);
+              throw new Error(
+                data.error ||
+                "Failed to move game"
+              );
 
-            await updateGame(
-              changes
-            );
+            }
 
-            closeGame();
+            await apiGetGames();
+
+            renderGameModal();
+
+            render();
 
           }catch(error){
 
             alert(
-              "Could not save game: " +
+              "Could not move game: " +
               error.message
             );
 
@@ -2375,189 +2200,178 @@ function renderGameModal(){
         }
       );
 
+      tierWrap.appendChild(chip);
+
+    });
+
   }
 
-}
+  /* =======================================================
+     CLOSE / DONE
+  ======================================================= */
 
-function renderGameTierPicker(
-  game,
-  tier
-){
-
-  const picker =
-    document.getElementById(
-      "gameTierPicker"
+  document
+    .getElementById("closeGame")
+    .addEventListener(
+      "click",
+      closeGame
     );
 
-  picker.innerHTML = "";
+  document
+    .getElementById("doneGame")
+    .addEventListener(
+      "click",
+      closeGame
+    );
 
-  tiers.forEach(
-    t => {
+  /* =======================================================
+     NAME
+  ======================================================= */
 
-      const button =
-        document.createElement(
-          "button"
-        );
+  if(editMode){
 
-      button.type =
-        "button";
+    document
+      .getElementById("editName")
+      .addEventListener(
+        "change",
+        async event => {
 
-      button.className =
-        "tier-chip";
+          try{
 
-      button.textContent =
-        t.letter;
+            await updateGame({
+              id:game.id,
+              name:event.target.value
+            });
 
-      button.style.color =
-        colorForTier(
-          t.tier_key
-        );
+          }catch(error){
 
-      if(
-        t.tier_key ===
-        game.tier
-      ){
-
-        button.style.borderColor =
-          colorForTier(
-            t.tier_key
-          );
-
-      }
-
-      if(editMode){
-
-        button.addEventListener(
-          "click",
-          async () => {
-
-            try{
-
-              await updateGame({
-                id:game.id,
-                tier:t.tier_key
-              });
-
-              renderGameModal();
-
-            }catch(error){
-
-              alert(
-                "Could not change category: " +
-                error.message
-              );
-
-            }
+            alert(
+              "Could not save name: " +
+              error.message
+            );
 
           }
-        );
+
+        }
+      );
+
+    /* =====================================================
+       COMMENTARY
+    ===================================================== */
+
+    document
+      .getElementById("commentary")
+      .addEventListener(
+        "change",
+        async event => {
+
+          try{
+
+            await updateGame({
+              id:game.id,
+              commentary:event.target.value
+            });
+
+          }catch(error){
+
+            alert(
+              "Could not save commentary: " +
+              error.message
+            );
+
+          }
+
+        }
+      );
+
+    /* =====================================================
+       CUSTOM RATING
+    ===================================================== */
+
+    const customInput =
+      document.getElementById(
+        "customRating"
+      );
+
+    customInput.addEventListener(
+      "change",
+      async () => {
+
+        const raw =
+          customInput.value.trim();
+
+        try{
+
+          await updateGame({
+            id:game.id,
+            custom_overall:
+              raw === ""
+                ? null
+                : Number(raw)
+          });
+
+          renderGameModal();
+
+        }catch(error){
+
+          alert(
+            "Could not save custom rating: " +
+            error.message
+          );
+
+        }
 
       }
-
-      picker.appendChild(
-        button
-      );
-
-    }
-  );
-
-}
-
-function renderCategories(
-  game
-){
-
-  const list =
-    document.getElementById(
-      "categoryList"
     );
 
-  list.innerHTML = "";
+    document
+      .getElementById(
+        "clearCustomRating"
+      )
+      .addEventListener(
+        "click",
+        async () => {
 
-  CATEGORIES.forEach(
-    category => {
+          try{
 
-      const value =
-        Number(
-          game[category.key] || 0
-        );
+            await updateGame({
+              id:game.id,
+              custom_overall:null
+            });
 
-      const row =
-        document.createElement(
-          "div"
-        );
+            renderGameModal();
 
-      row.className =
-        "cat-row";
+          }catch(error){
 
-      row.innerHTML = `
+            alert(
+              "Could not clear custom rating: " +
+              error.message
+            );
 
-        <div class="cat-label">
-          ${escapeHtml(
-            category.label
-          )}
-        </div>
+          }
 
-        <div class="stars">
-
-          ${Array.from(
-            {length:10},
-            (_,index) => `
-
-              <div
-                class="star ${
-                  index < value
-                    ? "filled"
-                    : ""
-                } ${
-                  editMode
-                    ? ""
-                    : "readonly"
-                }"
-                data-value="${index + 1}"
-                data-category="${category.key}"
-              >
-                ${starSvg()}
-              </div>
-
-            `
-          ).join("")}
-
-        </div>
-
-        <div class="cat-num">
-          ${formatNumber(value)}
-        </div>
-
-      `;
-
-      list.appendChild(
-        row
+        }
       );
 
-    }
-  );
+    /* =====================================================
+       RATINGS
+    ===================================================== */
 
-  if(!editMode)
-    return;
-
-  list
-    .querySelectorAll(
-      ".star"
-    )
-    .forEach(
-      star => {
+    modal
+      .querySelectorAll(".star")
+      .forEach(star => {
 
         star.addEventListener(
           "click",
           async () => {
 
             const category =
-              star.dataset.category;
+              star.dataset.cat;
 
             const value =
-              Number(
-                star.dataset.value
+              parseInt(
+                star.dataset.val,
+                10
               );
 
             const current =
@@ -2574,8 +2388,7 @@ function renderCategories(
 
               await updateGame({
                 id:game.id,
-                [category]:
-                  newValue
+                [category]:newValue
               });
 
               await apiGetGames();
@@ -2594,107 +2407,77 @@ function renderCategories(
           }
         );
 
-      }
-    );
+      });
 
-}
+    /* =====================================================
+       DELETE
+    ===================================================== */
 
-/* =========================================================
-   DELETE
-========================================================= */
+    document
+      .getElementById("deleteGame")
+      .addEventListener(
+        "click",
+        async () => {
 
-document
-  .getElementById(
-    "deleteGame"
-  );
+          if(
+            !confirm(
+              `Delete "${game.name}"? This can't be undone.`
+            )
+          )
+            return;
 
-/*
- * Delete button is created dynamically,
- * so use delegation.
- */
+          try{
 
-document
-  .getElementById(
-    "gameModal"
-  )
-  .addEventListener(
-    "click",
-    async event => {
+            const response =
+              await apiFetch(
+                "/games/" +
+                encodeURIComponent(
+                  game.id
+                ),
+                {
+                  method:"DELETE"
+                }
+              );
 
-      if(
-        event.target.id !==
-        "deleteGame"
-      )
-        return;
+            const data =
+              await response.json();
 
-      const game =
-        gameById(
-          currentGameId
-        );
+            if(
+              !response.ok ||
+              !data.success
+            ){
 
-      if(!game)
-        return;
+              throw new Error(
+                data.error ||
+                "Failed to delete game"
+              );
 
-      if(
-        !confirm(
-          `Delete "${game.name}"? This can't be undone.`
-        )
-      )
-        return;
-
-      try{
-
-        const response =
-          await apiFetch(
-            "/games/" +
-            encodeURIComponent(
-              game.id
-            ),
-            {
-              method:"DELETE"
             }
-          );
 
-        const data =
-          await response.json();
+            await apiGetGames();
 
-        if(
-          !response.ok ||
-          !data.success
-        ){
+            closeGame();
 
-          throw new Error(
-            data.error ||
-            "Failed to delete game"
-          );
+          }catch(error){
+
+            alert(
+              "Could not delete game: " +
+              error.message
+            );
+
+          }
 
         }
+      );
 
-        await apiGetGames();
-
-        closeGame();
-
-        render();
-
-      }catch(error){
-
-        alert(
-          "Could not delete game: " +
-          error.message
-        );
-
-      }
-
-    }
-  );
+  }
+}
 
 /* =========================================================
    UPDATE
 ========================================================= */
 
-async function updateGame(
-  changes
-){
+async function updateGame(changes){
 
   const response =
     await apiFetch(
@@ -2705,10 +2488,7 @@ async function updateGame(
           "Content-Type":
             "application/json"
         },
-        body:
-          JSON.stringify(
-            changes
-          )
+        body:JSON.stringify(changes)
       }
     );
 
@@ -2730,7 +2510,6 @@ async function updateGame(
   await apiGetGames();
 
   render();
-
 }
 
 /* =========================================================
@@ -2751,343 +2530,7 @@ function starSvg(){
       />
     </svg>
   `;
-
 }
-
-/* =========================================================
-   BACKUP / RESTORE
-========================================================= */
-
-function downloadJson(
-  filename,
-  data
-){
-
-  const blob =
-    new Blob(
-      [
-        JSON.stringify(
-          data,
-          null,
-          2
-        )
-      ],
-      {
-        type:
-          "application/json"
-      }
-    );
-
-  const url =
-    URL.createObjectURL(
-      blob
-    );
-
-  const a =
-    document.createElement(
-      "a"
-    );
-
-  a.href =
-    url;
-
-  a.download =
-    filename;
-
-  document.body.appendChild(
-    a
-  );
-
-  a.click();
-
-  a.remove();
-
-  URL.revokeObjectURL(
-    url
-  );
-
-}
-
-async function exportBackup(){
-
-  if(!editMode)
-    return;
-
-  const backup = {
-
-    format:
-      "played-tier-list-backup",
-
-    version:1,
-
-    exported_at:
-      new Date().toISOString(),
-
-    tiers:
-      tiers.map(
-        t => ({
-          tier_key:
-            t.tier_key,
-          letter:
-            t.letter,
-          label:
-            t.label,
-          sub:
-            t.sub
-        })
-      ),
-
-    games:
-      games.map(
-        g => ({
-
-          id:g.id,
-
-          name:g.name,
-
-          tier:g.tier,
-
-          position:
-            Number(
-              g.position || 0
-            ),
-
-          commentary:
-            g.commentary || "",
-
-          gameplay:
-            Number(
-              g.gameplay || 0
-            ),
-
-          graphics:
-            Number(
-              g.graphics || 0
-            ),
-
-          story_pacing:
-            Number(
-              g.story_pacing || 0
-            ),
-
-          writing:
-            Number(
-              g.writing || 0
-            ),
-
-          voice_acting:
-            Number(
-              g.voice_acting || 0
-            ),
-
-          music_audio:
-            Number(
-              g.music_audio || 0
-            ),
-
-          technical_performance:
-            Number(
-              g.technical_performance || 0
-            ),
-
-          emotional_impact:
-            Number(
-              g.emotional_impact || 0
-            ),
-
-          custom_overall:
-            (
-              g.custom_overall === null ||
-              g.custom_overall === undefined ||
-              g.custom_overall === ""
-            )
-              ? null
-              : Number(
-                  g.custom_overall
-                )
-
-        })
-      )
-
-  };
-
-  downloadJson(
-    "played-tier-list-backup-" +
-    new Date()
-      .toISOString()
-      .slice(0,10) +
-    ".json",
-    backup
-  );
-
-}
-
-async function importBackupFile(
-  file
-){
-
-  if(!editMode)
-    return;
-
-  const text =
-    await file.text();
-
-  let backup;
-
-  try{
-
-    backup =
-      JSON.parse(
-        text
-      );
-
-  }catch{
-
-    throw new Error(
-      "Backup file is not valid JSON."
-    );
-
-  }
-
-  if(
-    backup?.format !==
-      "played-tier-list-backup" ||
-    !Array.isArray(
-      backup.games
-    )
-  ){
-
-    throw new Error(
-      "This is not a valid Played tier-list backup."
-    );
-
-  }
-
-  if(
-    !confirm(
-      "Restore this backup?\n\n" +
-      "This will replace the current games, ratings, positions and tier descriptions with the saved backup."
-    )
-  )
-    return;
-
-  const response =
-    await apiFetch(
-      "/backup/import",
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":
-            "application/json"
-        },
-        body:
-          JSON.stringify(
-            backup
-          )
-      }
-    );
-
-  const data =
-    await response.json();
-
-  if(
-    !response.ok ||
-    !data.success
-  ){
-
-    throw new Error(
-      data.error ||
-      "Failed to restore backup"
-    );
-
-  }
-
-  await apiGetTiers();
-  await apiGetGames();
-
-  render();
-
-  alert(
-    "Backup restored successfully."
-  );
-
-}
-
-document
-  .getElementById(
-    "exportBackup"
-  )
-  .addEventListener(
-    "click",
-    () => {
-
-      exportBackup()
-        .catch(
-          error =>
-            alert(
-              "Could not export backup: " +
-              error.message
-            )
-        );
-
-    }
-  );
-
-document
-  .getElementById(
-    "importBackup"
-  )
-  .addEventListener(
-    "click",
-    () => {
-
-      if(!editMode)
-        return;
-
-      document
-        .getElementById(
-          "backupFile"
-        )
-        .click();
-
-    }
-  );
-
-document
-  .getElementById(
-    "backupFile"
-  )
-  .addEventListener(
-    "change",
-    async event => {
-
-      const file =
-        event.target
-          .files?.[0];
-
-      event.target.value =
-        "";
-
-      if(!file)
-        return;
-
-      try{
-
-        await importBackupFile(
-          file
-        );
-
-      }catch(error){
-
-        alert(
-          "Could not restore backup: " +
-          error.message
-        );
-
-      }
-
-    }
-  );
 
 /* =========================================================
    EDIT LOGIN
@@ -3114,10 +2557,9 @@ async function tryUnlock(){
             "Content-Type":
               "application/json"
           },
-          body:
-            JSON.stringify({
-              password
-            })
+          body:JSON.stringify({
+            password
+          })
         }
       );
 
@@ -3129,10 +2571,7 @@ async function tryUnlock(){
       !data.success
     ){
 
-      alert(
-        "Wrong password."
-      );
-
+      alert("Wrong password.");
       return;
 
     }
@@ -3147,8 +2586,7 @@ async function tryUnlock(){
       "yes"
     );
 
-    editMode =
-      true;
+    editMode = true;
 
     render();
 
@@ -3160,7 +2598,6 @@ async function tryUnlock(){
     );
 
   }
-
 }
 
 function lockEdit(){
@@ -3173,8 +2610,7 @@ function lockEdit(){
     "played-edit-unlocked"
   );
 
-  editMode =
-    false;
+  editMode = false;
 
   closeGame();
 
@@ -3183,9 +2619,7 @@ function lockEdit(){
 }
 
 document
-  .getElementById(
-    "editButton"
-  )
+  .getElementById("editButton")
   .addEventListener(
     "click",
     () => {
@@ -3206,10 +2640,7 @@ document.addEventListener(
   "keydown",
   event => {
 
-    if(
-      event.key !==
-      "Escape"
-    )
+    if(event.key !== "Escape")
       return;
 
     const gameOverlay =
@@ -3254,7 +2685,6 @@ document.addEventListener(
 load();
 
 })();
-
 </script>
 
 </body>
