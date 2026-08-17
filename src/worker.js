@@ -8,28 +8,16 @@ export default {
 
     async function ensureSchema() {
       try {
-        const columns = await env.DB
-          .prepare("PRAGMA table_info(games)")
-          .all();
-
-        const hasOverride = columns.results.some(
-          column => column.name === "total_override"
-        );
-
-        if (!hasOverride) {
-          await env.DB.prepare(
-            "ALTER TABLE games ADD COLUMN total_override REAL"
-          ).run();
-        }
+        await env.DB.prepare(
+          "ALTER TABLE games ADD COLUMN custom_score REAL"
+        ).run();
       } catch (error) {
-        console.error("Schema check failed:", error);
+        // Column already exists — nothing to do.
       }
     }
 
-    await ensureSchema();
-
     // =========================================================
-    // AUTH
+    // ADMIN AUTH
     // =========================================================
 
     function isAdmin(request) {
@@ -37,9 +25,7 @@ export default {
 
       if (!auth) return false;
 
-      const token = auth.startsWith("Bearer ")
-        ? auth.slice(7)
-        : auth;
+      const token = auth.replace(/^Bearer\s+/i, "");
 
       return token === env.ADMIN_PASSWORD;
     }
@@ -85,11 +71,13 @@ export default {
     }
 
     // =========================================================
-    // TEST D1
+    // TEST
     // =========================================================
 
     if (url.pathname === "/api/test") {
       try {
+        await ensureSchema();
+
         const result = await env.DB
           .prepare(
             "SELECT COUNT(*) AS count FROM games"
@@ -113,32 +101,7 @@ export default {
     }
 
     // =========================================================
-    // MIGRATION
-    // =========================================================
-
-    if (
-      url.pathname === "/api/migrate" &&
-      request.method === "POST"
-    ) {
-      if (!isAdmin(request)) {
-        return Response.json(
-          {
-            success: false,
-            error: "Unauthorized"
-          },
-          { status: 401 }
-        );
-      }
-
-      return Response.json({
-        success: true,
-        message:
-          "Migration is no longer needed. Existing database preserved."
-      });
-    }
-
-    // =========================================================
-    // GET ALL GAMES
+    // GET GAMES
     // =========================================================
 
     if (
@@ -146,6 +109,8 @@ export default {
       request.method === "GET"
     ) {
       try {
+        await ensureSchema();
+
         const result = await env.DB
           .prepare(`
             SELECT
@@ -161,24 +126,48 @@ export default {
               writing,
               commentary,
               position,
-              total_override
+              custom_score
             FROM games
-            ORDER BY
-              CASE tier
-                WHEN 'S' THEN 0
-                WHEN 'A' THEN 1
-                WHEN 'B' THEN 2
-                WHEN 'F' THEN 3
-                WHEN 'X' THEN 4
-                ELSE 5
-              END,
-              position ASC
+            ORDER BY tier_sort(tier), position ASC
           `)
-          .all();
+          .all()
+          .catch(async () => {
+            // SQLite/D1 does not necessarily have the helper
+            // function above, so use explicit CASE ordering.
+            return await env.DB
+              .prepare(`
+                SELECT
+                  id,
+                  name,
+                  tier,
+                  gameplay,
+                  visuals,
+                  story,
+                  music,
+                  voice,
+                  sound,
+                  writing,
+                  commentary,
+                  position,
+                  custom_score
+                FROM games
+                ORDER BY
+                  CASE tier
+                    WHEN 'S' THEN 1
+                    WHEN 'A' THEN 2
+                    WHEN 'B' THEN 3
+                    WHEN 'F' THEN 4
+                    WHEN 'X' THEN 5
+                    ELSE 6
+                  END,
+                  position ASC
+              `)
+              .all();
+          });
 
         return Response.json({
           success: true,
-          games: result.results
+          games: result.results || []
         });
 
       } catch (error) {
@@ -194,10 +183,6 @@ export default {
 
     // =========================================================
     // UPDATE GAME
-    //
-    // Frontend sends:
-    // PUT /api/games
-    // body contains id + only fields being changed
     // =========================================================
 
     if (
@@ -215,19 +200,15 @@ export default {
       }
 
       try {
+        await ensureSchema();
+
         const body = await request.json();
 
         if (!body.id) {
-          return Response.json(
-            {
-              success: false,
-              error: "Missing game id"
-            },
-            { status: 400 }
-          );
+          throw new Error("Missing game id");
         }
 
-        const allowedFields = [
+        const allowed = [
           "name",
           "tier",
           "gameplay",
@@ -238,85 +219,56 @@ export default {
           "sound",
           "writing",
           "commentary",
-          "position",
-          "total_override"
+          "custom_score"
         ];
 
         const updates = [];
         const values = [];
 
-        for (const field of allowedFields) {
-          if (
-            Object.prototype.hasOwnProperty.call(
-              body,
-              field
-            )
+        for (const field of allowed) {
+          if (!Object.prototype.hasOwnProperty.call(body, field)) {
+            continue;
+          }
+
+          if (field === "custom_score") {
+            const value =
+              body.custom_score === null ||
+              body.custom_score === "" ||
+              body.custom_score === undefined
+                ? null
+                : Number(body.custom_score);
+
+            updates.push("custom_score = ?");
+            values.push(
+              Number.isNaN(value) ? null : value
+            );
+
+          } else if (
+            [
+              "gameplay",
+              "visuals",
+              "story",
+              "music",
+              "voice",
+              "sound",
+              "writing"
+            ].includes(field)
           ) {
             updates.push(`${field} = ?`);
 
-            if (field === "total_override") {
-              if (
-                body[field] === null ||
-                body[field] === "" ||
-                body[field] === undefined
-              ) {
-                values.push(null);
-              } else {
-                const num = Number(body[field]);
+            const value = Number(body[field]);
 
-                if (
-                  !Number.isFinite(num) ||
-                  num < 0 ||
-                  num > 10
-                ) {
-                  return Response.json(
-                    {
-                      success: false,
-                      error:
-                        "Manual rating must be between 0 and 10"
-                    },
-                    { status: 400 }
-                  );
-                }
+            values.push(
+              Number.isFinite(value) ? value : 0
+            );
 
-                values.push(
-                  Math.round(num * 10) / 10
-                );
-              }
-
-            } else if (
-              [
-                "gameplay",
-                "visuals",
-                "story",
-                "music",
-                "voice",
-                "sound",
-                "writing"
-              ].includes(field)
-            ) {
-              const num = Number(body[field]);
-
-              values.push(
-                Number.isFinite(num)
-                  ? Math.max(0, Math.min(10, num))
-                  : 0
-              );
-
-            } else if (field === "position") {
-              const num = Number(body[field]);
-
-              values.push(
-                Number.isFinite(num) ? num : 0
-              );
-
-            } else {
-              values.push(body[field] ?? "");
-            }
+          } else {
+            updates.push(`${field} = ?`);
+            values.push(body[field] ?? "");
           }
         }
 
-        if (updates.length === 0) {
+        if (!updates.length) {
           return Response.json({
             success: true,
             message: "Nothing to update"
@@ -369,6 +321,8 @@ export default {
       }
 
       try {
+        await ensureSchema();
+
         const body = await request.json();
 
         const id =
@@ -379,19 +333,16 @@ export default {
               .toString(36)
               .substring(2, 7);
 
-        const tier = body.tier || "B";
-
-        const maxPosition = await env.DB
-          .prepare(`
-            SELECT MAX(position) AS maxPosition
-            FROM games
-            WHERE tier = ?
-          `)
-          .bind(tier)
-          .first();
+        const maxPosition =
+          await env.DB
+            .prepare(
+              "SELECT MAX(position) AS maxPosition FROM games"
+            )
+            .first();
 
         const position =
-          maxPosition?.maxPosition != null
+          maxPosition &&
+          maxPosition.maxPosition != null
             ? Number(maxPosition.maxPosition) + 1
             : 0;
 
@@ -410,14 +361,14 @@ export default {
               writing,
               commentary,
               position,
-              total_override
+              custom_score
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `)
           .bind(
             id,
             body.name || "New Game",
-            tier,
+            body.tier || "B",
             Number(body.gameplay) || 0,
             Number(body.visuals) || 0,
             Number(body.story) || 0,
@@ -427,7 +378,7 @@ export default {
             Number(body.writing) || 0,
             body.commentary ?? "",
             position,
-            body.total_override ?? null
+            body.custom_score ?? null
           )
           .run();
 
@@ -467,9 +418,11 @@ export default {
 
       try {
         const id =
-          url.pathname
-            .split("/")
-            .pop();
+          decodeURIComponent(
+            url.pathname.substring(
+              "/api/games/".length
+            )
+          );
 
         await env.DB
           .prepare(
@@ -477,8 +430,6 @@ export default {
           )
           .bind(id)
           .run();
-
-        await normalizePositions();
 
         return Response.json({
           success: true,
@@ -498,10 +449,6 @@ export default {
 
     // =========================================================
     // MOVE GAME
-    //
-    // Used both for:
-    // - dragging within a tier
-    // - changing tier
     // =========================================================
 
     if (
@@ -523,110 +470,84 @@ export default {
 
         const id = body.id;
         const targetTier = body.tier;
+        let targetPosition = Number(body.position);
 
         if (!id || !targetTier) {
-          return Response.json(
-            {
-              success: false,
-              error: "Missing id or tier"
-            },
-            { status: 400 }
+          throw new Error(
+            "Missing id or tier"
           );
         }
 
-        const current = await env.DB
-          .prepare(
-            "SELECT id, tier, position FROM games WHERE id = ?"
-          )
-          .bind(id)
-          .first();
-
-        if (!current) {
-          return Response.json(
-            {
-              success: false,
-              error: "Game not found"
-            },
-            { status: 404 }
-          );
+        if (!Number.isFinite(targetPosition)) {
+          targetPosition = 0;
         }
 
-        const oldTier = current.tier;
-
-        // Remove game from old tier's ordering
-        await env.DB
-          .prepare(`
-            UPDATE games
-            SET position = position - 1
-            WHERE tier = ?
-              AND position > ?
-          `)
-          .bind(
-            oldTier,
-            Number(current.position)
-          )
-          .run();
-
-        // Get target tier games excluding moving game
-        const targetGames = await env.DB
-          .prepare(`
-            SELECT id
-            FROM games
-            WHERE tier = ?
+        const targetGames =
+          await env.DB
+            .prepare(`
+              SELECT id
+              FROM games
+              WHERE tier = ?
               AND id != ?
-            ORDER BY position ASC
-          `)
-          .bind(targetTier, id)
-          .all();
+              ORDER BY position ASC
+            `)
+            .bind(targetTier, id)
+            .all();
 
-        let position = Number(body.position);
+        const ids =
+          targetGames.results.map(
+            game => game.id
+          );
 
-        if (!Number.isFinite(position)) {
-          position = targetGames.results.length;
-        }
-
-        position = Math.max(
+        targetPosition = Math.max(
           0,
           Math.min(
-            position,
-            targetGames.results.length
+            targetPosition,
+            ids.length
           )
         );
 
-        // Make space in target tier
-        await env.DB
-          .prepare(`
-            UPDATE games
-            SET position = position + 1
-            WHERE tier = ?
-              AND position >= ?
-              AND id != ?
-          `)
-          .bind(
-            targetTier,
-            position,
-            id
-          )
-          .run();
+        ids.splice(
+          targetPosition,
+          0,
+          id
+        );
 
+        // First move the game to target tier.
         await env.DB
           .prepare(`
             UPDATE games
-            SET tier = ?, position = ?
+            SET tier = ?
             WHERE id = ?
           `)
-          .bind(
-            targetTier,
-            position,
-            id
-          )
+          .bind(targetTier, id)
           .run();
 
-        await normalizePositions();
+        // Re-number only affected tier.
+        const statements = [];
+
+        for (
+          let i = 0;
+          i < ids.length;
+          i++
+        ) {
+          statements.push(
+            env.DB
+              .prepare(`
+                UPDATE games
+                SET position = ?
+                WHERE id = ?
+              `)
+              .bind(i, ids[i])
+          );
+        }
+
+        if (statements.length) {
+          await env.DB.batch(statements);
+        }
 
         return Response.json({
-          success: true,
-          message: "Game moved"
+          success: true
         });
 
       } catch (error) {
@@ -641,7 +562,7 @@ export default {
     }
 
     // =========================================================
-    // REORDER TIER
+    // REORDER WITHIN TIER
     // =========================================================
 
     if (
@@ -661,38 +582,40 @@ export default {
       try {
         const body = await request.json();
 
-        const tier = body.tier;
-        const positions = body.positions || {};
-
-        if (!tier) {
-          return Response.json(
-            {
-              success: false,
-              error: "Missing tier"
-            },
-            { status: 400 }
+        if (
+          !body.tier ||
+          !body.positions
+        ) {
+          throw new Error(
+            "Missing tier or positions"
           );
         }
 
-        for (const [id, position] of Object.entries(
-          positions
-        )) {
-          await env.DB
-            .prepare(`
-              UPDATE games
-              SET position = ?
-              WHERE id = ?
+        const statements = [];
+
+        for (
+          const [id, position]
+          of Object.entries(body.positions)
+        ) {
+          statements.push(
+            env.DB
+              .prepare(`
+                UPDATE games
+                SET position = ?
+                WHERE id = ?
                 AND tier = ?
-            `)
-            .bind(
-              Number(position),
-              id,
-              tier
-            )
-            .run();
+              `)
+              .bind(
+                Number(position),
+                id,
+                body.tier
+              )
+          );
         }
 
-        await normalizePositions();
+        if (statements.length) {
+          await env.DB.batch(statements);
+        }
 
         return Response.json({
           success: true
@@ -706,44 +629,6 @@ export default {
           },
           { status: 500 }
         );
-      }
-    }
-
-    // =========================================================
-    // NORMALIZE POSITIONS
-    // =========================================================
-
-    async function normalizePositions() {
-      const tiers = ["S", "A", "B", "F", "X"];
-
-      for (const tier of tiers) {
-        const result = await env.DB
-          .prepare(`
-            SELECT id
-            FROM games
-            WHERE tier = ?
-            ORDER BY position ASC, id ASC
-          `)
-          .bind(tier)
-          .all();
-
-        for (
-          let i = 0;
-          i < result.results.length;
-          i++
-        ) {
-          await env.DB
-            .prepare(`
-              UPDATE games
-              SET position = ?
-              WHERE id = ?
-            `)
-            .bind(
-              i,
-              result.results[i].id
-            )
-            .run();
-        }
       }
     }
 
