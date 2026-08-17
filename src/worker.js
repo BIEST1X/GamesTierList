@@ -2,7 +2,57 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Test D1 connection
+    // =========================================================
+    // ADMIN LOGIN
+    // =========================================================
+
+    if (url.pathname === "/api/login" && request.method === "POST") {
+      try {
+        const body = await request.json();
+
+        if (!body.password || body.password !== env.ADMIN_PASSWORD) {
+          return Response.json(
+            {
+              success: false,
+              error: "Invalid password"
+            },
+            { status: 401 }
+          );
+        }
+
+        return Response.json({
+          success: true,
+          token: env.ADMIN_PASSWORD
+        });
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: "Invalid request"
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // =========================================================
+    // ADMIN AUTH CHECK
+    // =========================================================
+
+    function isAdmin(request) {
+      const auth = request.headers.get("Authorization");
+
+      if (!auth) return false;
+
+      const token = auth.replace("Bearer ", "");
+
+      return token === env.ADMIN_PASSWORD;
+    }
+
+    // =========================================================
+    // TEST D1
+    // =========================================================
+
     if (url.pathname === "/api/test") {
       try {
         const result = await env.DB
@@ -24,7 +74,10 @@ export default {
       }
     }
 
-    // One-time migration
+    // =========================================================
+    // ONE-TIME MIGRATION
+    // =========================================================
+
     if (url.pathname === "/api/migrate" && request.method === "POST") {
       try {
         const games = [
@@ -465,7 +518,7 @@ export default {
             tier: "B"
           },
           {
-            id: "g_mswe0tlmqp57d",
+            id: "g_mswe0tllmqp57d",
             name: "Resident Evil 5",
             tier: "B"
           },
@@ -525,7 +578,6 @@ export default {
           }
         ];
 
-        // Stop accidental duplicate migration
         const existing = await env.DB
           .prepare("SELECT COUNT(*) AS count FROM games")
           .first();
@@ -538,7 +590,6 @@ export default {
           }, { status: 409 });
         }
 
-        // Insert games in tier-list order
         for (let i = 0; i < games.length; i++) {
           const game = games[i];
 
@@ -583,7 +634,10 @@ export default {
       }
     }
 
-    // Get all games
+    // =========================================================
+    // GET ALL GAMES
+    // =========================================================
+
     if (url.pathname === "/api/games" && request.method === "GET") {
       try {
         const result = await env.DB
@@ -605,7 +659,192 @@ export default {
       }
     }
 
-    // Everything else = website
+    // =========================================================
+    // UPDATE GAME
+    // =========================================================
+
+    if (
+      url.pathname.startsWith("/api/games/") &&
+      request.method === "PUT"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
+          {
+            success: false,
+            error: "Unauthorized"
+          },
+          { status: 401 }
+        );
+      }
+
+      try {
+        const id = url.pathname.split("/").pop();
+        const body = await request.json();
+
+        await env.DB.prepare(`
+          UPDATE games
+          SET
+            name = ?,
+            tier = ?,
+            gameplay = ?,
+            visuals = ?,
+            story = ?,
+            music = ?,
+            voice = ?,
+            sound = ?,
+            writing = ?,
+            commentary = ?,
+            position = ?
+          WHERE id = ?
+        `).bind(
+          body.name,
+          body.tier,
+          Number(body.gameplay) || 0,
+          Number(body.visuals) || 0,
+          Number(body.story) || 0,
+          Number(body.music) || 0,
+          Number(body.voice) || 0,
+          Number(body.sound) || 0,
+          Number(body.writing) || 0,
+          body.commentary ?? "",
+          Number(body.position) || 0,
+          id
+        ).run();
+
+        return Response.json({
+          success: true,
+          message: "Game updated"
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // =========================================================
+    // ADD GAME
+    // =========================================================
+
+    if (url.pathname === "/api/games" && request.method === "POST") {
+      if (!isAdmin(request)) {
+        return Response.json(
+          {
+            success: false,
+            error: "Unauthorized"
+          },
+          { status: 401 }
+        );
+      }
+
+      try {
+        const body = await request.json();
+
+        const id =
+          body.id ||
+          "g_" +
+          Date.now().toString(36) +
+          Math.random().toString(36).substring(2, 7);
+
+        const maxPosition = await env.DB
+          .prepare("SELECT MAX(position) AS maxPosition FROM games")
+          .first();
+
+        const position =
+          maxPosition?.maxPosition != null
+            ? Number(maxPosition.maxPosition) + 1
+            : 0;
+
+        await env.DB.prepare(`
+          INSERT INTO games (
+            id, name, tier,
+            gameplay, visuals, story, music,
+            voice, sound, writing,
+            commentary, position
+          )
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          id,
+          body.name || "New Game",
+          body.tier || "B",
+          Number(body.gameplay) || 0,
+          Number(body.visuals) || 0,
+          Number(body.story) || 0,
+          Number(body.music) || 0,
+          Number(body.voice) || 0,
+          Number(body.sound) || 0,
+          Number(body.writing) || 0,
+          body.commentary ?? "",
+          position
+        ).run();
+
+        return Response.json({
+          success: true,
+          id
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // =========================================================
+    // DELETE GAME
+    // =========================================================
+
+    if (
+      url.pathname.startsWith("/api/games/") &&
+      request.method === "DELETE"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
+          {
+            success: false,
+            error: "Unauthorized"
+          },
+          { status: 401 }
+        );
+      }
+
+      try {
+        const id = url.pathname.split("/").pop();
+
+        await env.DB
+          .prepare("DELETE FROM games WHERE id = ?")
+          .bind(id)
+          .run();
+
+        return Response.json({
+          success: true,
+          message: "Game deleted"
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // =========================================================
+    // WEBSITE
+    // =========================================================
+
     return env.ASSETS.fetch(request);
   }
 };
