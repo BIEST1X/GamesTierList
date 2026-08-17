@@ -169,7 +169,8 @@ main{
 }
 
 .tier{
-  flex:1 1 0;
+  flex:0 0 auto;
+  width:max-content;
   min-width:210px;
 }
 
@@ -210,13 +211,6 @@ main{
   letter-spacing:.05em;
   margin-top:8px;
   min-height:16px;
-}
-
-.tier-count{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--text-dim);
-  margin-top:8px;
 }
 
 .rows{
@@ -303,13 +297,11 @@ main{
   background:linear-gradient(
     90deg,
     #8dd9ff 0%,
-    #d8f7ff 28%,
-    #a8eaff 50%,
-    #78d7ff 72%,
-    #8dd9ff 100%
+    #2EC0FF 50%,
+    #E3FAFF 100%
   );
 
-  background-size:240% 100%;
+  background-size:300% 100%;
   -webkit-background-clip:text;
   background-clip:text;
   color:transparent;
@@ -1218,10 +1210,6 @@ function renderTier(tier,tierGames){
 
     <div class="tier-sub">
       ${escapeHtml(tier.sub)}
-    </div>
-
-    <div class="tier-count">
-      ${tierGames.length}
     </div>
 
     <div class="tier-edit-fields">
