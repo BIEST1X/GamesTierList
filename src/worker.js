@@ -1,599 +1,398 @@
 export default {
-
   async fetch(request, env) {
+    const url = new URL(request.url);
 
-    const url =
-      new URL(request.url);
+    // =========================================================
+    // DATABASE SETUP
+    // =========================================================
 
-    /* =======================================================
-       HELPERS
-    ======================================================= */
+    async function ensureSchema() {
+      try {
+        const columns = await env.DB
+          .prepare("PRAGMA table_info(games)")
+          .all();
 
-    function json(data, status = 200){
-
-      return Response.json(
-        data,
-        {
-          status,
-          headers:{
-            "Cache-Control":"no-store"
-          }
-        }
-      );
-
-    }
-
-    function isAdmin(request){
-
-      const auth =
-        request.headers.get(
-          "Authorization"
+        const hasOverride = columns.results.some(
+          column => column.name === "total_override"
         );
 
-      if(!auth)
-        return false;
-
-      const token =
-        auth.startsWith("Bearer ")
-          ? auth.slice(7)
-          : auth;
-
-      return (
-        token ===
-        env.ADMIN_PASSWORD
-      );
-
-    }
-
-    async function requireAdmin(){
-
-      return null;
-
-    }
-
-    /*
-      Make sure the optional manual_score column exists.
-
-      This is intentionally checked automatically so you don't
-      have to manually edit the D1 database schema.
-    */
-
-    async function ensureManualScoreColumn(){
-
-      try{
-
-        const columns =
-          await env.DB
-            .prepare(
-              "PRAGMA table_info(games)"
-            )
-            .all();
-
-        const exists =
-          (columns.results || [])
-            .some(
-              column =>
-                column.name ===
-                "manual_score"
-            );
-
-        if(!exists){
-
-          await env.DB
-            .prepare(
-              "ALTER TABLE games ADD COLUMN manual_score REAL DEFAULT NULL"
-            )
-            .run();
-
+        if (!hasOverride) {
+          await env.DB.prepare(
+            "ALTER TABLE games ADD COLUMN total_override REAL"
+          ).run();
         }
-
-      }catch(error){
-
-        /*
-          If another request already added it,
-          SQLite may complain. We can safely
-          continue in that case.
-        */
-
-        if(
-          !String(
-            error.message || ''
-          ).toLowerCase()
-          .includes(
-            'duplicate'
-          )
-        ){
-
-          throw error;
-
-        }
-
+      } catch (error) {
+        console.error("Schema check failed:", error);
       }
-
     }
 
-    /* =======================================================
-       LOGIN
-    ======================================================= */
+    await ensureSchema();
 
-    if(
-      url.pathname ===
-      "/api/login" &&
-      request.method ===
-      "POST"
-    ){
+    // =========================================================
+    // AUTH
+    // =========================================================
 
-      try{
+    function isAdmin(request) {
+      const auth = request.headers.get("Authorization");
 
-        const body =
-          await request.json();
+      if (!auth) return false;
 
-        if(
+      const token = auth.startsWith("Bearer ")
+        ? auth.slice(7)
+        : auth;
+
+      return token === env.ADMIN_PASSWORD;
+    }
+
+    // =========================================================
+    // LOGIN
+    // =========================================================
+
+    if (
+      url.pathname === "/api/login" &&
+      request.method === "POST"
+    ) {
+      try {
+        const body = await request.json();
+
+        if (
           !body.password ||
-          body.password !==
-          env.ADMIN_PASSWORD
-        ){
-
-          return json(
+          body.password !== env.ADMIN_PASSWORD
+        ) {
+          return Response.json(
             {
-              success:false,
-              error:"Invalid password"
+              success: false,
+              error: "Invalid password"
             },
-            401
+            { status: 401 }
           );
-
         }
 
-        return json({
-          success:true,
-          token:env.ADMIN_PASSWORD
+        return Response.json({
+          success: true,
+          token: env.ADMIN_PASSWORD
         });
 
-      }catch(error){
-
-        return json(
+      } catch (error) {
+        return Response.json(
           {
-            success:false,
-            error:"Invalid request"
+            success: false,
+            error: "Invalid request"
           },
-          400
+          { status: 400 }
         );
-
       }
-
     }
 
-    /* =======================================================
-       TEST D1
-    ======================================================= */
+    // =========================================================
+    // TEST D1
+    // =========================================================
 
-    if(
-      url.pathname ===
-      "/api/test"
-    ){
+    if (url.pathname === "/api/test") {
+      try {
+        const result = await env.DB
+          .prepare(
+            "SELECT COUNT(*) AS count FROM games"
+          )
+          .first();
 
-      try{
-
-        const result =
-          await env.DB
-            .prepare(
-              "SELECT COUNT(*) AS count FROM games"
-            )
-            .first();
-
-        return json({
-          success:true,
-          games:result.count
+        return Response.json({
+          success: true,
+          games: result.count
         });
 
-      }catch(error){
-
-        return json(
+      } catch (error) {
+        return Response.json(
           {
-            success:false,
-            error:error.message
+            success: false,
+            error: error.message
           },
-          500
+          { status: 500 }
         );
-
       }
-
     }
 
-    /* =======================================================
-       MIGRATION
-    ======================================================= */
+    // =========================================================
+    // MIGRATION
+    // =========================================================
 
-    if(
-      url.pathname ===
-      "/api/migrate" &&
-      request.method ===
-      "POST"
-    ){
-
-      if(!isAdmin(request)){
-
-        return json(
+    if (
+      url.pathname === "/api/migrate" &&
+      request.method === "POST"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
           {
-            success:false,
-            error:"Unauthorized"
+            success: false,
+            error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
-
       }
 
-      try{
+      return Response.json({
+        success: true,
+        message:
+          "Migration is no longer needed. Existing database preserved."
+      });
+    }
 
-        await ensureManualScoreColumn();
+    // =========================================================
+    // GET ALL GAMES
+    // =========================================================
 
-        /*
-          IMPORTANT:
+    if (
+      url.pathname === "/api/games" &&
+      request.method === "GET"
+    ) {
+      try {
+        const result = await env.DB
+          .prepare(`
+            SELECT
+              id,
+              name,
+              tier,
+              gameplay,
+              visuals,
+              story,
+              music,
+              voice,
+              sound,
+              writing,
+              commentary,
+              position,
+              total_override
+            FROM games
+            ORDER BY
+              CASE tier
+                WHEN 'S' THEN 0
+                WHEN 'A' THEN 1
+                WHEN 'B' THEN 2
+                WHEN 'F' THEN 3
+                WHEN 'X' THEN 4
+                ELSE 5
+              END,
+              position ASC
+          `)
+          .all();
 
-          Keep your existing migration array here if you still
-          need the original migration.
-
-          The database already contains your games, so this
-          endpoint is mainly retained for compatibility.
-        */
-
-        const existing =
-          await env.DB
-            .prepare(
-              "SELECT COUNT(*) AS count FROM games"
-            )
-            .first();
-
-        return json({
-          success:true,
-          message:
-            "Database schema checked",
-          games:existing.count
+        return Response.json({
+          success: true,
+          games: result.results
         });
 
-      }catch(error){
-
-        return json(
+      } catch (error) {
+        return Response.json(
           {
-            success:false,
-            error:error.message
+            success: false,
+            error: error.message
           },
-          500
+          { status: 500 }
         );
-
       }
-
     }
 
-    /* =======================================================
-       GET ALL GAMES
-    ======================================================= */
+    // =========================================================
+    // UPDATE GAME
+    //
+    // Frontend sends:
+    // PUT /api/games
+    // body contains id + only fields being changed
+    // =========================================================
 
-    if(
-      url.pathname ===
-      "/api/games" &&
-      request.method ===
-      "GET"
-    ){
-
-      try{
-
-        await ensureManualScoreColumn();
-
-        const result =
-          await env.DB
-            .prepare(`
-              SELECT *
-              FROM games
-              ORDER BY tier, position ASC
-            `)
-            .all();
-
-        /*
-          The frontend itself determines tier order,
-          so database tier ordering here doesn't affect
-          the visual SS/S/A/B/X order.
-        */
-
-        return json({
-          success:true,
-          games:
-            result.results || []
-        });
-
-      }catch(error){
-
-        return json(
+    if (
+      url.pathname === "/api/games" &&
+      request.method === "PUT"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
           {
-            success:false,
-            error:error.message
+            success: false,
+            error: "Unauthorized"
           },
-          500
+          { status: 401 }
         );
-
       }
 
-    }
+      try {
+        const body = await request.json();
 
-    /* =======================================================
-       UPDATE GAME
-    ======================================================= */
-
-    if(
-      url.pathname ===
-      "/api/games" &&
-      request.method ===
-      "PUT"
-    ){
-
-      if(!isAdmin(request)){
-
-        return json(
-          {
-            success:false,
-            error:"Unauthorized"
-          },
-          401
-        );
-
-      }
-
-      try{
-
-        await ensureManualScoreColumn();
-
-        const body =
-          await request.json();
-
-        if(!body.id){
-
-          return json(
+        if (!body.id) {
+          return Response.json(
             {
-              success:false,
-              error:"Missing game id"
+              success: false,
+              error: "Missing game id"
             },
-            400
+            { status: 400 }
           );
-
         }
 
-        const existing =
-          await env.DB
-            .prepare(
-              "SELECT * FROM games WHERE id = ?"
+        const allowedFields = [
+          "name",
+          "tier",
+          "gameplay",
+          "visuals",
+          "story",
+          "music",
+          "voice",
+          "sound",
+          "writing",
+          "commentary",
+          "position",
+          "total_override"
+        ];
+
+        const updates = [];
+        const values = [];
+
+        for (const field of allowedFields) {
+          if (
+            Object.prototype.hasOwnProperty.call(
+              body,
+              field
             )
-            .bind(body.id)
-            .first();
+          ) {
+            updates.push(`${field} = ?`);
 
-        if(!existing){
+            if (field === "total_override") {
+              if (
+                body[field] === null ||
+                body[field] === "" ||
+                body[field] === undefined
+              ) {
+                values.push(null);
+              } else {
+                const num = Number(body[field]);
 
-          return json(
-            {
-              success:false,
-              error:"Game not found"
-            },
-            404
-          );
+                if (
+                  !Number.isFinite(num) ||
+                  num < 0 ||
+                  num > 10
+                ) {
+                  return Response.json(
+                    {
+                      success: false,
+                      error:
+                        "Manual rating must be between 0 and 10"
+                    },
+                    { status: 400 }
+                  );
+                }
 
-        }
+                values.push(
+                  Math.round(num * 10) / 10
+                );
+              }
 
-        /*
-          IMPORTANT:
+            } else if (
+              [
+                "gameplay",
+                "visuals",
+                "story",
+                "music",
+                "voice",
+                "sound",
+                "writing"
+              ].includes(field)
+            ) {
+              const num = Number(body[field]);
 
-          Only fields actually supplied by the frontend
-          are changed. This prevents undefined values from
-          reaching D1.
-        */
+              values.push(
+                Number.isFinite(num)
+                  ? Math.max(0, Math.min(10, num))
+                  : 0
+              );
 
-        const name =
-          body.name !== undefined
-            ? String(body.name)
-            : existing.name;
+            } else if (field === "position") {
+              const num = Number(body[field]);
 
-        const tier =
-          body.tier !== undefined
-            ? String(body.tier)
-            : existing.tier;
+              values.push(
+                Number.isFinite(num) ? num : 0
+              );
 
-        const gameplay =
-          body.gameplay !== undefined
-            ? Number(body.gameplay)
-            : Number(existing.gameplay || 0);
-
-        const visuals =
-          body.visuals !== undefined
-            ? Number(body.visuals)
-            : Number(existing.visuals || 0);
-
-        const story =
-          body.story !== undefined
-            ? Number(body.story)
-            : Number(existing.story || 0);
-
-        const music =
-          body.music !== undefined
-            ? Number(body.music)
-            : Number(existing.music || 0);
-
-        const voice =
-          body.voice !== undefined
-            ? Number(body.voice)
-            : Number(existing.voice || 0);
-
-        const sound =
-          body.sound !== undefined
-            ? Number(body.sound)
-            : Number(existing.sound || 0);
-
-        const writing =
-          body.writing !== undefined
-            ? Number(body.writing)
-            : Number(existing.writing || 0);
-
-        const commentary =
-          body.commentary !== undefined
-            ? String(body.commentary)
-            : (existing.commentary || "");
-
-        let manualScore;
-
-        if(
-          body.manual_score === null ||
-          body.manual_score === ''
-        ){
-
-          manualScore = null;
-
-        }else if(
-          body.manual_score !== undefined
-        ){
-
-          manualScore =
-            Number(body.manual_score);
-
-          if(
-            !Number.isFinite(
-              manualScore
-            )
-          ){
-
-            return json(
-              {
-                success:false,
-                error:
-                  "Invalid manual score"
-              },
-              400
-            );
-
+            } else {
+              values.push(body[field] ?? "");
+            }
           }
-
-          manualScore =
-            Math.max(
-              0,
-              Math.min(
-                10,
-                Math.round(
-                  manualScore * 10
-                ) / 10
-              )
-            );
-
-        }else{
-
-          manualScore =
-            existing.manual_score;
-
         }
+
+        if (updates.length === 0) {
+          return Response.json({
+            success: true,
+            message: "Nothing to update"
+          });
+        }
+
+        values.push(body.id);
 
         await env.DB
           .prepare(`
             UPDATE games
-            SET
-              name = ?,
-              tier = ?,
-              gameplay = ?,
-              visuals = ?,
-              story = ?,
-              music = ?,
-              voice = ?,
-              sound = ?,
-              writing = ?,
-              commentary = ?,
-              manual_score = ?
+            SET ${updates.join(", ")}
             WHERE id = ?
           `)
-          .bind(
-            name,
-            tier,
-            gameplay,
-            visuals,
-            story,
-            music,
-            voice,
-            sound,
-            writing,
-            commentary,
-            manualScore,
-            body.id
-          )
+          .bind(...values)
           .run();
 
-        return json({
-          success:true,
-          message:"Game updated"
+        return Response.json({
+          success: true,
+          message: "Game updated"
         });
 
-      }catch(error){
-
-        return json(
+      } catch (error) {
+        return Response.json(
           {
-            success:false,
-            error:error.message
+            success: false,
+            error: error.message
           },
-          500
+          { status: 500 }
         );
-
       }
-
     }
 
-    /* =======================================================
-       ADD GAME
-    ======================================================= */
+    // =========================================================
+    // ADD GAME
+    // =========================================================
 
-    if(
-      url.pathname ===
-      "/api/games" &&
-      request.method ===
-      "POST"
-    ){
-
-      if(!isAdmin(request)){
-
-        return json(
+    if (
+      url.pathname === "/api/games" &&
+      request.method === "POST"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
           {
-            success:false,
-            error:"Unauthorized"
+            success: false,
+            error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
-
       }
 
-      try{
-
-        await ensureManualScoreColumn();
-
-        const body =
-          await request.json();
+      try {
+        const body = await request.json();
 
         const id =
           body.id ||
           "g_" +
-          Date.now().toString(36) +
-          Math.random()
-            .toString(36)
-            .substring(2,7);
+            Date.now().toString(36) +
+            Math.random()
+              .toString(36)
+              .substring(2, 7);
 
-        const tier =
-          body.tier || "B";
+        const tier = body.tier || "B";
 
-        const maxPosition =
-          await env.DB
-            .prepare(`
-              SELECT MAX(position) AS maxPosition
-              FROM games
-              WHERE tier = ?
-            `)
-            .bind(tier)
-            .first();
+        const maxPosition = await env.DB
+          .prepare(`
+            SELECT MAX(position) AS maxPosition
+            FROM games
+            WHERE tier = ?
+          `)
+          .bind(tier)
+          .first();
 
         const position =
           maxPosition?.maxPosition != null
-            ? Number(
-                maxPosition.maxPosition
-              ) + 1
+            ? Number(maxPosition.maxPosition) + 1
             : 0;
 
         await env.DB
@@ -611,17 +410,13 @@ export default {
               writing,
               commentary,
               position,
-              manual_score
+              total_override
             )
-            VALUES (
-              ?, ?, ?, ?, ?, ?, ?, ?,
-              ?, ?, ?, ?, ?
-            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `)
           .bind(
             id,
-            body.name ||
-              "New Game",
+            body.name || "New Game",
             tier,
             Number(body.gameplay) || 0,
             Number(body.visuals) || 0,
@@ -630,65 +425,51 @@ export default {
             Number(body.voice) || 0,
             Number(body.sound) || 0,
             Number(body.writing) || 0,
-            body.commentary ??
-              "",
+            body.commentary ?? "",
             position,
-            body.manual_score ??
-              null
+            body.total_override ?? null
           )
           .run();
 
-        return json({
-          success:true,
+        return Response.json({
+          success: true,
           id
         });
 
-      }catch(error){
-
-        return json(
+      } catch (error) {
+        return Response.json(
           {
-            success:false,
-            error:error.message
+            success: false,
+            error: error.message
           },
-          500
+          { status: 500 }
         );
-
       }
-
     }
 
-    /* =======================================================
-       DELETE GAME
-    ======================================================= */
+    // =========================================================
+    // DELETE GAME
+    // =========================================================
 
-    if(
-      url.pathname.startsWith(
-        "/api/games/"
-      ) &&
-      request.method ===
-      "DELETE"
-    ){
-
-      if(!isAdmin(request)){
-
-        return json(
+    if (
+      url.pathname.startsWith("/api/games/") &&
+      request.method === "DELETE"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
           {
-            success:false,
-            error:"Unauthorized"
+            success: false,
+            error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
-
       }
 
-      try{
-
+      try {
         const id =
-          decodeURIComponent(
-            url.pathname
-              .split("/")
-              .pop()
-          );
+          url.pathname
+            .split("/")
+            .pop();
 
         await env.DB
           .prepare(
@@ -697,360 +478,279 @@ export default {
           .bind(id)
           .run();
 
-        return json({
-          success:true,
-          message:"Game deleted"
+        await normalizePositions();
+
+        return Response.json({
+          success: true,
+          message: "Game deleted"
         });
 
-      }catch(error){
-
-        return json(
+      } catch (error) {
+        return Response.json(
           {
-            success:false,
-            error:error.message
+            success: false,
+            error: error.message
           },
-          500
+          { status: 500 }
         );
-
       }
-
     }
 
-    /* =======================================================
-       MOVE GAME
-    ======================================================= */
+    // =========================================================
+    // MOVE GAME
+    //
+    // Used both for:
+    // - dragging within a tier
+    // - changing tier
+    // =========================================================
 
-    if(
-      url.pathname ===
-      "/api/games/move" &&
-      request.method ===
-      "POST"
-    ){
-
-      if(!isAdmin(request)){
-
-        return json(
+    if (
+      url.pathname === "/api/games/move" &&
+      request.method === "POST"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
           {
-            success:false,
-            error:"Unauthorized"
+            success: false,
+            error: "Unauthorized"
           },
-          401
+          { status: 401 }
         );
-
       }
 
-      try{
+      try {
+        const body = await request.json();
 
-        const body =
-          await request.json();
+        const id = body.id;
+        const targetTier = body.tier;
 
-        const id =
-          body.id;
-
-        const targetTier =
-          body.tier;
-
-        let targetPosition =
-          Number(
-            body.position
-          );
-
-        if(!id || !targetTier){
-
-          return json(
+        if (!id || !targetTier) {
+          return Response.json(
             {
-              success:false,
-              error:
-                "Missing id or tier"
+              success: false,
+              error: "Missing id or tier"
             },
-            400
+            { status: 400 }
           );
-
         }
 
-        if(
-          !Number.isFinite(
-            targetPosition
+        const current = await env.DB
+          .prepare(
+            "SELECT id, tier, position FROM games WHERE id = ?"
           )
-        ){
+          .bind(id)
+          .first();
 
-          targetPosition = 0;
-
-        }
-
-        const game =
-          await env.DB
-            .prepare(
-              "SELECT * FROM games WHERE id = ?"
-            )
-            .bind(id)
-            .first();
-
-        if(!game){
-
-          return json(
+        if (!current) {
+          return Response.json(
             {
-              success:false,
-              error:"Game not found"
+              success: false,
+              error: "Game not found"
             },
-            404
+            { status: 404 }
           );
-
         }
 
-        const targetGames =
+        const oldTier = current.tier;
+
+        // Remove game from old tier's ordering
+        await env.DB
+          .prepare(`
+            UPDATE games
+            SET position = position - 1
+            WHERE tier = ?
+              AND position > ?
+          `)
+          .bind(
+            oldTier,
+            Number(current.position)
+          )
+          .run();
+
+        // Get target tier games excluding moving game
+        const targetGames = await env.DB
+          .prepare(`
+            SELECT id
+            FROM games
+            WHERE tier = ?
+              AND id != ?
+            ORDER BY position ASC
+          `)
+          .bind(targetTier, id)
+          .all();
+
+        let position = Number(body.position);
+
+        if (!Number.isFinite(position)) {
+          position = targetGames.results.length;
+        }
+
+        position = Math.max(
+          0,
+          Math.min(
+            position,
+            targetGames.results.length
+          )
+        );
+
+        // Make space in target tier
+        await env.DB
+          .prepare(`
+            UPDATE games
+            SET position = position + 1
+            WHERE tier = ?
+              AND position >= ?
+              AND id != ?
+          `)
+          .bind(
+            targetTier,
+            position,
+            id
+          )
+          .run();
+
+        await env.DB
+          .prepare(`
+            UPDATE games
+            SET tier = ?, position = ?
+            WHERE id = ?
+          `)
+          .bind(
+            targetTier,
+            position,
+            id
+          )
+          .run();
+
+        await normalizePositions();
+
+        return Response.json({
+          success: true,
+          message: "Game moved"
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            success: false,
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // =========================================================
+    // REORDER TIER
+    // =========================================================
+
+    if (
+      url.pathname === "/api/games/reorder" &&
+      request.method === "POST"
+    ) {
+      if (!isAdmin(request)) {
+        return Response.json(
+          {
+            success: false,
+            error: "Unauthorized"
+          },
+          { status: 401 }
+        );
+      }
+
+      try {
+        const body = await request.json();
+
+        const tier = body.tier;
+        const positions = body.positions || {};
+
+        if (!tier) {
+          return Response.json(
+            {
+              success: false,
+              error: "Missing tier"
+            },
+            { status: 400 }
+          );
+        }
+
+        for (const [id, position] of Object.entries(
+          positions
+        )) {
           await env.DB
             .prepare(`
-              SELECT id
-              FROM games
-              WHERE tier = ?
-                AND id != ?
-              ORDER BY position ASC
+              UPDATE games
+              SET position = ?
+              WHERE id = ?
+                AND tier = ?
             `)
             .bind(
-              targetTier,
-              id
+              Number(position),
+              id,
+              tier
             )
-            .all();
-
-        const ids =
-          (targetGames.results || [])
-            .map(
-              g => g.id
-            );
-
-        targetPosition =
-          Math.max(
-            0,
-            Math.min(
-              targetPosition,
-              ids.length
-            )
-          );
-
-        ids.splice(
-          targetPosition,
-          0,
-          id
-        );
-
-        const statements = [];
-
-        for(
-          let i = 0;
-          i < ids.length;
-          i++
-        ){
-
-          statements.push(
-            env.DB
-              .prepare(`
-                UPDATE games
-                SET tier = ?, position = ?
-                WHERE id = ?
-              `)
-              .bind(
-                targetTier,
-                i,
-                ids[i]
-              )
-          );
-
+            .run();
         }
 
-        await env.DB.batch(
-          statements
-        );
+        await normalizePositions();
 
-        /*
-          Re-number the old tier as well.
-        */
-
-        if(
-          game.tier !== targetTier
-        ){
-
-          const oldGames =
-            await env.DB
-              .prepare(`
-                SELECT id
-                FROM games
-                WHERE tier = ?
-                ORDER BY position ASC
-              `)
-              .bind(
-                game.tier
-              )
-              .all();
-
-          const oldStatements =
-            (oldGames.results || [])
-              .map(
-                (g,index) =>
-                  env.DB
-                    .prepare(`
-                      UPDATE games
-                      SET position = ?
-                      WHERE id = ?
-                    `)
-                    .bind(
-                      index,
-                      g.id
-                    )
-              );
-
-          if(oldStatements.length){
-
-            await env.DB.batch(
-              oldStatements
-            );
-
-          }
-
-        }
-
-        return json({
-          success:true
+        return Response.json({
+          success: true
         });
 
-      }catch(error){
-
-        return json(
+      } catch (error) {
+        return Response.json(
           {
-            success:false,
-            error:error.message
+            success: false,
+            error: error.message
           },
-          500
+          { status: 500 }
         );
-
       }
-
     }
 
-    /* =======================================================
-       REORDER TIER
-    ======================================================= */
+    // =========================================================
+    // NORMALIZE POSITIONS
+    // =========================================================
 
-    if(
-      url.pathname ===
-      "/api/games/reorder" &&
-      request.method ===
-      "POST"
-    ){
+    async function normalizePositions() {
+      const tiers = ["S", "A", "B", "F", "X"];
 
-      if(!isAdmin(request)){
+      for (const tier of tiers) {
+        const result = await env.DB
+          .prepare(`
+            SELECT id
+            FROM games
+            WHERE tier = ?
+            ORDER BY position ASC, id ASC
+          `)
+          .bind(tier)
+          .all();
 
-        return json(
-          {
-            success:false,
-            error:"Unauthorized"
-          },
-          401
-        );
-
-      }
-
-      try{
-
-        const body =
-          await request.json();
-
-        const tier =
-          body.tier;
-
-        const positions =
-          body.positions;
-
-        if(
-          !tier ||
-          !positions
-        ){
-
-          return json(
-            {
-              success:false,
-              error:
-                "Missing tier or positions"
-            },
-            400
-          );
-
-        }
-
-        const games =
+        for (
+          let i = 0;
+          i < result.results.length;
+          i++
+        ) {
           await env.DB
             .prepare(`
-              SELECT id
-              FROM games
-              WHERE tier = ?
-              ORDER BY position ASC
+              UPDATE games
+              SET position = ?
+              WHERE id = ?
             `)
-            .bind(tier)
-            .all();
-
-        const ordered =
-          (games.results || [])
-            .sort(
-              (a,b) =>
-                Number(
-                  positions[a.id] ??
-                  999999
-                ) -
-                Number(
-                  positions[b.id] ??
-                  999999
-                )
-            );
-
-        const statements =
-          ordered.map(
-            (game,index) =>
-              env.DB
-                .prepare(`
-                  UPDATE games
-                  SET position = ?
-                  WHERE id = ?
-                `)
-                .bind(
-                  index,
-                  game.id
-                )
-          );
-
-        if(statements.length){
-
-          await env.DB.batch(
-            statements
-          );
-
+            .bind(
+              i,
+              result.results[i].id
+            )
+            .run();
         }
-
-        return json({
-          success:true
-        });
-
-      }catch(error){
-
-        return json(
-          {
-            success:false,
-            error:error.message
-          },
-          500
-        );
-
       }
-
     }
 
-    /* =======================================================
-       WEBSITE
-    ======================================================= */
+    // =========================================================
+    // WEBSITE
+    // =========================================================
 
-    return env.ASSETS.fetch(
-      request
-    );
-
+    return env.ASSETS.fetch(request);
   }
-
 };
