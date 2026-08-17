@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PLAYED. — a personal scoreboard</title>
+<title>GAMES PLAYED BY BIEST1X</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,0..144,500;1,0..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -28,9 +28,15 @@
   --rust-dim:rgba(209,103,63,0.18);
   --slate:#736e8f;
   --slate-dim:rgba(115,110,143,0.18);
+
+  --highlight:#e83f3f;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
+}
 
 html,body{
   background:var(--bg);
@@ -69,6 +75,10 @@ body{
   border-radius:3px;
 }
 
+/* =========================================================
+   HEADER
+========================================================= */
+
 header.top{
   max-width:1400px;
   margin:0 auto;
@@ -81,10 +91,11 @@ header.top{
 }
 
 .brand h1{
-  font-family:'Fraunces',serif;
+  font-family:'Inter',sans-serif;
   font-weight:600;
-  font-style:italic;
-  font-size:42px;
+  font-style:normal;
+  font-size:30px;
+  letter-spacing:-.025em;
   color:var(--text);
 }
 
@@ -94,23 +105,48 @@ header.top{
   color:var(--text-faint);
   letter-spacing:.06em;
   text-transform:uppercase;
-  margin-top:6px;
+  margin-top:7px;
 }
 
-.btn-add{
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.btn-add,
+.btn-edit{
   font-weight:600;
   font-size:14px;
-  color:#0f0e17;
-  background:var(--gold);
   border:none;
   padding:12px 20px;
   border-radius:8px;
   cursor:pointer;
 }
 
+.btn-add{
+  color:#0f0e17;
+  background:var(--gold);
+}
+
 .btn-add:hover{
   filter:brightness(1.08);
 }
+
+.btn-edit{
+  color:var(--text-dim);
+  background:transparent;
+  border:1px solid var(--line-strong);
+}
+
+.btn-edit:hover{
+  color:var(--text);
+  background:var(--surface-hover);
+}
+
+/* =========================================================
+   MAIN / TIERS
+========================================================= */
 
 main{
   max-width:1400px;
@@ -141,7 +177,7 @@ main{
   font-family:'Fraunces',serif;
   font-style:italic;
   font-weight:600;
-  font-size:26px;
+  font-size:34px;
   color:var(--tier-color);
   line-height:1;
 }
@@ -202,15 +238,16 @@ main{
 
 .row{
   display:flex;
-  flex-direction:column;
-  gap:6px;
-  padding:9px 10px;
+  align-items:center;
+  padding:10px 10px;
   margin:6px 0;
   background:var(--surface);
   border-left:3px solid var(--tier-color);
   border-radius:6px;
   cursor:pointer;
-  transition:background .12s ease;
+  transition:
+    background .12s ease,
+    color .12s ease;
 }
 
 .row:hover{
@@ -230,6 +267,7 @@ main{
 }
 
 .row-top{
+  width:100%;
   display:flex;
   align-items:baseline;
   justify-content:space-between;
@@ -245,22 +283,6 @@ main{
   flex:1;
 }
 
-.row-eq{
-  display:flex;
-  align-items:flex-end;
-  gap:2.5px;
-  height:16px;
-}
-
-.row-eq i{
-  display:block;
-  width:4px;
-  background:var(--tier-color);
-  opacity:.55;
-  border-radius:1px;
-  min-height:2px;
-}
-
 .row-score{
   font-family:'JetBrains Mono',monospace;
   font-weight:700;
@@ -274,6 +296,27 @@ main{
   color:var(--text-faint);
   font-weight:400;
 }
+
+/* > 9.5 highlight */
+
+.row.highlight{
+  border-left-color:var(--highlight);
+}
+
+.row.highlight .row-name{
+  color:var(--highlight);
+  font-size:14px;
+  font-weight:600;
+}
+
+.row.highlight .row-score{
+  color:var(--highlight);
+  font-size:15px;
+}
+
+/* =========================================================
+   MODALS
+========================================================= */
 
 .overlay{
   position:fixed;
@@ -413,10 +456,6 @@ main{
 
 .star.readonly{
   cursor:default;
-}
-
-.star.readonly:hover{
-  transform:none;
 }
 
 .cat-num{
@@ -573,18 +612,25 @@ body.edit-mode .btn-add.edit-only{
   border:1px solid var(--line-strong)!important;
 }
 
-.export-btn{
-  background:var(--gold);
-  color:#0f0e17;
-}
-
 @media(max-width:700px){
+
   header.top{
     padding:32px 16px 24px;
+    align-items:flex-start;
   }
 
   .brand h1{
-    font-size:34px;
+    font-size:24px;
+  }
+
+  .header-actions{
+    flex-shrink:0;
+  }
+
+  .btn-add,
+  .btn-edit{
+    padding:10px 12px;
+    font-size:12px;
   }
 
   main{
@@ -610,33 +656,65 @@ body.edit-mode .btn-add.edit-only{
 <body>
 
 <header class="top">
+
   <div class="brand">
-    <h1>PLAYED.</h1>
-    <p>a personal scoreboard</p>
+    <h1>GAMES PLAYED BY BIEST1X</h1>
+    <p>a personal tier list</p>
   </div>
 
-  <button class="btn-add edit-only" id="openAdd">
-    + Add game
-  </button>
+  <div class="header-actions">
+
+    <button
+      class="btn-edit"
+      id="headerEdit"
+    >
+      Edit
+    </button>
+
+    <button
+      class="btn-add edit-only"
+      id="openAdd"
+    >
+      + Add game
+    </button>
+
+  </div>
+
 </header>
 
 <main id="main">
-  <div class="loading-msg">loading your list…</div>
+  <div class="loading-msg">
+    loading your list…
+  </div>
 </main>
 
 <!-- ADD GAME -->
+
 <div class="overlay" id="addOverlay">
+
   <div class="modal add-modal">
 
     <div class="modal-top">
-      <div class="modal-name" style="font-size:20px;">
+
+      <div
+        class="modal-name"
+        style="font-size:20px;"
+      >
         Add a game
       </div>
 
-      <button class="modal-close" id="closeAdd">✕</button>
+      <button
+        class="modal-close"
+        id="closeAdd"
+      >
+        ✕
+      </button>
+
     </div>
 
-    <label class="field-label">Name</label>
+    <label class="field-label">
+      Name
+    </label>
 
     <input
       class="name-input"
@@ -645,22 +723,40 @@ body.edit-mode .btn-add.edit-only{
       maxlength="80"
     >
 
-    <label class="field-label">Tier</label>
+    <label class="field-label">
+      Tier
+    </label>
 
-    <div class="tier-picker" id="addTierPicker"></div>
+    <div
+      class="tier-picker"
+      id="addTierPicker"
+    ></div>
 
-    <div class="modal-footer" style="justify-content:flex-end">
-      <button class="done-btn" id="confirmAdd">
+    <div
+      class="modal-footer"
+      style="justify-content:flex-end"
+    >
+      <button
+        class="done-btn"
+        id="confirmAdd"
+      >
         Add game
       </button>
     </div>
 
   </div>
+
 </div>
 
 <!-- GAME -->
+
 <div class="overlay" id="gameOverlay">
-  <div class="modal" id="gameModal"></div>
+
+  <div
+    class="modal"
+    id="gameModal"
+  ></div>
+
 </div>
 
 <div id="editBar"></div>
@@ -673,6 +769,9 @@ body.edit-mode .btn-add.edit-only{
 ========================================================= */
 
 const API = '/api';
+
+const TOKEN_KEY = 'played-admin-token';
+const EDIT_KEY = 'played-edit-unlocked';
 
 /* =========================================================
    CATEGORIES
@@ -693,6 +792,7 @@ const CATEGORIES = [
 ========================================================= */
 
 const TIERS = [
+
   {
     key:'S',
     letter:'SS',
@@ -701,6 +801,7 @@ const TIERS = [
     color:'var(--gold)',
     dim:'var(--gold-dim)'
   },
+
   {
     key:'A',
     letter:'S',
@@ -709,6 +810,7 @@ const TIERS = [
     color:'var(--teal)',
     dim:'var(--teal-dim)'
   },
+
   {
     key:'B',
     letter:'A',
@@ -717,6 +819,7 @@ const TIERS = [
     color:'var(--sage)',
     dim:'var(--sage-dim)'
   },
+
   {
     key:'F',
     letter:'B',
@@ -725,6 +828,7 @@ const TIERS = [
     color:'var(--rust)',
     dim:'var(--rust-dim)'
   },
+
   {
     key:'X',
     letter:'—',
@@ -733,6 +837,7 @@ const TIERS = [
     color:'var(--slate)',
     dim:'var(--slate-dim)'
   }
+
 ];
 
 /* =========================================================
@@ -745,15 +850,6 @@ let currentGameId = null;
 let addTier = 'B';
 let dragId = null;
 
-/*
-  Authentication token.
-
-  We keep it in sessionStorage rather than localStorage.
-  This means closing the browser/tab logs you out.
-*/
-let authToken =
-  sessionStorage.getItem('played-auth-token') || '';
-
 /* =========================================================
    HELPERS
 ========================================================= */
@@ -764,9 +860,10 @@ function getTier(key){
 
 function score(game){
 
-  const values = CATEGORIES.map(c =>
-    Number(game[c.key] || 0)
-  );
+  const values =
+    CATEGORIES.map(c =>
+      Number(game[c.key] || 0)
+    );
 
   const average =
     values.reduce((a,b) => a + b, 0) /
@@ -777,7 +874,8 @@ function score(game){
 
 function escapeHtml(str){
 
-  const d = document.createElement('div');
+  const d =
+    document.createElement('div');
 
   d.textContent = str ?? '';
 
@@ -788,124 +886,25 @@ function gameById(id){
   return games.find(g => g.id === id);
 }
 
-/* =========================================================
-   AUTH
-========================================================= */
+function authHeaders(){
 
-function authHeaders(extra = {}){
+  const token =
+    localStorage.getItem(TOKEN_KEY);
 
-  const headers = {
-    ...extra
-  };
-
-  if(authToken){
-    headers.Authorization =
-      'Bearer ' + authToken;
-  }
-
-  return headers;
+  return token
+    ? {
+        'Authorization':'Bearer ' + token,
+        'Content-Type':'application/json'
+      }
+    : {
+        'Content-Type':'application/json'
+      };
 }
 
-function clearAuth(){
+function isAuthenticated(){
 
-  authToken = '';
+  return !!localStorage.getItem(TOKEN_KEY);
 
-  sessionStorage.removeItem(
-    'played-auth-token'
-  );
-
-  editMode = false;
-}
-
-async function login(){
-
-  const password =
-    prompt('Enter edit password:');
-
-  if(password === null)
-    return false;
-
-  if(!password)
-    return false;
-
-  try{
-
-    const response =
-      await fetch(
-        API + '/login',
-        {
-          method:'POST',
-          headers:{
-            'Content-Type':
-              'application/json'
-          },
-          body:JSON.stringify({
-            password
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(
-      !response.ok ||
-      !data.success ||
-      !data.token
-    ){
-
-      alert(
-        data.error ||
-        'Invalid password.'
-      );
-
-      return false;
-    }
-
-    authToken = data.token;
-
-    sessionStorage.setItem(
-      'played-auth-token',
-      authToken
-    );
-
-    editMode = true;
-
-    return true;
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      'Could not log in: ' +
-      error.message
-    );
-
-    return false;
-  }
-}
-
-/*
-  Check whether our saved token is still accepted.
-
-  We use /api/test because it is a protected server-side
-  authentication-independent endpoint that confirms D1 works.
-
-  Actual write requests will still receive 401 if the token
-  is invalid, and handle that separately.
-*/
-
-function handleUnauthorized(){
-
-  clearAuth();
-
-  render();
-  renderEditBar();
-
-  alert(
-    'Your edit session has expired. Please click Edit and log in again.'
-  );
 }
 
 /* =========================================================
@@ -922,70 +921,57 @@ async function apiGetGames(){
       }
     );
 
-  if(!response.ok){
-
-    throw new Error(
-      'Failed to load games'
-    );
-  }
+  if(!response.ok)
+    throw new Error('Failed to load games');
 
   const data =
     await response.json();
 
-  if(!data.success){
-
+  if(!data.success)
     throw new Error(
-      data.error ||
-      'Failed to load games'
+      data.error || 'Failed to load games'
     );
-  }
 
-  games =
-    data.games || [];
+  games = data.games || [];
 }
 
-async function apiWrite(
-  url,
-  options = {}
-){
+async function apiLogin(password){
 
   const response =
     await fetch(
-      url,
+      API + '/login',
       {
-        ...options,
-        headers:authHeaders({
-          'Content-Type':
-            'application/json',
-          ...(options.headers || {})
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          password
         })
       }
     );
 
-  if(response.status === 401){
-
-    handleUnauthorized();
-
-    throw new Error(
-      'Unauthorized'
-    );
-  }
-
   const data =
     await response.json();
 
-  if(
-    !response.ok ||
-    !data.success
-  ){
+  if(!response.ok || !data.success){
 
     throw new Error(
-      data.error ||
-      'Request failed'
+      data.error || 'Login failed'
     );
+
   }
 
-  return data;
+  localStorage.setItem(
+    TOKEN_KEY,
+    data.token
+  );
+
+  localStorage.setItem(
+    EDIT_KEY,
+    'yes'
+  );
+
 }
 
 /* =========================================================
@@ -994,12 +980,9 @@ async function apiWrite(
 
 async function load(){
 
-  /*
-    A token in sessionStorage means we can restore edit mode
-    after a page refresh during the same browser session.
-  */
-
-  editMode = !!authToken;
+  editMode =
+    localStorage.getItem(EDIT_KEY) === 'yes' &&
+    isAuthenticated();
 
   try{
 
@@ -1012,16 +995,13 @@ async function load(){
 
     console.error(error);
 
-    document.getElementById(
-      'main'
-    ).innerHTML = `
+    document.getElementById('main').innerHTML = `
       <div class="error-msg">
         Failed to load games.<br><br>
         ${escapeHtml(error.message)}
       </div>
     `;
 
-    renderEditBar();
   }
 }
 
@@ -1058,12 +1038,14 @@ function render(){
   });
 
   renderAddTierPicker();
+
 }
 
-function renderTier(
-  tier,
-  tierGames
-){
+/* =========================================================
+   TIER
+========================================================= */
+
+function renderTier(tier,tierGames){
 
   const section =
     document.createElement('section');
@@ -1083,15 +1065,16 @@ function renderTier(
   const head =
     document.createElement('div');
 
-  head.className =
-    'tier-head';
+  head.className = 'tier-head';
 
   head.innerHTML = `
+
     <span class="tier-letter">
       ${tier.letter}
     </span>
 
     <div>
+
       <div class="tier-label">
         ${tier.label}
       </div>
@@ -1099,6 +1082,7 @@ function renderTier(
       <div class="tier-sub">
         ${tier.sub}
       </div>
+
     </div>
 
     <div class="tier-meta">
@@ -1115,6 +1099,7 @@ function renderTier(
       </span>
 
     </div>
+
   `;
 
   section.appendChild(head);
@@ -1122,8 +1107,7 @@ function renderTier(
   const rows =
     document.createElement('div');
 
-  rows.className =
-    'rows';
+  rows.className = 'rows';
 
   rows.dataset.tier =
     tier.key;
@@ -1158,18 +1142,16 @@ function renderTier(
 
   section.appendChild(rows);
 
-  head
-    .querySelector('.resort-btn')
+  head.querySelector('.resort-btn')
     ?.addEventListener(
       'click',
       async () => {
 
         const sorted =
-          [
-            ...games.filter(
-              g => g.tier === tier.key
-            )
-          ].sort(
+          [...games.filter(
+            g => g.tier === tier.key
+          )]
+          .sort(
             (a,b) =>
               score(b) - score(a)
           );
@@ -1185,31 +1167,46 @@ function renderTier(
 
         try{
 
-          await apiWrite(
-            API + '/games/reorder',
-            {
-              method:'POST',
-              body:JSON.stringify({
-                tier:tier.key,
-                positions
-              })
-            }
-          );
+          const response =
+            await fetch(
+              API + '/games/reorder',
+              {
+                method:'POST',
+                headers:authHeaders(),
+                body:JSON.stringify({
+                  tier:tier.key,
+                  positions
+                })
+              }
+            );
+
+          const data =
+            await response.json();
+
+          if(
+            !response.ok ||
+            !data.success
+          ){
+
+            throw new Error(
+              data.error ||
+              'Could not reorder games'
+            );
+
+          }
 
           await apiGetGames();
-
           render();
 
         }catch(error){
 
-          if(error.message !== 'Unauthorized'){
+          alert(
+            'Could not reorder games: ' +
+            error.message
+          );
 
-            alert(
-              'Could not reorder games: ' +
-              error.message
-            );
-          }
         }
+
       }
     );
 
@@ -1218,16 +1215,16 @@ function renderTier(
   return section;
 }
 
-function renderRow(
-  game,
-  tier
-){
+/* =========================================================
+   ROW
+========================================================= */
+
+function renderRow(game,tier){
 
   const row =
     document.createElement('div');
 
-  row.className =
-    'row';
+  row.className = 'row';
 
   row.dataset.id =
     game.id;
@@ -1235,26 +1232,16 @@ function renderRow(
   row.draggable =
     editMode;
 
-  const eq =
-    CATEGORIES.map(
-      c => {
+  const gameScore =
+    score(game);
 
-        const value =
-          Number(
-            game[c.key] || 0
-          );
+  if(gameScore > 9.5){
 
-        const height =
-          Math.max(
-            2,
-            (value / 10) * 16
-          );
+    row.classList.add(
+      'highlight'
+    );
 
-        return `
-          <i style="height:${height}px"></i>
-        `;
-      }
-    ).join('');
+  }
 
   row.innerHTML = `
 
@@ -1268,15 +1255,15 @@ function renderRow(
       </div>
 
       <div class="row-score">
-        ${score(game).toFixed(1)}
+
+        ${gameScore.toFixed(1)}
+
         <sub>/10</sub>
+
       </div>
 
     </div>
 
-    <div class="row-eq">
-      ${eq}
-    </div>
   `;
 
   row.addEventListener(
@@ -1291,6 +1278,7 @@ function renderRow(
         return;
 
       openGame(game.id);
+
     }
   );
 
@@ -1301,9 +1289,7 @@ function renderRow(
    DRAG / DROP
 ========================================================= */
 
-function setupDnD(
-  container
-){
+function setupDnD(container){
 
   container.addEventListener(
     'dragstart',
@@ -1327,6 +1313,7 @@ function setupDnD(
 
       event.dataTransfer.effectAllowed =
         'move';
+
     }
   );
 
@@ -1352,6 +1339,7 @@ function setupDnD(
           );
 
         });
+
     }
   );
 
@@ -1403,8 +1391,11 @@ function setupDnD(
           ].classList.add(
             'drag-over-bottom'
           );
+
         }
+
       }
+
     }
   );
 
@@ -1456,21 +1447,39 @@ function setupDnD(
 
         targetPosition =
           tierGames.length;
+
       }
 
       try{
 
-        await apiWrite(
-          API + '/games/move',
-          {
-            method:'POST',
-            body:JSON.stringify({
-              id:dragId,
-              tier:targetTier,
-              position:targetPosition
-            })
-          }
-        );
+        const response =
+          await fetch(
+            API + '/games/move',
+            {
+              method:'POST',
+              headers:authHeaders(),
+              body:JSON.stringify({
+                id:dragId,
+                tier:targetTier,
+                position:targetPosition
+              })
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if(
+          !response.ok ||
+          !data.success
+        ){
+
+          throw new Error(
+            data.error ||
+            'Could not move game'
+          );
+
+        }
 
         dragId = null;
 
@@ -1480,19 +1489,15 @@ function setupDnD(
 
       }catch(error){
 
-        if(
-          error.message !==
-          'Unauthorized'
-        ){
+        console.error(error);
 
-          console.error(error);
+        alert(
+          'Could not move game: ' +
+          error.message
+        );
 
-          alert(
-            'Could not move game: ' +
-            error.message
-          );
-        }
       }
+
     }
   );
 }
@@ -1529,6 +1534,7 @@ function getDragAfterElement(
           offset,
           element:child
         };
+
       }
 
       return closest;
@@ -1557,54 +1563,51 @@ function renderAddTierPicker(){
 
   wrap.innerHTML = '';
 
-  TIERS.forEach(
-    tier => {
+  TIERS.forEach(tier => {
 
-      const chip =
-        document.createElement(
-          'button'
-        );
+    const chip =
+      document.createElement('button');
 
-      chip.className =
-        'tier-chip' +
-        (
-          addTier === tier.key
-            ? ' active'
-            : ''
-        );
-
-      chip.textContent =
-        tier.letter;
-
-      chip.style.borderColor =
-        tier.color;
-
-      chip.style.color =
+    chip.className =
+      'tier-chip' +
+      (
         addTier === tier.key
-          ? '#0f0e17'
-          : tier.color;
-
-      chip.style.background =
-        addTier === tier.key
-          ? tier.color
-          : 'transparent';
-
-      chip.addEventListener(
-        'click',
-        () => {
-
-          addTier =
-            tier.key;
-
-          renderAddTierPicker();
-        }
+          ? ' active'
+          : ''
       );
 
-      wrap.appendChild(
-        chip
-      );
-    }
-  );
+    chip.textContent =
+      tier.letter;
+
+    chip.style.borderColor =
+      tier.color;
+
+    chip.style.color =
+      addTier === tier.key
+        ? '#0f0e17'
+        : tier.color;
+
+    chip.style.background =
+      addTier === tier.key
+        ? tier.color
+        : 'transparent';
+
+    chip.addEventListener(
+      'click',
+      () => {
+
+        addTier =
+          tier.key;
+
+        renderAddTierPicker();
+
+      }
+    );
+
+    wrap.appendChild(chip);
+
+  });
+
 }
 
 document
@@ -1616,11 +1619,9 @@ document
       if(!editMode)
         return;
 
-      document
-        .getElementById(
-          'addName'
-        )
-        .value = '';
+      document.getElementById(
+        'addName'
+      ).value = '';
 
       addTier = 'B';
 
@@ -1641,6 +1642,7 @@ document
             .focus(),
         50
       );
+
     }
   );
 
@@ -1657,6 +1659,7 @@ document
         .classList.remove(
           'open'
         );
+
     }
   );
 
@@ -1675,7 +1678,9 @@ document
           .classList.remove(
             'open'
           );
+
       }
+
     }
   );
 
@@ -1694,20 +1699,38 @@ async function confirmAdd(){
     input.focus();
 
     return;
+
   }
 
   try{
 
-    await apiWrite(
-      API + '/games',
-      {
-        method:'POST',
-        body:JSON.stringify({
-          name,
-          tier:addTier
-        })
-      }
-    );
+    const response =
+      await fetch(
+        API + '/games',
+        {
+          method:'POST',
+          headers:authHeaders(),
+          body:JSON.stringify({
+            name,
+            tier:addTier
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(
+      !response.ok ||
+      !data.success
+    ){
+
+      throw new Error(
+        data.error ||
+        'Failed to add game'
+      );
+
+    }
 
     await apiGetGames();
 
@@ -1723,17 +1746,13 @@ async function confirmAdd(){
 
   }catch(error){
 
-    if(
-      error.message !==
-      'Unauthorized'
-    ){
+    alert(
+      'Could not add game: ' +
+      error.message
+    );
 
-      alert(
-        'Could not add game: ' +
-        error.message
-      );
-    }
   }
+
 }
 
 document
@@ -1751,6 +1770,7 @@ document
 
       if(event.key === 'Enter')
         confirmAdd();
+
     }
   );
 
@@ -1760,8 +1780,7 @@ document
 
 function openGame(id){
 
-  currentGameId =
-    id;
+  currentGameId = id;
 
   renderGameModal();
 
@@ -1772,6 +1791,7 @@ function openGame(id){
     .classList.add(
       'open'
     );
+
 }
 
 function closeGame(){
@@ -1784,14 +1804,16 @@ function closeGame(){
       'open'
     );
 
-  currentGameId =
-    null;
+  currentGameId = null;
 
   render();
+
 }
 
 document
-  .getElementById('gameOverlay')
+  .getElementById(
+    'gameOverlay'
+  )
   .addEventListener(
     'click',
     event => {
@@ -1802,7 +1824,9 @@ document
       ){
 
         closeGame();
+
       }
+
     }
   );
 
@@ -1843,6 +1867,7 @@ function renderGameModal(){
                 i < value;
 
               return `
+
                 <span
                   class="star
                   ${filled ? 'filled' : ''}
@@ -1850,14 +1875,19 @@ function renderGameModal(){
                   data-cat="${category.key}"
                   data-val="${i+1}"
                 >
+
                   ${starSvg()}
+
                 </span>
+
               `;
+
             }
           )
           .join('');
 
         return `
+
           <div class="cat-row">
 
             <div class="cat-label">
@@ -1873,7 +1903,9 @@ function renderGameModal(){
             </div>
 
           </div>
+
         `;
+
       }
     ).join('');
 
@@ -1920,19 +1952,13 @@ function renderGameModal(){
     </div>
 
     <div class="commentary-label">
-      ${editMode
-        ? 'Your commentary'
-        : 'Commentary'}
+      ${editMode ? 'Your commentary' : 'Commentary'}
     </div>
 
     <textarea
       class="commentary"
       id="commentary"
-      placeholder="${
-        editMode
-          ? 'What did you think of it?'
-          : 'No commentary yet.'
-      }"
+      placeholder="${editMode ? 'What did you think of it?' : 'No commentary yet.'}"
       ${editMode ? '' : 'readonly'}
     >${escapeHtml(
       game.commentary || ''
@@ -1956,11 +1982,10 @@ function renderGameModal(){
       </button>
 
     </div>
+
   `;
 
-  /* =======================================================
-     TIER PICKER
-  ======================================================= */
+  /* TIER PICKER */
 
   if(editMode){
 
@@ -2015,71 +2040,63 @@ function renderGameModal(){
 
             try{
 
-              await apiWrite(
-                API + '/games/move',
-                {
-                  method:'POST',
-                  body:JSON.stringify({
-                    id:game.id,
-                    tier:tier.key,
-                    position:0
-                  })
-                }
-              );
-
-              await apiGetGames();
+              await updateGame({
+                id:game.id,
+                tier:tier.key,
+                position:0
+              });
 
               renderGameModal();
 
             }catch(error){
 
-              if(
-                error.message !==
-                'Unauthorized'
-              ){
+              alert(
+                'Could not move game: ' +
+                error.message
+              );
 
-                alert(
-                  'Could not move game: ' +
-                  error.message
-                );
-              }
             }
+
           }
         );
 
         tierWrap.appendChild(
           chip
         );
+
       }
     );
+
   }
 
-  /* =======================================================
-     BUTTONS
-  ======================================================= */
+  /* BUTTONS */
 
   document
-    .getElementById('closeGame')
+    .getElementById(
+      'closeGame'
+    )
     .addEventListener(
       'click',
       closeGame
     );
 
   document
-    .getElementById('doneGame')
+    .getElementById(
+      'doneGame'
+    )
     .addEventListener(
       'click',
       closeGame
     );
 
-  /* =======================================================
-     NAME
-  ======================================================= */
+  /* NAME */
 
   if(editMode){
 
     document
-      .getElementById('editName')
+      .getElementById(
+        'editName'
+      )
       .addEventListener(
         'change',
         async event => {
@@ -2088,32 +2105,27 @@ function renderGameModal(){
 
             await updateGame({
               id:game.id,
-              name:
-                event.target.value
+              name:event.target.value
             });
 
           }catch(error){
 
-            if(
-              error.message !==
-              'Unauthorized'
-            ){
+            alert(
+              'Could not save name: ' +
+              error.message
+            );
 
-              alert(
-                'Could not save name: ' +
-                error.message
-              );
-            }
           }
+
         }
       );
 
-    /* =====================================================
-       COMMENTARY
-    ===================================================== */
+    /* COMMENTARY */
 
     document
-      .getElementById('commentary')
+      .getElementById(
+        'commentary'
+      )
       .addEventListener(
         'change',
         async event => {
@@ -2122,29 +2134,22 @@ function renderGameModal(){
 
             await updateGame({
               id:game.id,
-              commentary:
-                event.target.value
+              commentary:event.target.value
             });
 
           }catch(error){
 
-            if(
-              error.message !==
-              'Unauthorized'
-            ){
+            alert(
+              'Could not save commentary: ' +
+              error.message
+            );
 
-              alert(
-                'Could not save commentary: ' +
-                error.message
-              );
-            }
           }
+
         }
       );
 
-    /* =====================================================
-       RATINGS
-    ===================================================== */
+    /* RATINGS */
 
     modal
       .querySelectorAll('.star')
@@ -2180,38 +2185,32 @@ function renderGameModal(){
 
                 await updateGame({
                   id:game.id,
-                  [category]:
-                    newValue
+                  [category]:newValue
                 });
-
-                await apiGetGames();
 
                 renderGameModal();
 
               }catch(error){
 
-                if(
-                  error.message !==
-                  'Unauthorized'
-                ){
+                alert(
+                  'Could not save rating: ' +
+                  error.message
+                );
 
-                  alert(
-                    'Could not save rating: ' +
-                    error.message
-                  );
-                }
               }
+
             }
           );
+
         }
       );
 
-    /* =====================================================
-       DELETE
-    ===================================================== */
+    /* DELETE */
 
     document
-      .getElementById('deleteGame')
+      .getElementById(
+        'deleteGame'
+      )
       .addEventListener(
         'click',
         async () => {
@@ -2225,16 +2224,33 @@ function renderGameModal(){
 
           try{
 
-            await apiWrite(
-              API +
-              '/games/' +
-              encodeURIComponent(
-                game.id
-              ),
-              {
-                method:'DELETE'
-              }
-            );
+            const response =
+              await fetch(
+                API +
+                '/games/' +
+                encodeURIComponent(
+                  game.id
+                ),
+                {
+                  method:'DELETE',
+                  headers:authHeaders()
+                }
+              );
+
+            const data =
+              await response.json();
+
+            if(
+              !response.ok ||
+              !data.success
+            ){
+
+              throw new Error(
+                data.error ||
+                'Failed to delete game'
+              );
+
+            }
 
             await apiGetGames();
 
@@ -2242,57 +2258,57 @@ function renderGameModal(){
 
           }catch(error){
 
-            if(
-              error.message !==
-              'Unauthorized'
-            ){
+            alert(
+              'Could not delete game: ' +
+              error.message
+            );
 
-              alert(
-                'Could not delete game: ' +
-                error.message
-              );
-            }
           }
+
         }
       );
+
   }
+
 }
 
 /* =========================================================
-   UPDATE GAME
+   UPDATE
 ========================================================= */
 
-async function updateGame(
-  changes
-){
+async function updateGame(changes){
 
-  /*
-    IMPORTANT:
+  const response =
+    await fetch(
+      API + '/games',
+      {
+        method:'PUT',
+        headers:authHeaders(),
+        body:JSON.stringify(
+          changes
+        )
+      }
+    );
 
-    Worker expects:
-      PUT /api/games/:id
+  const data =
+    await response.json();
 
-    The old frontend incorrectly sent:
-      PUT /api/games
-  */
+  if(
+    !response.ok ||
+    !data.success
+  ){
 
-  await apiWrite(
-    API +
-    '/games/' +
-    encodeURIComponent(
-      changes.id
-    ),
-    {
-      method:'PUT',
-      body:JSON.stringify(
-        changes
-      )
-    }
-  );
+    throw new Error(
+      data.error ||
+      'Failed to save'
+    );
+
+  }
 
   await apiGetGames();
 
   render();
+
 }
 
 /* =========================================================
@@ -2302,17 +2318,22 @@ async function updateGame(
 function starSvg(){
 
   return `
+
     <svg
       viewBox="0 0 24 24"
       fill="currentColor"
       width="100%"
       height="100%"
     >
+
       <path
         d="M12 2.5l2.9 6.05 6.6.85-4.85 4.6 1.25 6.6L12 17.4l-5.9 3.2 1.25-6.6-4.85-4.6 6.6-.85z"
       />
+
     </svg>
+
   `;
+
 }
 
 /* =========================================================
@@ -2344,7 +2365,9 @@ function renderEditBar(){
     `;
 
     document
-      .getElementById('lockBtn')
+      .getElementById(
+        'lockBtn'
+      )
       .addEventListener(
         'click',
         lockEdit
@@ -2352,46 +2375,83 @@ function renderEditBar(){
 
   }else{
 
-    bar.innerHTML = `
+    bar.innerHTML = '';
 
-      <button
-        class="lock-btn"
-        id="unlockBtn"
-      >
-        Edit
-      </button>
-
-    `;
-
-    document
-      .getElementById('unlockBtn')
-      .addEventListener(
-        'click',
-        tryUnlock
-      );
   }
+
 }
+
+document
+  .getElementById(
+    'headerEdit'
+  )
+  .addEventListener(
+    'click',
+    tryUnlock
+  );
 
 async function tryUnlock(){
 
-  const success =
-    await login();
+  if(isAuthenticated()){
 
-  if(!success)
+    editMode = true;
+
+    localStorage.setItem(
+      EDIT_KEY,
+      'yes'
+    );
+
+    render();
+    renderEditBar();
+
     return;
 
-  render();
+  }
 
-  renderEditBar();
+  const password =
+    prompt(
+      'Enter edit password:'
+    );
+
+  if(password === null)
+    return;
+
+  try{
+
+    await apiLogin(
+      password
+    );
+
+    editMode = true;
+
+    render();
+    renderEditBar();
+
+  }catch(error){
+
+    alert(
+      'Wrong password.'
+    );
+
+  }
+
 }
 
 function lockEdit(){
 
-  clearAuth();
+  localStorage.removeItem(
+    TOKEN_KEY
+  );
+
+  localStorage.removeItem(
+    EDIT_KEY
+  );
+
+  editMode = false;
 
   render();
-
   renderEditBar();
+
 }
 
 /* =========================================================
@@ -2403,8 +2463,7 @@ document.addEventListener(
   event => {
 
     if(
-      event.key !==
-      'Escape'
+      event.key !== 'Escape'
     )
       return;
 
@@ -2425,6 +2484,7 @@ document.addEventListener(
     ){
 
       closeGame();
+
     }
 
     if(
@@ -2436,7 +2496,9 @@ document.addEventListener(
       addOverlay.classList.remove(
         'open'
       );
+
     }
+
   }
 );
 
