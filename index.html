@@ -674,8 +674,6 @@ body.edit-mode .btn-add.edit-only{
 
 const API = '/api';
 
-const EDIT_PASSWORD = 'changeme';
-
 /* =========================================================
    CATEGORIES
 ========================================================= */
@@ -747,6 +745,15 @@ let currentGameId = null;
 let addTier = 'B';
 let dragId = null;
 
+/*
+  Authentication token.
+
+  We keep it in sessionStorage rather than localStorage.
+  This means closing the browser/tab logs you out.
+*/
+let authToken =
+  sessionStorage.getItem('played-auth-token') || '';
+
 /* =========================================================
    HELPERS
 ========================================================= */
@@ -782,26 +789,203 @@ function gameById(id){
 }
 
 /* =========================================================
+   AUTH
+========================================================= */
+
+function authHeaders(extra = {}){
+
+  const headers = {
+    ...extra
+  };
+
+  if(authToken){
+    headers.Authorization =
+      'Bearer ' + authToken;
+  }
+
+  return headers;
+}
+
+function clearAuth(){
+
+  authToken = '';
+
+  sessionStorage.removeItem(
+    'played-auth-token'
+  );
+
+  editMode = false;
+}
+
+async function login(){
+
+  const password =
+    prompt('Enter edit password:');
+
+  if(password === null)
+    return false;
+
+  if(!password)
+    return false;
+
+  try{
+
+    const response =
+      await fetch(
+        API + '/login',
+        {
+          method:'POST',
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
+          body:JSON.stringify({
+            password
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(
+      !response.ok ||
+      !data.success ||
+      !data.token
+    ){
+
+      alert(
+        data.error ||
+        'Invalid password.'
+      );
+
+      return false;
+    }
+
+    authToken = data.token;
+
+    sessionStorage.setItem(
+      'played-auth-token',
+      authToken
+    );
+
+    editMode = true;
+
+    return true;
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      'Could not log in: ' +
+      error.message
+    );
+
+    return false;
+  }
+}
+
+/*
+  Check whether our saved token is still accepted.
+
+  We use /api/test because it is a protected server-side
+  authentication-independent endpoint that confirms D1 works.
+
+  Actual write requests will still receive 401 if the token
+  is invalid, and handle that separately.
+*/
+
+function handleUnauthorized(){
+
+  clearAuth();
+
+  render();
+  renderEditBar();
+
+  alert(
+    'Your edit session has expired. Please click Edit and log in again.'
+  );
+}
+
+/* =========================================================
    API
 ========================================================= */
 
 async function apiGetGames(){
 
-  const response = await fetch(API + '/games', {
-    cache:'no-store'
-  });
+  const response =
+    await fetch(
+      API + '/games',
+      {
+        cache:'no-store'
+      }
+    );
 
   if(!response.ok){
-    throw new Error('Failed to load games');
+
+    throw new Error(
+      'Failed to load games'
+    );
   }
 
-  const data = await response.json();
+  const data =
+    await response.json();
 
   if(!data.success){
-    throw new Error(data.error || 'Failed to load games');
+
+    throw new Error(
+      data.error ||
+      'Failed to load games'
+    );
   }
 
-  games = data.games || [];
+  games =
+    data.games || [];
+}
+
+async function apiWrite(
+  url,
+  options = {}
+){
+
+  const response =
+    await fetch(
+      url,
+      {
+        ...options,
+        headers:authHeaders({
+          'Content-Type':
+            'application/json',
+          ...(options.headers || {})
+        })
+      }
+    );
+
+  if(response.status === 401){
+
+    handleUnauthorized();
+
+    throw new Error(
+      'Unauthorized'
+    );
+  }
+
+  const data =
+    await response.json();
+
+  if(
+    !response.ok ||
+    !data.success
+  ){
+
+    throw new Error(
+      data.error ||
+      'Request failed'
+    );
+  }
+
+  return data;
 }
 
 /* =========================================================
@@ -810,8 +994,12 @@ async function apiGetGames(){
 
 async function load(){
 
-  editMode =
-    localStorage.getItem('played-edit-unlocked') === 'yes';
+  /*
+    A token in sessionStorage means we can restore edit mode
+    after a page refresh during the same browser session.
+  */
+
+  editMode = !!authToken;
 
   try{
 
@@ -824,13 +1012,16 @@ async function load(){
 
     console.error(error);
 
-    document.getElementById('main').innerHTML = `
+    document.getElementById(
+      'main'
+    ).innerHTML = `
       <div class="error-msg">
         Failed to load games.<br><br>
         ${escapeHtml(error.message)}
       </div>
     `;
 
+    renderEditBar();
   }
 }
 
@@ -853,10 +1044,15 @@ function render(){
   TIERS.forEach(tier => {
 
     const tierGames =
-      games.filter(g => g.tier === tier.key);
+      games.filter(
+        g => g.tier === tier.key
+      );
 
     main.appendChild(
-      renderTier(tier, tierGames)
+      renderTier(
+        tier,
+        tierGames
+      )
     );
 
   });
@@ -864,7 +1060,10 @@ function render(){
   renderAddTierPicker();
 }
 
-function renderTier(tier, tierGames){
+function renderTier(
+  tier,
+  tierGames
+){
 
   const section =
     document.createElement('section');
@@ -884,7 +1083,8 @@ function renderTier(tier, tierGames){
   const head =
     document.createElement('div');
 
-  head.className = 'tier-head';
+  head.className =
+    'tier-head';
 
   head.innerHTML = `
     <span class="tier-letter">
@@ -922,16 +1122,19 @@ function renderTier(tier, tierGames){
   const rows =
     document.createElement('div');
 
-  rows.className = 'rows';
+  rows.className =
+    'rows';
 
-  rows.dataset.tier = tier.key;
+  rows.dataset.tier =
+    tier.key;
 
   if(tierGames.length === 0){
 
     const empty =
       document.createElement('div');
 
-    empty.className = 'empty-row';
+    empty.className =
+      'empty-row';
 
     empty.textContent =
       'No games here yet.';
@@ -943,7 +1146,10 @@ function renderTier(tier, tierGames){
     tierGames.forEach(game => {
 
       rows.appendChild(
-        renderRow(game, tier)
+        renderRow(
+          game,
+          tier
+        )
       );
 
     });
@@ -952,79 +1158,103 @@ function renderTier(tier, tierGames){
 
   section.appendChild(rows);
 
-  head.querySelector('.resort-btn')
-    ?.addEventListener('click', async () => {
+  head
+    .querySelector('.resort-btn')
+    ?.addEventListener(
+      'click',
+      async () => {
 
-      const sorted =
-        [...games.filter(g => g.tier === tier.key)]
-        .sort((a,b) => score(b) - score(a));
+        const sorted =
+          [
+            ...games.filter(
+              g => g.tier === tier.key
+            )
+          ].sort(
+            (a,b) =>
+              score(b) - score(a)
+          );
 
-      const positions = {};
+        const positions = {};
 
-      sorted.forEach((game,index) => {
-        positions[game.id] = index;
-      });
-
-      try{
-
-        await fetch(API + '/games/reorder', {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({
-            tier:tier.key,
-            positions
-          })
-        });
-
-        await apiGetGames();
-        render();
-
-      }catch(error){
-
-        alert(
-          'Could not reorder games: ' +
-          error.message
+        sorted.forEach(
+          (game,index) => {
+            positions[game.id] =
+              index;
+          }
         );
 
-      }
+        try{
 
-    });
+          await apiWrite(
+            API + '/games/reorder',
+            {
+              method:'POST',
+              body:JSON.stringify({
+                tier:tier.key,
+                positions
+              })
+            }
+          );
+
+          await apiGetGames();
+
+          render();
+
+        }catch(error){
+
+          if(error.message !== 'Unauthorized'){
+
+            alert(
+              'Could not reorder games: ' +
+              error.message
+            );
+          }
+        }
+      }
+    );
 
   setupDnD(rows);
 
   return section;
 }
 
-function renderRow(game,tier){
+function renderRow(
+  game,
+  tier
+){
 
   const row =
     document.createElement('div');
 
-  row.className = 'row';
+  row.className =
+    'row';
 
-  row.dataset.id = game.id;
+  row.dataset.id =
+    game.id;
 
-  row.draggable = editMode;
+  row.draggable =
+    editMode;
 
   const eq =
-    CATEGORIES.map(c => {
+    CATEGORIES.map(
+      c => {
 
-      const value =
-        Number(game[c.key] || 0);
+        const value =
+          Number(
+            game[c.key] || 0
+          );
 
-      const height =
-        Math.max(
-          2,
-          (value / 10) * 16
-        );
+        const height =
+          Math.max(
+            2,
+            (value / 10) * 16
+          );
 
-      return `
-        <i style="height:${height}px"></i>
-      `;
-
-    }).join('');
+        return `
+          <i style="height:${height}px"></i>
+        `;
+      }
+    ).join('');
 
   row.innerHTML = `
 
@@ -1049,14 +1279,20 @@ function renderRow(game,tier){
     </div>
   `;
 
-  row.addEventListener('click', () => {
+  row.addEventListener(
+    'click',
+    () => {
 
-    if(row.classList.contains('dragging'))
-      return;
+      if(
+        row.classList.contains(
+          'dragging'
+        )
+      )
+        return;
 
-    openGame(game.id);
-
-  });
+      openGame(game.id);
+    }
+  );
 
   return row;
 }
@@ -1065,7 +1301,9 @@ function renderRow(game,tier){
    DRAG / DROP
 ========================================================= */
 
-function setupDnD(container){
+function setupDnD(
+  container
+){
 
   container.addEventListener(
     'dragstart',
@@ -1080,9 +1318,12 @@ function setupDnD(container){
       if(!row)
         return;
 
-      dragId = row.dataset.id;
+      dragId =
+        row.dataset.id;
 
-      row.classList.add('dragging');
+      row.classList.add(
+        'dragging'
+      );
 
       event.dataTransfer.effectAllowed =
         'move';
@@ -1097,7 +1338,9 @@ function setupDnD(container){
         event.target.closest('.row');
 
       if(row)
-        row.classList.remove('dragging');
+        row.classList.remove(
+          'dragging'
+        );
 
       container
         .querySelectorAll('.row')
@@ -1109,7 +1352,6 @@ function setupDnD(container){
           );
 
         });
-
     }
   );
 
@@ -1156,15 +1398,13 @@ function setupDnD(container){
 
         if(rows.length){
 
-          rows[rows.length - 1]
-            .classList.add(
-              'drag-over-bottom'
-            );
-
+          rows[
+            rows.length - 1
+          ].classList.add(
+            'drag-over-bottom'
+          );
         }
-
       }
-
     }
   );
 
@@ -1174,7 +1414,10 @@ function setupDnD(container){
 
       event.preventDefault();
 
-      if(!editMode || !dragId)
+      if(
+        !editMode ||
+        !dragId
+      )
         return;
 
       const targetTier =
@@ -1188,8 +1431,9 @@ function setupDnD(container){
 
       const tierGames =
         games.filter(
-          g => g.tier === targetTier &&
-          g.id !== dragId
+          g =>
+            g.tier === targetTier &&
+            g.id !== dragId
         );
 
       let targetPosition;
@@ -1198,7 +1442,9 @@ function setupDnD(container){
 
         const index =
           tierGames.findIndex(
-            g => g.id === after.dataset.id
+            g =>
+              g.id ===
+              after.dataset.id
           );
 
         targetPosition =
@@ -1210,18 +1456,14 @@ function setupDnD(container){
 
         targetPosition =
           tierGames.length;
-
       }
 
       try{
 
-        await fetch(
+        await apiWrite(
           API + '/games/move',
           {
             method:'POST',
-            headers:{
-              'Content-Type':'application/json'
-            },
             body:JSON.stringify({
               id:dragId,
               tier:targetTier,
@@ -1238,20 +1480,27 @@ function setupDnD(container){
 
       }catch(error){
 
-        console.error(error);
+        if(
+          error.message !==
+          'Unauthorized'
+        ){
 
-        alert(
-          'Could not move game: ' +
-          error.message
-        );
+          console.error(error);
 
+          alert(
+            'Could not move game: ' +
+            error.message
+          );
+        }
       }
-
     }
   );
 }
 
-function getDragAfterElement(container,y){
+function getDragAfterElement(
+  container,
+  y
+){
 
   const rows =
     [
@@ -1280,7 +1529,6 @@ function getDragAfterElement(container,y){
           offset,
           element:child
         };
-
       }
 
       return closest;
@@ -1309,49 +1557,54 @@ function renderAddTierPicker(){
 
   wrap.innerHTML = '';
 
-  TIERS.forEach(tier => {
+  TIERS.forEach(
+    tier => {
 
-    const chip =
-      document.createElement('button');
+      const chip =
+        document.createElement(
+          'button'
+        );
 
-    chip.className =
-      'tier-chip' +
-      (
+      chip.className =
+        'tier-chip' +
+        (
+          addTier === tier.key
+            ? ' active'
+            : ''
+        );
+
+      chip.textContent =
+        tier.letter;
+
+      chip.style.borderColor =
+        tier.color;
+
+      chip.style.color =
         addTier === tier.key
-          ? ' active'
-          : ''
+          ? '#0f0e17'
+          : tier.color;
+
+      chip.style.background =
+        addTier === tier.key
+          ? tier.color
+          : 'transparent';
+
+      chip.addEventListener(
+        'click',
+        () => {
+
+          addTier =
+            tier.key;
+
+          renderAddTierPicker();
+        }
       );
 
-    chip.textContent =
-      tier.letter;
-
-    chip.style.borderColor =
-      tier.color;
-
-    chip.style.color =
-      addTier === tier.key
-        ? '#0f0e17'
-        : tier.color;
-
-    chip.style.background =
-      addTier === tier.key
-        ? tier.color
-        : 'transparent';
-
-    chip.addEventListener(
-      'click',
-      () => {
-
-        addTier = tier.key;
-
-        renderAddTierPicker();
-
-      }
-    );
-
-    wrap.appendChild(chip);
-
-  });
+      wrap.appendChild(
+        chip
+      );
+    }
+  );
 }
 
 document
@@ -1363,26 +1616,31 @@ document
       if(!editMode)
         return;
 
-      document.getElementById(
-        'addName'
-      ).value = '';
+      document
+        .getElementById(
+          'addName'
+        )
+        .value = '';
 
       addTier = 'B';
 
       renderAddTierPicker();
 
       document
-        .getElementById('addOverlay')
+        .getElementById(
+          'addOverlay'
+        )
         .classList.add('open');
 
       setTimeout(
         () =>
           document
-            .getElementById('addName')
+            .getElementById(
+              'addName'
+            )
             .focus(),
         50
       );
-
     }
   );
 
@@ -1393,9 +1651,12 @@ document
     () => {
 
       document
-        .getElementById('addOverlay')
-        .classList.remove('open');
-
+        .getElementById(
+          'addOverlay'
+        )
+        .classList.remove(
+          'open'
+        );
     }
   );
 
@@ -1405,13 +1666,16 @@ document
     'click',
     event => {
 
-      if(event.target.id === 'addOverlay'){
+      if(
+        event.target.id ===
+        'addOverlay'
+      ){
 
         event.currentTarget
-          .classList.remove('open');
-
+          .classList.remove(
+            'open'
+          );
       }
-
     }
   );
 
@@ -1434,49 +1698,41 @@ async function confirmAdd(){
 
   try{
 
-    const response =
-      await fetch(
-        API + '/games',
-        {
-          method:'POST',
-          headers:{
-            'Content-Type':
-              'application/json'
-          },
-          body:JSON.stringify({
-            name,
-            tier:addTier
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(!response.ok || !data.success){
-
-      throw new Error(
-        data.error ||
-        'Failed to add game'
-      );
-
-    }
+    await apiWrite(
+      API + '/games',
+      {
+        method:'POST',
+        body:JSON.stringify({
+          name,
+          tier:addTier
+        })
+      }
+    );
 
     await apiGetGames();
 
     render();
 
     document
-      .getElementById('addOverlay')
-      .classList.remove('open');
+      .getElementById(
+        'addOverlay'
+      )
+      .classList.remove(
+        'open'
+      );
 
   }catch(error){
 
-    alert(
-      'Could not add game: ' +
-      error.message
-    );
+    if(
+      error.message !==
+      'Unauthorized'
+    ){
 
+      alert(
+        'Could not add game: ' +
+        error.message
+      );
+    }
   }
 }
 
@@ -1495,7 +1751,6 @@ document
 
       if(event.key === 'Enter')
         confirmAdd();
-
     }
   );
 
@@ -1505,22 +1760,32 @@ document
 
 function openGame(id){
 
-  currentGameId = id;
+  currentGameId =
+    id;
 
   renderGameModal();
 
   document
-    .getElementById('gameOverlay')
-    .classList.add('open');
+    .getElementById(
+      'gameOverlay'
+    )
+    .classList.add(
+      'open'
+    );
 }
 
 function closeGame(){
 
   document
-    .getElementById('gameOverlay')
-    .classList.remove('open');
+    .getElementById(
+      'gameOverlay'
+    )
+    .classList.remove(
+      'open'
+    );
 
-  currentGameId = null;
+  currentGameId =
+    null;
 
   render();
 }
@@ -1537,16 +1802,16 @@ document
       ){
 
         closeGame();
-
       }
-
     }
   );
 
 function renderGameModal(){
 
   const game =
-    gameById(currentGameId);
+    gameById(
+      currentGameId
+    );
 
   if(!game)
     return;
@@ -1557,54 +1822,60 @@ function renderGameModal(){
     );
 
   const catRows =
-    CATEGORIES.map(category => {
+    CATEGORIES.map(
+      category => {
 
-      const value =
-        Number(
-          game[category.key] || 0
-        );
+        const value =
+          Number(
+            game[
+              category.key
+            ] || 0
+          );
 
-      const stars =
-        Array.from({length:10})
-          .map((_,i) => {
-
-            const filled =
-              i < value;
-
-            return `
-              <span
-                class="star
-                ${filled ? 'filled' : ''}
-                ${editMode ? '' : 'readonly'}"
-                data-cat="${category.key}"
-                data-val="${i+1}"
-              >
-                ${starSvg()}
-              </span>
-            `;
-
+        const stars =
+          Array.from({
+            length:10
           })
+          .map(
+            (_,i) => {
+
+              const filled =
+                i < value;
+
+              return `
+                <span
+                  class="star
+                  ${filled ? 'filled' : ''}
+                  ${editMode ? '' : 'readonly'}"
+                  data-cat="${category.key}"
+                  data-val="${i+1}"
+                >
+                  ${starSvg()}
+                </span>
+              `;
+            }
+          )
           .join('');
 
-      return `
-        <div class="cat-row">
+        return `
+          <div class="cat-row">
 
-          <div class="cat-label">
-            ${category.label}
+            <div class="cat-label">
+              ${category.label}
+            </div>
+
+            <div class="stars">
+              ${stars}
+            </div>
+
+            <div class="cat-num">
+              ${value}/10
+            </div>
+
           </div>
-
-          <div class="stars">
-            ${stars}
-          </div>
-
-          <div class="cat-num">
-            ${value}/10
-          </div>
-
-        </div>
-      `;
-
-    }).join('');
+        `;
+      }
+    ).join('');
 
   modal.innerHTML = `
 
@@ -1649,15 +1920,23 @@ function renderGameModal(){
     </div>
 
     <div class="commentary-label">
-      ${editMode ? 'Your commentary' : 'Commentary'}
+      ${editMode
+        ? 'Your commentary'
+        : 'Commentary'}
     </div>
 
     <textarea
       class="commentary"
       id="commentary"
-      placeholder="${editMode ? 'What did you think of it?' : 'No commentary yet.'}"
+      placeholder="${
+        editMode
+          ? 'What did you think of it?'
+          : 'No commentary yet.'
+      }"
       ${editMode ? '' : 'readonly'}
-    >${escapeHtml(game.commentary || '')}</textarea>
+    >${escapeHtml(
+      game.commentary || ''
+    )}</textarea>
 
     <div class="modal-footer">
 
@@ -1679,7 +1958,9 @@ function renderGameModal(){
     </div>
   `;
 
-  /* TIER PICKER */
+  /* =======================================================
+     TIER PICKER
+  ======================================================= */
 
   if(editMode){
 
@@ -1688,55 +1969,56 @@ function renderGameModal(){
         'editTierPicker'
       );
 
-    TIERS.forEach(tier => {
+    TIERS.forEach(
+      tier => {
 
-      const chip =
-        document.createElement('button');
+        const chip =
+          document.createElement(
+            'button'
+          );
 
-      chip.className =
-        'tier-chip' +
-        (
+        chip.className =
+          'tier-chip' +
+          (
+            game.tier === tier.key
+              ? ' active'
+              : ''
+          );
+
+        chip.textContent =
+          tier.letter +
+          ' — ' +
+          tier.label;
+
+        chip.style.borderColor =
+          tier.color;
+
+        chip.style.color =
           game.tier === tier.key
-            ? ' active'
-            : ''
-        );
+            ? '#0f0e17'
+            : tier.color;
 
-      chip.textContent =
-        tier.letter +
-        ' — ' +
-        tier.label;
+        chip.style.background =
+          game.tier === tier.key
+            ? tier.color
+            : 'transparent';
 
-      chip.style.borderColor =
-        tier.color;
+        chip.addEventListener(
+          'click',
+          async () => {
 
-      chip.style.color =
-        game.tier === tier.key
-          ? '#0f0e17'
-          : tier.color;
+            if(
+              game.tier ===
+              tier.key
+            )
+              return;
 
-      chip.style.background =
-        game.tier === tier.key
-          ? tier.color
-          : 'transparent';
+            try{
 
-      chip.addEventListener(
-        'click',
-        async () => {
-
-          if(game.tier === tier.key)
-            return;
-
-          try{
-
-            const response =
-              await fetch(
+              await apiWrite(
                 API + '/games/move',
                 {
                   method:'POST',
-                  headers:{
-                    'Content-Type':
-                      'application/json'
-                  },
                   body:JSON.stringify({
                     id:game.id,
                     tier:tier.key,
@@ -1745,42 +2027,36 @@ function renderGameModal(){
                 }
               );
 
-            const data =
-              await response.json();
+              await apiGetGames();
 
-            if(!response.ok ||
-               !data.success){
+              renderGameModal();
 
-              throw new Error(
-                data.error ||
-                'Failed to move game'
-              );
+            }catch(error){
 
+              if(
+                error.message !==
+                'Unauthorized'
+              ){
+
+                alert(
+                  'Could not move game: ' +
+                  error.message
+                );
+              }
             }
-
-            await apiGetGames();
-
-            renderGameModal();
-
-          }catch(error){
-
-            alert(
-              'Could not move game: ' +
-              error.message
-            );
-
           }
+        );
 
-        }
-      );
-
-      tierWrap.appendChild(chip);
-
-    });
-
+        tierWrap.appendChild(
+          chip
+        );
+      }
+    );
   }
 
-  /* BUTTONS */
+  /* =======================================================
+     BUTTONS
+  ======================================================= */
 
   document
     .getElementById('closeGame')
@@ -1796,7 +2072,9 @@ function renderGameModal(){
       closeGame
     );
 
-  /* NAME */
+  /* =======================================================
+     NAME
+  ======================================================= */
 
   if(editMode){
 
@@ -1806,15 +2084,33 @@ function renderGameModal(){
         'change',
         async event => {
 
-          await updateGame({
-            id:game.id,
-            name:event.target.value
-          });
+          try{
 
+            await updateGame({
+              id:game.id,
+              name:
+                event.target.value
+            });
+
+          }catch(error){
+
+            if(
+              error.message !==
+              'Unauthorized'
+            ){
+
+              alert(
+                'Could not save name: ' +
+                error.message
+              );
+            }
+          }
         }
       );
 
-    /* COMMENTARY */
+    /* =====================================================
+       COMMENTARY
+    ===================================================== */
 
     document
       .getElementById('commentary')
@@ -1822,69 +2118,97 @@ function renderGameModal(){
         'change',
         async event => {
 
-          await updateGame({
-            id:game.id,
-            commentary:event.target.value
-          });
+          try{
 
+            await updateGame({
+              id:game.id,
+              commentary:
+                event.target.value
+            });
+
+          }catch(error){
+
+            if(
+              error.message !==
+              'Unauthorized'
+            ){
+
+              alert(
+                'Could not save commentary: ' +
+                error.message
+              );
+            }
+          }
         }
       );
 
-    /* RATINGS */
+    /* =====================================================
+       RATINGS
+    ===================================================== */
 
     modal
       .querySelectorAll('.star')
-      .forEach(star => {
+      .forEach(
+        star => {
 
-        star.addEventListener(
-          'click',
-          async () => {
+          star.addEventListener(
+            'click',
+            async () => {
 
-            const category =
-              star.dataset.cat;
+              const category =
+                star.dataset.cat;
 
-            const value =
-              parseInt(
-                star.dataset.val,
-                10
-              );
+              const value =
+                parseInt(
+                  star.dataset.val,
+                  10
+                );
 
-            const current =
-              Number(
-                game[category] || 0
-              );
+              const current =
+                Number(
+                  game[
+                    category
+                  ] || 0
+                );
 
-            const newValue =
-              current === value
-                ? value - 1
-                : value;
+              const newValue =
+                current === value
+                  ? value - 1
+                  : value;
 
-            try{
+              try{
 
-              await updateGame({
-                id:game.id,
-                [category]:newValue
-              });
+                await updateGame({
+                  id:game.id,
+                  [category]:
+                    newValue
+                });
 
-              await apiGetGames();
+                await apiGetGames();
 
-              renderGameModal();
+                renderGameModal();
 
-            }catch(error){
+              }catch(error){
 
-              alert(
-                'Could not save rating: ' +
-                error.message
-              );
+                if(
+                  error.message !==
+                  'Unauthorized'
+                ){
 
+                  alert(
+                    'Could not save rating: ' +
+                    error.message
+                  );
+                }
+              }
             }
+          );
+        }
+      );
 
-          }
-        );
-
-      });
-
-    /* DELETE */
+    /* =====================================================
+       DELETE
+    ===================================================== */
 
     document
       .getElementById('deleteGame')
@@ -1901,27 +2225,16 @@ function renderGameModal(){
 
           try{
 
-            const response =
-              await fetch(
-                API + '/games/' +
-                encodeURIComponent(game.id),
-                {
-                  method:'DELETE'
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if(!response.ok ||
-               !data.success){
-
-              throw new Error(
-                data.error ||
-                'Failed to delete game'
-              );
-
-            }
+            await apiWrite(
+              API +
+              '/games/' +
+              encodeURIComponent(
+                game.id
+              ),
+              {
+                method:'DELETE'
+              }
+            );
 
             await apiGetGames();
 
@@ -1929,50 +2242,53 @@ function renderGameModal(){
 
           }catch(error){
 
-            alert(
-              'Could not delete game: ' +
-              error.message
-            );
+            if(
+              error.message !==
+              'Unauthorized'
+            ){
 
+              alert(
+                'Could not delete game: ' +
+                error.message
+              );
+            }
           }
-
         }
       );
-
   }
 }
 
 /* =========================================================
-   UPDATE
+   UPDATE GAME
 ========================================================= */
 
-async function updateGame(changes){
+async function updateGame(
+  changes
+){
 
-  const response =
-    await fetch(
-      API + '/games',
-      {
-        method:'PUT',
-        headers:{
-          'Content-Type':
-            'application/json'
-        },
-        body:JSON.stringify(changes)
-      }
-    );
+  /*
+    IMPORTANT:
 
-  const data =
-    await response.json();
+    Worker expects:
+      PUT /api/games/:id
 
-  if(!response.ok ||
-     !data.success){
+    The old frontend incorrectly sent:
+      PUT /api/games
+  */
 
-    throw new Error(
-      data.error ||
-      'Failed to save'
-    );
-
-  }
+  await apiWrite(
+    API +
+    '/games/' +
+    encodeURIComponent(
+      changes.id
+    ),
+    {
+      method:'PUT',
+      body:JSON.stringify(
+        changes
+      )
+    }
+  );
 
   await apiGetGames();
 
@@ -2053,52 +2369,29 @@ function renderEditBar(){
         'click',
         tryUnlock
       );
-
   }
 }
 
-function tryUnlock(){
+async function tryUnlock(){
 
-  const password =
-    prompt(
-      'Enter edit password:'
-    );
+  const success =
+    await login();
 
-  if(password === null)
+  if(!success)
     return;
-
-  if(password === EDIT_PASSWORD){
-
-    localStorage.setItem(
-      'played-edit-unlocked',
-      'yes'
-    );
-
-    editMode = true;
-
-    render();
-
-    renderEditBar();
-
-  }else{
-
-    alert('Wrong password.');
-
-  }
-}
-
-function lockEdit(){
-
-  localStorage.removeItem(
-    'played-edit-unlocked'
-  );
-
-  editMode = false;
 
   render();
 
   renderEditBar();
+}
 
+function lockEdit(){
+
+  clearAuth();
+
+  render();
+
+  renderEditBar();
 }
 
 /* =========================================================
@@ -2109,7 +2402,10 @@ document.addEventListener(
   'keydown',
   event => {
 
-    if(event.key !== 'Escape')
+    if(
+      event.key !==
+      'Escape'
+    )
       return;
 
     const gameOverlay =
@@ -2129,7 +2425,6 @@ document.addEventListener(
     ){
 
       closeGame();
-
     }
 
     if(
@@ -2141,9 +2436,7 @@ document.addEventListener(
       addOverlay.classList.remove(
         'open'
       );
-
     }
-
   }
 );
 
