@@ -8,6 +8,88 @@ export default {
       );
 
     // =========================================================
+    // HELPERS
+    // =========================================================
+
+    /*
+     * Custom overall ratings can now be either:
+     *
+     *   8
+     *   8.5
+     *   "-"
+     *   "?"
+     *   "N/A"
+     *   "★"
+     *   any other non-empty text/symbol
+     *
+     * Numeric values remain numbers.
+     * Non-numeric values are preserved as strings.
+     */
+
+    function normalizeCustomOverall(value){
+
+      if(
+        value === null ||
+        value === undefined
+      ){
+
+        return null;
+
+      }
+
+      if(
+        typeof value ===
+        "number"
+      ){
+
+        return Number.isFinite(
+          value
+        )
+          ? value
+          : null;
+
+      }
+
+      const text =
+        String(
+          value
+        );
+
+      if(
+        text.trim() ===
+        ""
+      ){
+
+        return null;
+
+      }
+
+      const numeric =
+        Number(
+          text
+        );
+
+      if(
+        Number.isFinite(
+          numeric
+        )
+      ){
+
+        return numeric;
+
+      }
+
+      /*
+       * Important:
+       * Do NOT convert arbitrary text/symbols
+       * to null. Preserve them exactly.
+       */
+
+      return text;
+
+    }
+
+    // =========================================================
     // DATABASE SETUP
     // =========================================================
 
@@ -95,7 +177,8 @@ export default {
       ];
 
       for(
-        const row of defaults
+        const row
+        of defaults
       ){
 
         await env.DB
@@ -473,13 +556,19 @@ export default {
                   ) * 10
                 ) / 10;
 
+              /*
+               * IMPORTANT:
+               * Preserve custom symbols/text.
+               */
+
+              const customOverall =
+                normalizeCustomOverall(
+                  game.custom_overall
+                );
+
               const overall =
-                game.custom_overall !== null &&
-                game.custom_overall !== undefined &&
-                game.custom_overall !== ""
-                  ? Number(
-                      game.custom_overall
-                    )
+                customOverall !== null
+                  ? customOverall
                   : calculated;
 
               return {
@@ -541,13 +630,7 @@ export default {
                   ),
 
                 custom_overall:
-                  game.custom_overall === null ||
-                  game.custom_overall === undefined ||
-                  game.custom_overall === ""
-                    ? null
-                    : Number(
-                        game.custom_overall
-                      ),
+                  customOverall,
 
                 overall
 
@@ -723,45 +806,30 @@ export default {
           undefined
         ){
 
-          if(
-            body.custom_overall === null ||
-            body.custom_overall === ""
-          ){
+          /*
+           * Do NOT use Number() here.
+           *
+           * This allows:
+           *   8
+           *   8.5
+           *   "-"
+           *   "?"
+           *   "N/A"
+           *   "★"
+           *   etc.
+           */
 
-            customOverall =
-              null;
-
-          }else{
-
-            customOverall =
-              Number(
-                body.custom_overall
-              );
-
-            if(
-              !Number.isFinite(
-                customOverall
-              )
-            ){
-
-              customOverall =
-                null;
-
-            }
-
-          }
+          customOverall =
+            normalizeCustomOverall(
+              body.custom_overall
+            );
 
         }else{
 
           customOverall =
-            oldRatings?.custom_overall ===
-              null ||
-            oldRatings?.custom_overall ===
-              undefined
-              ? null
-              : Number(
-                  oldRatings.custom_overall
-                );
+            normalizeCustomOverall(
+              oldRatings?.custom_overall
+            );
 
         }
 
@@ -1837,32 +1905,15 @@ export default {
 
           };
 
-          let customOverall =
-            null;
+          /*
+           * Preserve numeric ratings AND arbitrary
+           * custom symbols/text during backup restore.
+           */
 
-          if(
-            game.custom_overall !== null &&
-            game.custom_overall !== undefined &&
-            game.custom_overall !== ""
-          ){
-
-            customOverall =
-              Number(
-                game.custom_overall
-              );
-
-            if(
-              !Number.isFinite(
-                customOverall
-              )
-            ){
-
-              customOverall =
-                null;
-
-            }
-
-          }
+          const customOverall =
+            normalizeCustomOverall(
+              game.custom_overall
+            );
 
           /*
            * Restore the legacy games columns too,
