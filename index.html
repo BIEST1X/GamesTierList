@@ -1165,12 +1165,15 @@ function gameById(id){
 
 function formatNumber(value){
 
-  const n = Number(value);
-
-  if(!Number.isFinite(n))
+  if(value === null || value === undefined || value === "")
     return "0";
 
-  return String(n);
+  const n = Number(value);
+
+  if(Number.isFinite(n))
+    return String(n);
+
+  return String(value);
 
 }
 
@@ -1182,7 +1185,7 @@ function score(game){
     game.custom_overall !== ""
   ){
 
-    return Number(game.custom_overall);
+    return String(game.custom_overall);
 
   }
 
@@ -2619,8 +2622,7 @@ function renderGameModal(){
             <input
               id="customRating"
               class="custom-rating"
-              type="number"
-              step="any"
+              type="text"
               value="${
                 game.custom_overall !== null &&
                 game.custom_overall !== undefined
