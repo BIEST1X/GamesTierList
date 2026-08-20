@@ -334,9 +334,11 @@ main{
 
   background:linear-gradient(
     90deg,
-    var(--diamond) 0%,
-    #E8F7FF 50%,
-    var(--diamond) 100%
+    #8CD4FF 0%,
+    #DFF5FF 25%,
+    #FFFFFF 50%,
+    #DFF5FF 75%,
+    #8CD4FF 100%
   );
 
   background-size:300% 100%;
@@ -344,14 +346,7 @@ main{
   background-clip:text;
   color:transparent;
 
-  text-shadow:
-    0 0 1.25px rgba(141,217,255,.138),
-    0 0 3px rgba(141,217,255,.113),
-    0 0 6px rgba(141,217,255,.08),
-    0 0 10.5px rgba(141,217,255,.05);
-
-  animation:highlightGradient 4s linear infinite,
-             highlightNeon 2.8s ease-in-out infinite;
+  animation:highlightGradient 5s ease-in-out infinite;
 }
 
 .row.highlighted .row-score{
@@ -361,9 +356,11 @@ main{
 
   background:linear-gradient(
     90deg,
-    var(--diamond) 0%,
-    #E8F7FF 50%,
-    var(--diamond) 100%
+    #8CD4FF 0%,
+    #DFF5FF 25%,
+    #FFFFFF 50%,
+    #DFF5FF 75%,
+    #8CD4FF 100%
   );
 
   background-size:300% 100%;
@@ -371,14 +368,7 @@ main{
   background-clip:text;
   color:transparent;
 
-  text-shadow:
-    0 0 1.25px rgba(141,217,255,.138),
-    0 0 3px rgba(141,217,255,.113),
-    0 0 6px rgba(141,217,255,.08),
-    0 0 10.5px rgba(141,217,255,.05);
-
-  animation:highlightGradient 4s linear infinite,
-             highlightNeon 2.8s ease-in-out infinite;
+  animation:highlightGradient 5s ease-in-out infinite;
 }
 
 @keyframes highlightGradient{
@@ -386,8 +376,12 @@ main{
     background-position:0% 50%;
   }
 
-  100%{
+  50%{
     background-position:100% 50%;
+  }
+
+  100%{
+    background-position:0% 50%;
   }
 }
 
