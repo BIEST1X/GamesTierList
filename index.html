@@ -400,35 +400,69 @@ main{
 }
 
 /* =========================================================
-   SS TIER — NEON DIAMOND GLOW
+   SSS TIER — NEON RED / ORANGE GLOW
 ========================================================= */
 
-.tier[data-tier="SS"] .tier-letter{
-  color:var(--diamond);
-  text-shadow:
-    0 0 5px rgba(141,217,255,.55),
-    0 0 12px rgba(141,217,255,.45),
-    0 0 24px rgba(141,217,255,.32),
-    0 0 42px rgba(141,217,255,.20);
+.tier[data-tier="SS"] .tier-head{
+  border-bottom-color:transparent;
+  border-image:linear-gradient(90deg,#FF3B30 0%,#FF6A00 50%,#FFB347 100%) 1;
+}
 
+.tier[data-tier="SS"] .tier-letter{
+  background:linear-gradient(
+    180deg,
+    #FF3B30 0%,
+    #FF6A00 50%,
+    #FFB347 100%
+  );
+
+  background-size:100% 300%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+
+  text-shadow:none;
   animation:ssNeon 2.8s ease-in-out infinite;
+}
+
+.tier[data-tier="SS"] .row{
+  border-left-color:transparent;
+  border-image:linear-gradient(
+    180deg,
+    #FF3B30 0%,
+    #FF6A00 50%,
+    #FFB347 100%
+  ) 1;
+}
+
+.tier[data-tier="SS"] .row-score{
+  background:linear-gradient(
+    180deg,
+    #FF3B30 0%,
+    #FF6A00 50%,
+    #FFB347 100%
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
 @keyframes ssNeon{
   0%,100%{
     text-shadow:
-      0 0 5px rgba(141,217,255,.55),
-      0 0 12px rgba(141,217,255,.45),
-      0 0 24px rgba(141,217,255,.32),
-      0 0 42px rgba(141,217,255,.20);
+      0 0 5px rgba(255,59,48,.55),
+      0 0 12px rgba(255,59,48,.45),
+      0 0 24px rgba(255,106,0,.32),
+      0 0 42px rgba(255,106,0,.20);
   }
 
   50%{
     text-shadow:
-      0 0 7px rgba(141,217,255,.75),
-      0 0 16px rgba(141,217,255,.62),
-      0 0 30px rgba(141,217,255,.48),
-      0 0 52px rgba(141,217,255,.28);
+      0 0 7px rgba(255,59,48,.75),
+      0 0 16px rgba(255,59,48,.62),
+      0 0 30px rgba(255,106,0,.48),
+      0 0 52px rgba(255,106,0,.28);
   }
 }
 
